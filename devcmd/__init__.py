@@ -229,19 +229,20 @@ Works like:
     
     @_devcmd.command(name="disable", aliases=['enable'])
     @is_owner()
-    async def _dc_disable(self, ctx, command):
-        command = self.bot.get_command(command)
-        if command == None:
-            raise BadArgument(f'Command "{command}" not found')
+    async def _dc_disable(self, ctx, command: bot.get_command):
         em = discord.Embed()
+        if not command.enabled:
+            em.color = discord.Color.red()
+            em.description = f"{command.name} is already disabled"
+            return await ctx.send(embed=em)
         if ctx.invoked_with == "enable":
-            command.disabled = False
+            command.enabled = True
             em.description = f"Enabled {command.name}"
             em.color = discord.Color.green()
         elif ctx.invoked_with == "disable":
-            command.disabled = True
+            command.enabled = False
             em.description = f"Disabled {command.name}"
-            em.color = discord.Color.red()
+            em.color = discord.Color.black()
         await ctx.send(embed=em)
 
 

@@ -16,7 +16,7 @@ setup(
         'Issue tracker': 'https://github.com/Cyber-Incorporated/devcmd/issues'
     },
 
-    version=0.0.1,
+    version='0.0.1',
     packages=['devcmd'],
     include_package_data=True,
     install_requires=REQUIREMENTS,

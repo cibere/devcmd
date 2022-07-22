@@ -43,7 +43,7 @@ class devcmd(commands.Cog):
     @is_owner()
     async def _devcmd(self, ctx, *, extra_args=None):
         if extra_args == None:
-            await ctx.send(":P")
+            await ctx.send("Invalid Syntax")
         else:
             raise discord.ext.commands.CommandNotFound(f"Command '{ctx.invoked_with} {extra_args}' is not a subcommand of 'devcmd'")
 

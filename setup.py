@@ -6,14 +6,14 @@ with open('README.md', 'r') as f:
 setup(
     name='devcmd',
     author='Devon (Gorialis) R',
-    url='https://github.com/Cyber-Incorporated/devcmd',
+    url='https://github.com/cibere/devcmd',
 
     license='MIT',
     description='a developer tool for discord.py discord bots',
     long_description=README,
     project_urls={
-        'Code': 'https://github.com/Cyber-Incorporated/devcmd',
-        'Issue tracker': 'https://github.com/Cyber-Incorporated/devcmd/issues'
+        'Code': 'https://github.com/cibere/devcmd',
+        'Issue tracker': 'https://github.com/cibere/devcmd/issues'
     },
 
     version='0.0.1',
@@ -21,11 +21,19 @@ setup(
     include_package_data=True,
     python_requires='>=3.8.0',
 
-    download_url=f'https://github.com/Cyber-Incorporated/devcmd/blob/main/dist/devcmd-1.0.0.tar.gz',
-
-    classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'License :: OSI Approved :: MIT License',
+        'Intended Audience :: Developers',
+        'Natural Language :: English',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Topic :: Internet',
+        'Topic :: Software Development :: Libraries',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Utilities',
+        'Typing :: Typed',
     ]
 )

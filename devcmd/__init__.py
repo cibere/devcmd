@@ -10,7 +10,7 @@ from textwrap import indent
 import sys, traceback
 import subprocess
 
-VERSION = "0.0.4.4"
+VERSION = "0.0.4.5"
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
@@ -262,6 +262,8 @@ Works like:
         em=discord.Embed(title="Updating devcmd")
         await ctx.channel.typing()
         subprocess.run("pip install git+https://github.com/cibere/devcmd", shell=True)
+        await self.bot.unload_extension('devcmd')
+        await self.bot.load_extension(devcmd)
         em.description = f"Successfully updated to devcmd version {VERSION}"
         await ctx.send(embed=em)
     
@@ -269,6 +271,11 @@ Works like:
     @is_owner()
     async def _dc_version(self, ctx):
         await ctx.send(f"Running devcmd version {VERSION}")
+
+    @_devcmd.command(name="docs")
+    @is_owner()
+    async def _dc_docs(self, ctx):
+        await ctx.send(f"https://gist.github.com/cibere/da22060df5ab6282b452e972f08d269b")
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

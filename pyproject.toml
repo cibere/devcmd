@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "devcmd"
-version = "1.0.0"
+version = "0.0.1"
 authors = [
   { name="cibere", email="agent45.topsecret@gmail.com" },
 ]
@@ -21,3 +21,6 @@ classifiers = [
 [project.urls]
 "Homepage" = "https://github.com/Cyber-Incorporated/devcmd"
 "Bug Tracker" = "https://github.com/Cyber-Incorporated/devcmd/issues"
+
+[tool.setuptools.packages]
+find = {}

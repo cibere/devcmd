@@ -1,13 +1,13 @@
 # devcmd
 A discord.py extension for developers to help manage there bot
 
-Installation
+## Installation
 ```
 pip install git+https://github.com/cibere/devcmd
 # git is required to be installed first
 ```
 
-Credits:
+## Credits:
 
-cibere#6647 - everything else
+cibere#6647 - everything else\n
 AmongBrown#5609 - help with the eval command

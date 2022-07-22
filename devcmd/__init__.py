@@ -263,7 +263,7 @@ Works like:
         await ctx.channel.typing()
         subprocess.run("pip install git+https://github.com/cibere/devcmd", shell=True)
         await self.bot.unload_extension('devcmd')
-        await self.bot.load_extension(devcmd)
+        await self.bot.load_extension('devcmd')
         em.description = f"Successfully updated to devcmd version {VERSION}"
         await ctx.send(embed=em)
     

@@ -1,9 +1,0 @@
-LICENSE
-README.md
-pyproject.toml
-src/devcmd/__init__.py
-src/devcmd/devcmd.py
-src/devcmd.egg-info/PKG-INFO
-src/devcmd.egg-info/SOURCES.txt
-src/devcmd.egg-info/dependency_links.txt
-src/devcmd.egg-info/top_level.txt

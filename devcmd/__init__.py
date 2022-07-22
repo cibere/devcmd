@@ -262,10 +262,10 @@ Works like:
     async def _dc_update(self, ctx):
         em=discord.Embed(title="Updating devcmd")
         await ctx.channel.typing()
-        result = subprocess.run(["'pip install git+https://github.com/cibere/devcmd'"] ,stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+        result = subprocess.run("pip install git+https://github.com/cibere/devcmd", shell=True)
         em.description = f"Successfully updated to devcmd version {version}"
         print(result)
-        await ctx.send(em)
+        await ctx.send(embed=em)
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

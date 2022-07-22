@@ -9,7 +9,7 @@ from traceback import format_exc as geterr
 from textwrap import indent
 import sys, traceback
 
-VERSION = "0.0.3"
+VERSION = "0.0.4"
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
@@ -229,7 +229,10 @@ Works like:
     
     @_devcmd.command(name="disable", aliases=['enable'])
     @is_owner()
-    async def _dc_disable(self, ctx, command: bot.get_command):
+    async def _dc_disable(self, ctx, raw: str):
+        command = self.bot.get_command(raw)
+        if command == None:
+            raise BadArgument(f'Command "{raw}" not found')
         em = discord.Embed()
         if not command.enabled:
             em.color = discord.Color.red()

@@ -222,19 +222,27 @@ Works like:
 
         await ctx.send(f"Synced the tree to {ret}/{len(guilds)}.")
 
-    @_devcmd.command(name="toggle-jsk", aliases=['jsk'])
+    @_devcmd.command(name="github")
     @is_owner()
-    async def _dc_jsk(self, ctx):
-        try:
-            await self.bot.unload_extension("jishaku")
-            text = "unloaded"
-        except Exception:
-            text = "loaded"
-            await self.bot.load_extension('jishaku')
-            msg = ctx.message
-            msg.content = ";jsk hide"
-            await self.bot.process_commands(msg)
-        await ctx.send(f"`✅ {text} jishaku`")
+    async def _dc_github(self, ctx):
+        await ctx.reply('https://github.com/cibere/devcmd')
+    
+    @_devcmd.command(name="disable", aliases=['enable'])
+    @is_owner()
+    async def _dc_disable(self, ctx, command):
+        command = self.bot.get_command(command)
+        if command == None:
+            raise BadArgument(f'Command "{command}" not found')
+        em = discord.Embed()
+        if ctx.invoked_with == "enable":
+            command.disabled = False
+            em.description = f"Enabled {command.name}"
+            em.color = discord.Color.green()
+        elif ctx.invoked_with == "disable":
+            command.disabled = True
+            em.description = f"Disabled {command.name}"
+            em.color = discord.Color.red()
+        await ctx.send(embed=em)
 
 
 async def setup(bot):

@@ -9,7 +9,7 @@ from traceback import format_exc as geterr
 from textwrap import indent
 import sys, traceback
 
-VERSION = "0.0.4"
+VERSION = "0.0.4.1"
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
@@ -245,7 +245,7 @@ Works like:
         elif ctx.invoked_with == "disable":
             command.update(enabled=False)
             em.description = f"Disabled {command.name}"
-            em.color = discord.Color.black()
+            em.color = discord.Color.darker_gray()
         await ctx.send(embed=em)
 
 

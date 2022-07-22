@@ -234,15 +234,15 @@ Works like:
         if command == None:
             raise BadArgument(f'Command "{raw}" not found')
         em = discord.Embed()
-        if not command.enabled:
-            em.color = discord.Color.red()
-            em.description = f"{command.name} is already disabled"
-            return await ctx.send(embed=em)
         if ctx.invoked_with == "enable":
             command.update(enabled=True)
             em.description = f"Enabled {command.name}"
             em.color = discord.Color.green()
         elif ctx.invoked_with == "disable":
+            if not command.enabled:
+                em.color = discord.Color.red()
+                em.description = f"{command.name} is already disabled"
+                return await ctx.send(embed=em)
             command.update(enabled=False)
             em.description = f"Disabled {command.name}"
             em.color = discord.Color.darker_gray()

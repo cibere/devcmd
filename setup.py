@@ -21,8 +21,6 @@ setup(
     include_package_data=True,
     python_requires='>=3.8.0',
 
-    extras_require=EXTRA_REQUIRES,
-
     download_url=f'https://github.com/Cyber-Incorporated/devcmd/blob/main/dist/devcmd-1.0.0.tar.gz',
 
     classifiers = [

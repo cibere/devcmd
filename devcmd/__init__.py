@@ -227,27 +227,33 @@ Works like:
     async def _dc_github(self, ctx):
         await ctx.reply('https://github.com/cibere/devcmd')
     
-    @_devcmd.command(name="disable", aliases=['enable'])
+    @_devcmd.command(name="disable")
     @is_owner()
     async def _dc_disable(self, ctx, raw: str):
+        em=discord.Embed()
+        command = self.bot.get_command(raw)
+        if command == None:
+            raise BadArgument(f'Command "{raw}" not found')
+        if not command.enabled:
+            em.color = discord.Color.red()
+            em.description = f"{command.name} is already disabled"
+            return await ctx.send(embed=em)
+        command.update(enabled=False)
+        em.description = f"Disabled {command.name}"
+        em.color = discord.Color.darker_gray()
+        await ctx.send(embed=em)
+
+    @_devcmd.command(name="enable")
+    @is_owner()
+    async def _dc_enable(self, ctx, raw: str):
         command = self.bot.get_command(raw)
         if command == None:
             raise BadArgument(f'Command "{raw}" not found')
         em = discord.Embed()
-        if ctx.invoked_with == "enable":
-            command.update(enabled=True)
-            em.description = f"Enabled {command.name}"
-            em.color = discord.Color.green()
-        elif ctx.invoked_with == "disable":
-            if not command.enabled:
-                em.color = discord.Color.red()
-                em.description = f"{command.name} is already disabled"
-                return await ctx.send(embed=em)
-            command.update(enabled=False)
-            em.description = f"Disabled {command.name}"
-            em.color = discord.Color.darker_gray()
+        command.update(enabled=True)
+        em.description = f"Enabled {command.name}"
+        em.color = discord.Color.green()
         await ctx.send(embed=em)
-
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

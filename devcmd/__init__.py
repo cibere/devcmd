@@ -9,6 +9,8 @@ from traceback import format_exc as geterr
 from textwrap import indent
 import sys, traceback
 
+VERSION = "0.0.2"
+
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
         lines=block.split("\n")
@@ -45,7 +47,7 @@ class devcmd(commands.Cog):
         if extra_args == None:
             await ctx.send("Invalid Syntax")
         else:
-            raise discord.ext.commands.CommandNotFound(f"Command '{ctx.invoked_with} {extra_args}' is not a subcommand of 'devcmd'")
+            raise discord.ext.commands.CommandNotFound(f'Command "{ctx.invoked_with} {extra_args}" is not found')
 
     @_devcmd.command(aliases=['logs'], name="audit")
     @is_owner()

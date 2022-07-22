@@ -1,4 +1,5 @@
 from setuptools import setup
+from devcmd import VERSION
 
 with open('README.md', 'r') as f:
     README = f.read()
@@ -16,7 +17,7 @@ setup(
         'Issue tracker': 'https://github.com/cibere/devcmd/issues'
     },
 
-    version='0.0.1',
+    version=VERSION,
     packages=['devcmd'],
     include_package_data=True,
     python_requires='>=3.8.0',

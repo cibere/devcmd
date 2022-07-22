@@ -9,7 +9,7 @@ from traceback import format_exc as geterr
 from textwrap import indent
 import sys, traceback
 
-VERSION = "0.0.2"
+VERSION = "0.0.3"
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):

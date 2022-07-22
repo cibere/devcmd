@@ -1,4 +1,3 @@
-from ensurepip import version
 from discord.ext import commands
 from discord.ext.commands import *
 import discord
@@ -11,8 +10,7 @@ from textwrap import indent
 import sys, traceback
 import subprocess
 
-_version = "0.0.4.3"
-VERSION = _version
+VERSION = "0.0.4.4"
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
@@ -264,8 +262,13 @@ Works like:
         em=discord.Embed(title="Updating devcmd")
         await ctx.channel.typing()
         subprocess.run("pip install git+https://github.com/cibere/devcmd", shell=True)
-        em.description = f"Successfully updated to devcmd version {_version}"
+        em.description = f"Successfully updated to devcmd version {VERSION}"
         await ctx.send(embed=em)
+    
+    @_devcmd.command(name="version")
+    @is_owner()
+    async def _dc_version(self, ctx):
+        await ctx.send(f"Running devcmd version {VERSION}")
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

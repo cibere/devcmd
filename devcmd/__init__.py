@@ -11,12 +11,14 @@ import sys, traceback
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
-        lines=block.split("\n")
-        if "`" in lines[0]:
-            lines.pop(0)
-        if "`" in lines[len(lines)-1]:
-            lines.pop(len(lines)-1)
-        return "\n".join(lines)
+        if block.startswith("```"):
+            block = block.replace("```", "", 1)
+            if block.startswith("py"):
+                block = block.replace("py", "", 1)
+        if block.endswith("```"):
+            li = block.rsplit(block, 1)
+            block= ''.join(li)
+        return block
 
 class RedirectedStdout:
     def __init__(self):

@@ -19,7 +19,6 @@ setup(
     version='0.0.1',
     packages=['devcmd'],
     include_package_data=True,
-    install_requires=REQUIREMENTS,
     python_requires='>=3.8.0',
 
     extras_require=EXTRA_REQUIRES,

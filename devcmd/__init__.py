@@ -11,7 +11,7 @@ from textwrap import indent
 import sys, traceback
 import subprocess
 
-_version = "0.0.4.2"
+_version = "0.0.4.3"
 VERSION = _version
 
 class CodeBlock(commands.Converter):

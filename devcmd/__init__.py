@@ -11,14 +11,13 @@ import sys, traceback
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
-        if block.startswith("```"):
-            block = block.replace("```", "", 1)
-            if block.startswith("py"):
-                block = block.replace("py", "", 1)
-        if block.endswith("```"):
-            li = block.rsplit(block, 1)
-            block= ''.join(li)
-        return block
+        lines=block.split("\n")
+        if "`" in lines[0]:
+            lines.pop(0)
+        if "`" in lines[len(lines)-1]:
+            li = lines[len(lines)-1].rsplit('```', 1)
+            lines[len(lines)-1] = ''.join(li)
+        return "\n".join(lines)
 
 class RedirectedStdout:
     def __init__(self):
@@ -42,9 +41,11 @@ class devcmd(commands.Cog):
 
     @commands.group(hidden=True, invoke_without_command=True, name="devcmd", aliases=['dev', 'dc'])
     @is_owner()
-    async def _devcmd(self, ctx):
-        await ctx.channel.typing()
-        await ctx.send(":P")
+    async def _devcmd(self, ctx, *, extra_args=None):
+        if extra_args == None:
+            await ctx.send(":P")
+        else:
+            raise discord.ext.commands.CommandNotFound(f"Command '{ctx.invoked_with} {extra_args}' is not a subcommand of 'devcmd'")
 
     @_devcmd.command(aliases=['logs'], name="audit")
     @is_owner()

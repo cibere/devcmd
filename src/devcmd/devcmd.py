@@ -1,6 +1,5 @@
 from discord.ext import commands
 from discord.ext.commands import *
-from discord import Object
 import discord
 import io, os
 from typing import Literal, Optional

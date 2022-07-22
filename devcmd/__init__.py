@@ -236,11 +236,11 @@ Works like:
             em.description = f"{command.name} is already disabled"
             return await ctx.send(embed=em)
         if ctx.invoked_with == "enable":
-            command.enabled = True
+            command.update(enabled=True)
             em.description = f"Enabled {command.name}"
             em.color = discord.Color.green()
         elif ctx.invoked_with == "disable":
-            command.enabled = False
+            command.update(enabled=False)
             em.description = f"Disabled {command.name}"
             em.color = discord.Color.black()
         await ctx.send(embed=em)

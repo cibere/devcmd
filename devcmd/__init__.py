@@ -11,7 +11,8 @@ from textwrap import indent
 import sys, traceback
 import subprocess
 
-VERSION = "0.0.4.2"
+_version = "0.0.4.2"
+VERSION = _version
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
@@ -263,7 +264,7 @@ Works like:
         em=discord.Embed(title="Updating devcmd")
         await ctx.channel.typing()
         subprocess.run("pip install git+https://github.com/cibere/devcmd", shell=True)
-        em.description = f"Successfully updated to devcmd version {VERSION}"
+        em.description = f"Successfully updated to devcmd version {_version}"
         await ctx.send(embed=em)
 
 async def setup(bot):

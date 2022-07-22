@@ -22,5 +22,8 @@ classifiers = [
 "Homepage" = "https://github.com/Cyber-Incorporated/devcmd"
 "Bug Tracker" = "https://github.com/Cyber-Incorporated/devcmd/issues"
 
-[tool.setuptools.packages]
-find = {}
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["devcmd*"]
+exclude = ["devcmd.tests*"]
+namespaces = false

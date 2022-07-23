@@ -4,13 +4,15 @@ import discord
 import io, os
 from typing import Literal, Optional
 import inspect
+import mystbin
 from io import StringIO
 from traceback import format_exc as geterr
 from textwrap import indent
 import sys, traceback
 import subprocess
 
-VERSION = "0.0.4.5"
+mystbin_client = mystbin.Client()
+VERSION = "0.0.5.1"
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
@@ -118,8 +120,8 @@ class devcmd(commands.Cog):
             try:
                 await ctx.author.send(f"""```py\n{error}\n```""")
             except:
-                print(error)
-                await ctx.send("Error is too long to send here, so error was sent to console")
+                paste = await mystbin_client.post(error, syntax="python")
+                await ctx.send(f"Error is too long to send here, so error was sent to {str(paste)}")
 
     @_devcmd.command(name="source", aliases=['src'])
     @is_owner()

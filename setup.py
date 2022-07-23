@@ -4,6 +4,9 @@ from devcmd import VERSION
 with open('README.md', 'r') as f:
     README = f.read()
 
+with open('requirements.txt', 'r') as f:
+    requirements = f.read()
+
 setup(
     name='devcmd',
     author='Devon (Gorialis) R',
@@ -20,6 +23,7 @@ setup(
     version=VERSION,
     packages=['devcmd'],
     include_package_data=True,
+    install_requires=requirements,
     python_requires='>=3.8.0',
 
     classifiers=[

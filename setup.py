@@ -9,7 +9,7 @@ with open('requirements.txt', 'r') as f:
 
 setup(
     name='devcmd',
-    author='Devon (Gorialis) R',
+    author='cibere',
     url='https://github.com/cibere/devcmd',
 
     license='MIT',

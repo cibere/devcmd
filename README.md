@@ -38,7 +38,7 @@ Devcmd Docs
 
 > devcmd currently has two versions.
 > Master which is the stable version.<br>
-> <a href="https://github.com/cibere/devcmd#installation">(Installation Guide)</a>
+> <a href="https://github.com/cibere/devcmd#installation">Installation Guide</a>
 
 
 > Beta which is the development version.

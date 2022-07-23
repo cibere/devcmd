@@ -8,8 +8,8 @@ with open('requirements.txt', 'r') as f:
     requirements = f.read()
 
 setup(
-    name='devcmd',
-    author='Devon (Gorialis) R',
+    name='devcmd-beta',
+    author='cibere',
     url='https://github.com/cibere/devcmd',
 
     license='MIT',

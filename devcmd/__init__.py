@@ -12,7 +12,7 @@ import sys, traceback
 import subprocess
 
 mystbin_client = mystbin.Client()
-VERSION = "0.0.5.1"
+VERSION = "0.0.5.2"
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):

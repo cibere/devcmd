@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "0.0.5.5"
+VERSION = "beta-0.0.5.5"
 BRANCH = "beta"
 
 class CodeBlock(commands.Converter):

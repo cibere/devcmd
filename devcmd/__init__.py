@@ -15,6 +15,7 @@ load_dotenv()
 
 mystbin_client = mystbin.Client()
 VERSION = "0.0.5.5"
+BRANCH = "beta"
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
@@ -121,6 +122,7 @@ class devcmd(commands.Cog):
             await ctx.send(f"`✅ {text} {extension}`")
         except Exception:
             error = traceback.format_exc()
+            error = error.replace(os.getenv("NAME"), "")
             try:
                 await ctx.message.add_reaction('‼️')
             except:
@@ -128,7 +130,6 @@ class devcmd(commands.Cog):
             try:
                 await ctx.author.send(f"""```py\n{error}\n```""")
             except:
-                error = error.replace(os.getenv("NAME"), "")
                 paste = await mystbin_client.post(error, syntax="python")
                 await ctx.send(f"Error is too long to send here, so error was sent to {str(paste)}")
 
@@ -272,7 +273,11 @@ Works like:
     async def _dc_update(self, ctx):
         em=discord.Embed(title="Updating devcmd")
         await ctx.channel.typing()
-        subprocess.run("pip install git+https://github.com/cibere/devcmd", shell=True)
+        if BRANCH == "":
+            url = "https://github.com/cibere/devcmd"
+        else:
+            url = f"https://github.com/cibere/devcmd@{BRANCH}"
+        subprocess.run(f"pip install git+{url}", shell=True)
         await self.bot.unload_extension('devcmd')
         await self.bot.load_extension('devcmd')
         em.description = f"Successfully updated to devcmd! Run `devcmd version` for the new version"
@@ -282,7 +287,9 @@ Works like:
     @_devcmd.command(name="version")
     @is_owner()
     async def _dc_version(self, ctx):
-        await ctx.send(f"Running devcmd version {VERSION}")
+        if BRANCH == "":
+            return await ctx.send(f"Running devcmd version {VERSION}")
+        await ctx.send(f"Running devcmd version {BRANCH}-{VERSION}")
 
     @_devcmd.command(name="docs")
     @is_owner()

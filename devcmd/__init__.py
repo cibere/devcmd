@@ -104,7 +104,10 @@ class devcmd(commands.Cog):
                 await self.bot.unload_extension(extension)
                 return await ctx.send(f"`✅ unloaded {extension}`")
             except Exception:
-                await ctx.message.add_reaction('‼️')
+                try:
+                    await ctx.message.add_reaction('‼️')
+                except:
+                    pass
                 return await ctx.author.send(f"""```py\n{traceback.format_exc()}\n```""")
         try:
             await self.bot.unload_extension(extension)
@@ -116,7 +119,10 @@ class devcmd(commands.Cog):
             await ctx.send(f"`✅ {text} {extension}`")
         except Exception:
             error = traceback.format_exc()
-            await ctx.message.add_reaction('‼️')
+            try:
+                await ctx.message.add_reaction('‼️')
+            except:
+                pass
             try:
                 await ctx.author.send(f"""```py\n{error}\n```""")
             except:

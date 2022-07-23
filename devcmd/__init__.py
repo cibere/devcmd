@@ -10,9 +10,11 @@ from traceback import format_exc as geterr
 from textwrap import indent
 import sys, traceback
 import subprocess
+from dotenv import load_dotenv
+load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "0.0.5.2"
+VERSION = "0.0.5.3"
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
@@ -126,6 +128,7 @@ class devcmd(commands.Cog):
             try:
                 await ctx.author.send(f"""```py\n{error}\n```""")
             except:
+                error = error.replace(os.getenv("NAME"), "")
                 paste = await mystbin_client.post(error, syntax="python")
                 await ctx.send(f"Error is too long to send here, so error was sent to {str(paste)}")
 
@@ -267,14 +270,20 @@ Works like:
     @_devcmd.command(name="update")
     @is_owner()
     async def _dc_update(self, ctx):
-        em=discord.Embed(title="Updating devcmd")
         await ctx.channel.typing()
         subprocess.run("pip install git+https://github.com/cibere/devcmd", shell=True)
         await self.bot.unload_extension('devcmd')
         await self.bot.load_extension('devcmd')
+        ctx.message.content += "-send-new-version"
+        self.bot.process_commands(ctx.message)
+    
+    @_devcmd.command(name="update-send-new-version")
+    @is_owner()
+    async def _dc_update(self, ctx):
+        em=discord.Embed(title="Updating devcmd")
         em.description = f"Successfully updated to devcmd version {VERSION}"
         await ctx.send(embed=em)
-    
+
     @_devcmd.command(name="version")
     @is_owner()
     async def _dc_version(self, ctx):

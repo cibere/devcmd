@@ -15,7 +15,6 @@ load_dotenv()
 
 mystbin_client = mystbin.Client()
 VERSION = "beta-0.0.5.5"
-BRANCH = "beta"
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
@@ -273,10 +272,10 @@ Works like:
     async def _dc_update(self, ctx):
         em=discord.Embed(title="Updating devcmd")
         await ctx.channel.typing()
-        if BRANCH == "":
+        if VERSION.startswith("beta"):
             url = "https://github.com/cibere/devcmd"
         else:
-            url = f"https://github.com/cibere/devcmd@{BRANCH}"
+            url = f"https://github.com/cibere/devcmd@beta"
         subprocess.run(f"pip install git+{url}", shell=True)
         await self.bot.unload_extension('devcmd')
         await self.bot.load_extension('devcmd')
@@ -287,9 +286,7 @@ Works like:
     @_devcmd.command(name="version")
     @is_owner()
     async def _dc_version(self, ctx):
-        if BRANCH == "":
-            return await ctx.send(f"Running devcmd version {VERSION}")
-        await ctx.send(f"Running devcmd version {BRANCH}-{VERSION}")
+        await ctx.send(f"Running devcmd version {VERSION}")
 
     @_devcmd.command(name="docs")
     @is_owner()

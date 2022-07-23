@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "0.0.5.3"
+VERSION = "0.0.5.4"
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):

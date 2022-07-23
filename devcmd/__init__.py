@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "0.0.5.4"
+VERSION = "0.0.5.5"
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
@@ -270,19 +270,14 @@ Works like:
     @_devcmd.command(name="update")
     @is_owner()
     async def _dc_update(self, ctx):
+        em=discord.Embed(title="Updating devcmd")
         await ctx.channel.typing()
         subprocess.run("pip install git+https://github.com/cibere/devcmd", shell=True)
         await self.bot.unload_extension('devcmd')
         await self.bot.load_extension('devcmd')
-        ctx.message.content += "-send-new-version"
-        self.bot.process_commands(ctx.message)
-    
-    @_devcmd.command(name="update-send-new-version")
-    @is_owner()
-    async def _dc_update(self, ctx):
-        em=discord.Embed(title="Updating devcmd")
-        em.description = f"Successfully updated to devcmd version {VERSION}"
+        em.description = f"Successfully updated to devcmd! Run `devcmd version` for the new version"
         await ctx.send(embed=em)
+        
 
     @_devcmd.command(name="version")
     @is_owner()

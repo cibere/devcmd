@@ -12,9 +12,11 @@ import sys, traceback
 import subprocess
 from dotenv import load_dotenv
 load_dotenv()
+from infoCmd import devcmd_base
+_devcmd = devcmd_base._devcmd
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-0.0.5.5"
+VERSION = "beta-0.0.5.6"
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
@@ -42,17 +44,7 @@ class RedirectedStdout:
     def __str__(self):
         return self._string_io.getvalue()
 
-class devcmd(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-
-    @commands.group(hidden=True, invoke_without_command=True, name="devcmd", aliases=['dev', 'dc'])
-    @is_owner()
-    async def _devcmd(self, ctx, *, extra_args=None):
-        if extra_args == None:
-            await ctx.send("Invalid Syntax")
-        else:
-            raise discord.ext.commands.CommandNotFound(f'Command "{ctx.invoked_with} {extra_args}" is not found')
+class devcmd(devcmd_base):
 
     @_devcmd.command(aliases=['logs'], name="audit")
     @is_owner()
@@ -62,7 +54,7 @@ class devcmd(commands.Cog):
         async for entry in ctx.guild.audit_logs(limit=num):
             audits.append(f'{entry.user} did {entry.action} to {entry.target} with the reason of: {entry.reason}')
         nl = '\n'
-        embed=discord.Embed(color=discord.Color.yellow(), title="Audit", description=nl.join(audits))
+        embed=discord.Embed(color=discord.Color.blue(), title="Audit", description=nl.join(audits))
         try:
             await ctx.reply(embed=embed)
         except:
@@ -75,7 +67,8 @@ class devcmd(commands.Cog):
     async def _dc_purge(self, ctx, num:int):
         num += 1
         deleted = await ctx.channel.purge(limit=num)
-        await ctx.author.send(f"Deleted {len(deleted)} messages")
+        embed=discord.Embed(color=discord.Color.green(), description=f"Deleted {len(deleted)} messages")
+        await ctx.author.send(embed=embed)
 
     @_devcmd.command(name="restart")
     @is_owner()
@@ -89,7 +82,8 @@ class devcmd(commands.Cog):
     @is_owner()
     async def _dc_shutdown(self, ctx):
         await ctx.channel.typing()
-        await ctx.reply("Logging out...")
+        embed=discord.Embed(color=discord.Color.green(), title="Logging out...")
+        await ctx.reply(embed=embed)
         await self.bot.close()
 
     @_devcmd.command(name="load", aliases=['reload', 'unload'])
@@ -99,18 +93,16 @@ class devcmd(commands.Cog):
         if ctx.invoked_with == "reload" and extension == None:
             extension = "devcmd"
         elif extension == None:
-            await ctx.reply("`Extension` argument is required")
-            return
+            raise BadArgument(f'"Extension" is a required argument')
         if ctx.invoked_with == "unload":
             try:
                 await self.bot.unload_extension(extension)
                 return await ctx.send(f"`✅ unloaded {extension}`")
             except Exception:
-                try:
-                    await ctx.message.add_reaction('‼️')
-                except:
-                    pass
-                return await ctx.author.send(f"""```py\n{traceback.format_exc()}\n```""")
+                em = discord.Embed(title="Error", description=f"""```py\n{traceback.format_exc()}\n```""", color=discord.Color.red())
+                msg = await ctx.author.send(embed=em)
+                em2 = discord.Embed(title="", description=f"(Error has been sent to your dms)[{msg.jump_url}]", color=discord.Color.green())
+                return await ctx.send(embed=em2)
         try:
             await self.bot.unload_extension(extension)
             text = "reloaded"
@@ -118,19 +110,24 @@ class devcmd(commands.Cog):
             text = "loaded"
         try:
             await self.bot.load_extension(extension)
-            await ctx.send(f"`✅ {text} {extension}`")
+            em = discord.Embed(title="", description=f"`✅ {text} {extension}`", color=discord.Color.green())
+            await ctx.send(embed=em)
         except Exception:
             error = traceback.format_exc()
-            error = error.replace(os.getenv("NAME"), "")
+            error = error.replace(os.getenv("NAME"), "<my name>")
             try:
-                await ctx.message.add_reaction('‼️')
-            except:
-                pass
-            try:
-                await ctx.author.send(f"""```py\n{error}\n```""")
+                em = discord.Embed(title="Error", description=f"```py\n{error}\n```", color=discord.Color.red())
+                msg = await ctx.author.send(embed=em)
+                em2 = discord.Embed(title="", description=f"(Error has been sent to your dms)[{msg.jump_url}]", color=discord.Color.orange())
+                await ctx.send(embed=em2)
+            except discord.errors.Forbidden:
+                em = discord.Embed(title="Error", description=f"```py\n{error}\n```", color=discord.Color.red())
+                em2 = discord.Embed(title="", description=f"I am unable to send you a dm, so error will be sent here.", color=discord.Color.red())
+                await ctx.send(embeds=[em, em2])
             except:
                 paste = await mystbin_client.post(error, syntax="python")
-                await ctx.send(f"Error is too long to send here, so error was sent to {str(paste)}")
+                em = discord.Embed(title="Error", description=f"(Error is too long to send here, so it was sent here)[{str(paste)}]", color=discord.Color.red())
+                await ctx.send(embed=em)
 
     @_devcmd.command(name="source", aliases=['src'])
     @is_owner()
@@ -231,13 +228,8 @@ Works like:
                 pass
             else:
                 ret += 1
-
-        await ctx.send(f"Synced the tree to {ret}/{len(guilds)}.")
-
-    @_devcmd.command(name="github")
-    @is_owner()
-    async def _dc_github(self, ctx):
-        await ctx.reply('https://github.com/cibere/devcmd')
+        em = discord.Embed(description=f"Synced the tree to {ret}/{len(guilds)}", color=discord.Color.green())
+        await ctx.send(embed=em)
     
     @_devcmd.command(name="disable")
     @is_owner()
@@ -252,7 +244,7 @@ Works like:
             return await ctx.send(embed=em)
         command.update(enabled=False)
         em.description = f"Disabled {command.name}"
-        em.color = discord.Color.darker_gray()
+        em.color = discord.Color.green()
         await ctx.send(embed=em)
 
     @_devcmd.command(name="enable")
@@ -279,19 +271,17 @@ Works like:
         subprocess.run(f"pip install git+{url}", shell=True)
         await self.bot.unload_extension('devcmd')
         await self.bot.load_extension('devcmd')
-        em.description = f"Successfully updated to devcmd! Run `devcmd version` for the new version"
+        em.description = f"Successfully updated devcmd!"
+        em.color = discord.Color.green()
+        em.set_footer(text="Run `devcmd version` for the new version")
         await ctx.send(embed=em)
         
 
     @_devcmd.command(name="version")
     @is_owner()
     async def _dc_version(self, ctx):
-        await ctx.send(f"Running devcmd version {VERSION}")
+        em = discord.Embed(description=f"Running Devcmd Version {VERSION}", color=discord.Color.blue())
 
-    @_devcmd.command(name="docs")
-    @is_owner()
-    async def _dc_docs(self, ctx):
-        await ctx.send(f"https://gist.github.com/cibere/da22060df5ab6282b452e972f08d269b")
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

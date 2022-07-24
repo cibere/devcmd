@@ -77,12 +77,14 @@ class infoDropdown(discord.ui.Select):
 class infoDropdownView(discord.ui.View):
     def __init__(self, owner, docDef=False, gitDef=False, colorDef=False):
         super().__init__(timeout=None)
-
+        self.owner = owner
         self.x = infoDropdown(owner, docDef, gitDef, colorDef)
         self.add_item(self.x)
     
     @discord.ui.button(label='X', style=discord.ButtonStyle.red, row=2)
     async def _exit(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if interaction.user.id != self.owner.id:
+            return await interaction.response.send_message(f"This is for my owner(s) only.", ephemeral=True)
         self.x.disabled = True
         self._exit.disabled = True
         await interaction.response.edit_message(view=self)

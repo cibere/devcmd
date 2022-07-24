@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-0.0.5.7"
+VERSION = "beta-0.0.5.8"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -75,10 +75,10 @@ class infoDropdown(discord.ui.Select):
         await interaction.response.edit_message(embed=em, view=view)
 
 class infoDropdownView(discord.ui.View):
-    def __init__(self, owner, options):
+    def __init__(self, owner, docDef=False, gitDef=False, colorDef=False):
         super().__init__(timeout=None)
 
-        self.add_item(infoDropdown(owner, options))
+        self.add_item(infoDropdown(owner, docDef, gitDef, colorDef))
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
@@ -355,6 +355,7 @@ Works like:
     @is_owner()
     async def _dc_version(self, ctx):
         em = discord.Embed(description=f"Running Devcmd Version {VERSION}", color=discord.Color.blue())
+        await ctx.send(embed=em)
 
 
 async def setup(bot):

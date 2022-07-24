@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.4"
+VERSION = "beta-1.0.0.5"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -377,7 +377,7 @@ Works like:
         if "env" in file:
             raise BadArgument(f'"{file}" is not a safe file')
         try:
-            with open(file, 'r') as f:
+            with open(file, 'r', encoding="utf-8") as f:
                 code = str(f.read())
         except FileNotFoundError:
             raise BadArgument(f'"{file}" is not a valid file')

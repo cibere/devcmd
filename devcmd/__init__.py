@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-0.0.5.11"
+VERSION = "beta-0.0.5.12"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -78,11 +78,14 @@ class infoDropdownView(discord.ui.View):
     def __init__(self, owner, docDef=False, gitDef=False, colorDef=False):
         super().__init__(timeout=None)
 
-        self.add_item(infoDropdown(owner, docDef, gitDef, colorDef))
+        self.x = infoDropdown(owner, docDef, gitDef, colorDef)
+        self.add_item(self.x)
     
-    @discord.ui.button(label='X', style=discord.ButtonStyle.red)
+    @discord.ui.button(label='X', style=discord.ButtonStyle.red, row=2)
     async def _exit(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.message.delete()
+        self.x.disabled = True
+        self._exit.disabled = True
+        await interaction.response.edit_message(view=self)
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
@@ -341,18 +344,19 @@ Works like:
         em.color = discord.Color.green()
         await ctx.send(embed=em)
 
-    @_devcmd.command(name="update")
+    @_devcmd.command(name="update", aliases=['update-msg'])
     @is_owner()
     async def _dc_update(self, ctx):
-        em=discord.Embed(title="Updating devcmd")
+        if ctx.invoked_with == "update-msg":
+            em=discord.Embed(title="Updating devcmd")
+            em.description = f"Successfully updated devcmd to version {VERSION}"
+            em.color = discord.Color.green()
+            return await ctx.send(embed=em)
+        
         await ctx.channel.typing()
         subprocess.run(f"pip install git+{url}", shell=True)
         await self.bot.unload_extension('devcmd')
         await self.bot.load_extension('devcmd')
-        em.description = f"Successfully updated devcmd!"
-        em.color = discord.Color.green()
-        em.set_footer(text="Run `devcmd version` for the new version")
-        await ctx.send(embed=em)
         
 
     @_devcmd.command(name="version")

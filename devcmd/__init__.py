@@ -127,7 +127,7 @@ class devcmd(commands.Cog):
         else:
             raise discord.ext.commands.CommandNotFound(f'Command "{ctx.invoked_with} {extra_args}" is not found')
 
-    @_devcmd.command(name="info", alises=['about', 'github', 'docs'])
+    @_devcmd.command(name="info", aliases=['about', 'github', 'docs'])
     @is_owner()
     async def _dc_info(self, ctx):
         em = discord.Embed(title="Please make a selection", color=discord.Color.blue())

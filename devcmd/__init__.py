@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.3"
+VERSION = "beta-1.0.0.4"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -384,7 +384,7 @@ Works like:
         
         await ctx.send(file=discord.File(
             filename=file,
-            fp=io.BytesIO(code)))
+            fp=io.BytesIO(code.encode('utf-8'))))
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

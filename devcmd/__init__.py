@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-0.0.5.8"
+VERSION = "beta-0.0.5.9"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -65,13 +65,13 @@ class infoDropdown(discord.ui.Select):
         val = self.values[0]
         if val == "doc":
             em = masterEmbeds['doc']
-            view=infoDropdown(self.owner, docDef=True)
+            view=infoDropdownView(self.owner, docDef=True)
         elif val == "git":
             em = masterEmbeds['git']
-            view=infoDropdown(self.owner, gitDef=True)
+            view=infoDropdownView(self.owner, gitDef=True)
         elif val == "color":
             em = masterEmbeds['color']
-            view=infoDropdown(self.owner, colorDef=True)
+            view=infoDropdownView(self.owner, colorDef=True)
         await interaction.response.edit_message(embed=em, view=view)
 
 class infoDropdownView(discord.ui.View):

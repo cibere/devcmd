@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.5"
+VERSION = "beta-1.0.0.6"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -122,6 +122,7 @@ class devcmd(commands.Cog):
     @commands.group(hidden=True, invoke_without_command=True, name="devcmd", aliases=['dev', 'dc'])
     @is_owner()
     async def _devcmd(self, ctx, *, extra_args=None):
+        """the devcmd base group"""
         if extra_args == None:
             await ctx.send("Invalid Syntax")
         else:
@@ -130,12 +131,14 @@ class devcmd(commands.Cog):
     @_devcmd.command(name="info", aliases=['about', 'github', 'docs'])
     @is_owner()
     async def _dc_info(self, ctx):
+        """Gives you a view that gives you information about devcmd"""
         em = discord.Embed(title="Please make a selection", color=discord.Color.blue())
         await ctx.send(embed=em, view=infoDropdownView(ctx.author))
 
     @_devcmd.command(aliases=['logs'], name="audit")
     @is_owner()
     async def _cd_audit(self, ctx:commands.Context, num:int):
+        """Shows the last amount of audit log entries"""
         await ctx.channel.typing()
         audits = []
         async for entry in ctx.guild.audit_logs(limit=num):
@@ -152,6 +155,7 @@ class devcmd(commands.Cog):
     @_devcmd.command(aliases=['clean', 'clear'], name="purge")
     @is_owner()
     async def _dc_purge(self, ctx, num:int):
+        """Purges the specifies amount of messages"""
         num += 1
         deleted = await ctx.channel.purge(limit=num)
         embed=discord.Embed(color=discord.Color.green(), description=f"Deleted {len(deleted)} messages")
@@ -160,6 +164,7 @@ class devcmd(commands.Cog):
     @_devcmd.command(name="restart")
     @is_owner()
     async def _dc_restart(self, ctx):
+        """Restarts the bot"""
         await ctx.channel.typing()
         embed=discord.Embed(color=discord.Color.green(), title="Restarting now...")
         await ctx.send(embed=embed)
@@ -168,6 +173,7 @@ class devcmd(commands.Cog):
     @_devcmd.command(name="shutdown", aliases=['logout'])
     @is_owner()
     async def _dc_shutdown(self, ctx):
+        """Shutsdown/logs out the bot"""
         await ctx.channel.typing()
         embed=discord.Embed(color=discord.Color.green(), title="Logging out...")
         await ctx.reply(embed=embed)
@@ -176,6 +182,7 @@ class devcmd(commands.Cog):
     @_devcmd.command(name="load", aliases=['reload', 'unload'])
     @is_owner()
     async def _dc_load(self, ctx, extension:str=None):
+        """Loads/reloads/unloads the specified extension"""
         await ctx.channel.typing()
         if ctx.invoked_with == "reload" and extension == None:
             extension = "devcmd"
@@ -214,30 +221,12 @@ class devcmd(commands.Cog):
             except:
                 paste = await mystbin_client.post(error, syntax="python")
                 em = discord.Embed(title="Error", description=f"(Error is too long to send here, so it was sent here)[{str(paste)}]", color=discord.Color.red())
-                await ctx.send(embed=em)
-
-    @_devcmd.command(name="source", aliases=['src'])
-    @is_owner()
-    async def _dc_source(self, ctx, *, command_name: str):
-        await ctx.channel.typing()
-        command = self.bot.get_command(command_name)
-        if not command:
-            await ctx.send(f"Command `{command_name}` not found")
-            return
-        try:
-            source_lines, _ = inspect.getsourcelines(command.callback)
-        except:
-            await ctx.send(f"I could not find the source code for `{command}`.")
-            return
-        source_text = ''.join(source_lines)
-        await ctx.send(file=discord.File(
-            filename="source.py",
-            fp=io.BytesIO(source_text.encode('utf-8'))))
-    
+                await ctx.send(embed=em)    
 
     @_devcmd.command(name="eval", aliases=['```py', '```', 'py', 'python', 'run', 'exec', 'execute'])
     @is_owner()
     async def _dc_eval(self, ctx, *,code:CodeBlock):
+        """Evaluates the given code"""
         await ctx.channel.typing()
         env={
             "ctx":ctx,
@@ -289,6 +278,7 @@ Works like:
     @is_owner()
     @commands.guild_only()
     async def _dc_sync(self, ctx, guilds: Greedy[discord.Object], spec: Optional[Literal["~", "*", "^"]] = None):
+        """Syncs app_commands to the given thing"""
         if not guilds:
             if spec == "~":
                 synced = await ctx.bot.tree.sync(guild=ctx.guild)
@@ -321,6 +311,7 @@ Works like:
     @_devcmd.command(name="disable")
     @is_owner()
     async def _dc_disable(self, ctx, raw: str):
+        """Disables a command"""
         em=discord.Embed()
         command = self.bot.get_command(raw)
         if command == None:
@@ -337,6 +328,7 @@ Works like:
     @_devcmd.command(name="enable")
     @is_owner()
     async def _dc_enable(self, ctx, raw: str):
+        """Enables a command"""
         command = self.bot.get_command(raw)
         if command == None:
             raise BadArgument(f'Command "{raw}" not found')
@@ -349,6 +341,7 @@ Works like:
     @_devcmd.command(name="update", aliases=['update-msg'])
     @is_owner()
     async def _dc_update(self, ctx):
+        """Lets you update your devcmd"""
         if ctx.invoked_with == "update-msg":
             em=discord.Embed(title="Updating devcmd")
             em.description = f"Successfully updated devcmd to version {VERSION}"
@@ -367,8 +360,28 @@ Works like:
     @_devcmd.command(name="version")
     @is_owner()
     async def _dc_version(self, ctx):
+        """Sends the current version of devcmd you are running"""
         em = discord.Embed(description=f"Running Devcmd Version {VERSION}", color=discord.Color.blue())
         await ctx.send(embed=em)
+
+    @_devcmd.command(name="source", aliases=['src'])
+    @is_owner()
+    async def _dc_source(self, ctx, *, command_name: str):
+        """Gives the source code for the specified command"""
+        await ctx.channel.typing()
+        command = self.bot.get_command(command_name)
+        if not command:
+            await ctx.send(f"Command `{command_name}` not found")
+            return
+        try:
+            source_lines, _ = inspect.getsourcelines(command.callback)
+        except:
+            await ctx.send(f"I could not find the source code for `{command}`.")
+            return
+        source_text = ''.join(source_lines)
+        await ctx.send(file=discord.File(
+            filename="source.py",
+            fp=io.BytesIO(source_text.encode('utf-8'))))
 
     @_devcmd.command(name="file")
     @is_owner()
@@ -382,8 +395,10 @@ Works like:
         except FileNotFoundError:
             raise BadArgument(f'"{file}" is not a valid file')
         
+        name = file.split['/']
+        name = name[len(name) - 1]
         await ctx.send(file=discord.File(
-            filename=file,
+            filename=name,
             fp=io.BytesIO(code.encode('utf-8'))))
 
 async def setup(bot):

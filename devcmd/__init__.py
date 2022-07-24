@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.2"
+VERSION = "beta-1.0.0.3"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -374,7 +374,8 @@ Works like:
     @is_owner()
     async def _dc_file(self, ctx, file:str):
         """Sends the code for the specified file"""
-        
+        if "env" in file:
+            raise BadArgument(f'"{file}" is not a safe file')
         try:
             with open(file, 'r') as f:
                 code = str(f.read())
@@ -383,7 +384,7 @@ Works like:
         
         await ctx.send(file=discord.File(
             filename=file,
-            fp=io.BytesIO(code.encode('utf-8'))))
+            fp=io.BytesIO(code)))
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

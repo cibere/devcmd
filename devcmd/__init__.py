@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.0"
+VERSION = "beta-1.0.0.1"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -370,6 +370,17 @@ Works like:
         em = discord.Embed(description=f"Running Devcmd Version {VERSION}", color=discord.Color.blue())
         await ctx.send(embed=em)
 
+    @_devcmd.command(name="file")
+    @is_owner()
+    async def _dc_file(self, ctx, file:str):
+        """Sends the code for the specified file"""
+        
+        with open(file, 'r') as f:
+            code = str(f.read())
+        
+        await ctx.send(file=discord.File(
+            filename="source.py",
+            fp=io.BytesIO(code.encode('utf-8'))))
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

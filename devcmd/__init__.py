@@ -46,39 +46,32 @@ masterEmbeds = {
     )
 }
 
-masterOptions = {
-    'doc':[
-            discord.SelectOption(label='Docs', description='Gives you the devcmd docs', value='doc', default=True),
-            discord.SelectOption(label='Github', description='Gives you the devcmd github page', value='git'),
-            discord.SelectOption(label='Embed Colors', description='Gives you info about the coloring of embeds', value='color'),
-    ],
-    'git':[
-            discord.SelectOption(label='Docs', description='Gives you the devcmd docs', value='doc'),
-            discord.SelectOption(label='Github', description='Gives you the devcmd github page', value='git', default=True),
-            discord.SelectOption(label='Embed Colors', description='Gives you info about the coloring of embeds', value='color'),
-    ],
-    'color':[
-            discord.SelectOption(label='Docs', description='Gives you the devcmd docs', value='doc'),
-            discord.SelectOption(label='Github', description='Gives you the devcmd github page', value='git'),
-            discord.SelectOption(label='Embed Colors', description='Gives you info about the coloring of embeds', value='color', default=True),
-    ],
-    'normal':[
-            discord.SelectOption(label='Docs', description='Gives you the devcmd docs', value='doc'),
-            discord.SelectOption(label='Github', description='Gives you the devcmd github page', value='git'),
-            discord.SelectOption(label='Embed Colors', description='Gives you info about the coloring of embeds', value='color'),
-    ],
-}
-
 class infoDropdown(discord.ui.Select):
-    def __init__(self, owner, options):
+    def __init__(self, owner, docDef=False, gitDef=False, colorDef=False):
         self.owner = owner
+    
+        options = [
+            discord.SelectOption(label='Docs', description='Gives you the devcmd docs', value='doc'),
+            discord.SelectOption(label='Github', description='Gives you the devcmd github page', value='git'),
+            discord.SelectOption(label='Embed Colors', description='Gives you info about the coloring of embeds', value='color'),
+        ]
 
         super().__init__(placeholder='Choose a option', min_values=1, max_values=1, options=options)
 
     async def callback(self, interaction: discord.Interaction):
         if interaction.user.id != self.owner.id:
             return await interaction.response.send_message(f"This is for my owner(s) only.", ephemeral=True)
-        await interaction.response.edit_message(embed=masterEmbeds[self.values[0]], view=infoDropdown(self.owner, masterOptions[self.values[0]]))
+        val = self.values[0]
+        if val == "doc":
+            em = masterEmbeds['doc']
+            view=infoDropdown(self.owner, docDef=True)
+        elif val == "git":
+            em = masterEmbeds['git']
+            view=infoDropdown(self.owner, gitDef=True)
+        elif val == "color":
+            em = masterEmbeds['color']
+            view=infoDropdown(self.owner, colorDef=True)
+        await interaction.response.edit_message(embed=em, view=view)
 
 class infoDropdownView(discord.ui.View):
     def __init__(self, owner, options):
@@ -128,7 +121,7 @@ class devcmd(commands.Cog):
     @is_owner()
     async def _dc_info(self, ctx):
         em = discord.Embed(title="Please make a selection", color=discord.Color.blue())
-        await ctx.send(embed=em, view=infoDropdownView(ctx.author, masterOptions['normal']))
+        await ctx.send(embed=em, view=infoDropdownView(ctx.author))
 
     @_devcmd.command(aliases=['logs'], name="audit")
     @is_owner()

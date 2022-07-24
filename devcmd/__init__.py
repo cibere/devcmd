@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-0.0.5.12"
+VERSION = "beta-1.0.0.0"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {

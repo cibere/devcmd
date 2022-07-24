@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-0.0.5.10"
+VERSION = "beta-0.0.5.11"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -52,9 +52,9 @@ class infoDropdown(discord.ui.Select):
         self.owner = owner
     
         options = [
-            discord.SelectOption(label='Docs', description='Gives you the devcmd docs', value='doc'),
-            discord.SelectOption(label='Github', description='Gives you the devcmd github page', value='git'),
-            discord.SelectOption(label='Embed Colors', description='Gives you info about the coloring of embeds', value='color'),
+            discord.SelectOption(label='Docs', description='Gives you the devcmd docs', value='doc', default=docDef),
+            discord.SelectOption(label='Github', description='Gives you the devcmd github page', value='git', default=gitDef),
+            discord.SelectOption(label='Embed Colors', description='Gives you info about the coloring of embeds', value='color', default=colorDef),
         ]
 
         super().__init__(placeholder='Choose a option', min_values=1, max_values=1, options=options)

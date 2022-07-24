@@ -44,7 +44,7 @@ masterEmbeds = {
 > __A Error has been sent to your dms Embed__
 """,
         color=discord.Color.blue()
-    )
+    ),
 }
 
 class infoDropdown(discord.ui.Select):
@@ -79,6 +79,10 @@ class infoDropdownView(discord.ui.View):
         super().__init__(timeout=None)
 
         self.add_item(infoDropdown(owner, docDef, gitDef, colorDef))
+    
+    @discord.ui.button(label='X', style=discord.ButtonStyle.red)
+    async def _exit(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.message.delete()
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):

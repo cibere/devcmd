@@ -359,6 +359,9 @@ Works like:
         subprocess.run(f"pip install git+{url}", shell=True)
         await self.bot.unload_extension('devcmd')
         await self.bot.load_extension('devcmd')
+        msg = ctx.message
+        msg.content += "-msg"
+        await self.bot.process_commands(msg) 
         
 
     @_devcmd.command(name="version")

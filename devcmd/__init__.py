@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-0.0.5.6"
+VERSION = "beta-0.0.5.7"
 
 masterEmbeds = {
     'doc':discord.Embed(

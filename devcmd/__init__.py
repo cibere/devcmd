@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-0.0.5.9"
+VERSION = "beta-0.0.5.10"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -25,7 +25,7 @@ masterEmbeds = {
     ),
     'git':discord.Embed(
         title="Devcmd Github",
-        description="""(Stable/Main Version)[https://github.com/cibere/devcmd]\n(Development/Beta Version)[https://github.com/cibere/devcmd/tree/beta]""",
+        description="""[Stable/Main Version](https://github.com/cibere/devcmd)\n[Development/Beta Version](https://github.com/cibere/devcmd/tree/beta)""",
         color=discord.Color.blue()
     ),
     'color':discord.Embed(

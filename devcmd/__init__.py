@@ -375,11 +375,14 @@ Works like:
     async def _dc_file(self, ctx, file:str):
         """Sends the code for the specified file"""
         
-        with open(file, 'r') as f:
-            code = str(f.read())
+        try:
+            with open(file, 'r') as f:
+                code = str(f.read())
+        except FileNotFoundError:
+            raise BadArgument(f'"{file}" is not a valid file')
         
         await ctx.send(file=discord.File(
-            filename="source.py",
+            filename=file,
             fp=io.BytesIO(code.encode('utf-8'))))
 
 async def setup(bot):

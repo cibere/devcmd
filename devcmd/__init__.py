@@ -15,6 +15,7 @@ load_dotenv()
 
 mystbin_client = mystbin.Client()
 VERSION = "beta-0.0.5.7"
+url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
     'doc':discord.Embed(
@@ -341,10 +342,6 @@ Works like:
     async def _dc_update(self, ctx):
         em=discord.Embed(title="Updating devcmd")
         await ctx.channel.typing()
-        if VERSION.startswith("beta"):
-            url = "https://github.com/cibere/devcmd"
-        else:
-            url = f"https://github.com/cibere/devcmd@beta"
         subprocess.run(f"pip install git+{url}", shell=True)
         await self.bot.unload_extension('devcmd')
         await self.bot.load_extension('devcmd')

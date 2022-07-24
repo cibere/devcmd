@@ -31,7 +31,7 @@ Devcmd Docs
 > ```
 > 2. Load the extension devcmd
 > ```
-> bot.load_extension('devcmd')
+> await bot.load_extension('devcmd')
 > ```
 
 ## Devcmd Versions:

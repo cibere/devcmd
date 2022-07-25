@@ -439,15 +439,16 @@ Works like:
                 lines = code.splitlines()
                 for line in lines:
                     if line.replace(" ", "").replace("  ", "").startswith("def"):
-                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)}`\nFile: `{xname}`\nReason: non async function found", color=discord.Color.blue())
-                        await ctx.send(embed=em)
-                        cases += 1
+                        if line.replace(" ", "").replace("  ", "").startswith("def__init__") == False:
+                            em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line) +1}`\nFile: `{xname}`\nReason: non async function found", color=discord.Color.blue())
+                            await ctx.send(embed=em)
+                            cases += 1
                     if "import requests" in line:
-                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)}`\nFile: `{xname}`\nReason: importing `requests`, which is a blocking", color=discord.Color.blue())
+                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)+1}`\nFile: `{xname}`\nReason: importing `requests`, which is a blocking", color=discord.Color.blue())
                         await ctx.send(embed=em)
                         cases += 1
                     if "from requests" in line:
-                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)}`\nFile: `{xname}`\nReason: importing `requests`, which is a blocking module", color=discord.Color.blue())
+                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)+1}`\nFile: `{xname}`\nReason: importing `requests`, which is a blocking module", color=discord.Color.blue())
                         await ctx.send(embed=em)
                         cases += 1
                 await ctx.send(f"finished checking {xname}")

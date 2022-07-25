@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.12"
+VERSION = "beta-1.0.0.13"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -433,7 +433,7 @@ Works like:
             for name in list_of_files:
                 with open(name, 'r', encoding='utf-8') as f:
                     code = str(f.read())
-                lines = code.splitlines
+                lines = code.splitlines()
                 for line in lines:
                     if line.replace(" ", "").replace("  ", "").startswith("def"):
                         em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{name}`", color=discord.Color.blue())

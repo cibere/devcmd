@@ -1,3 +1,4 @@
+from http.client import HTTPException
 from discord.ext import commands
 from discord.ext.commands import *
 import discord
@@ -14,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.9"
+VERSION = "beta-1.0.0.10"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -182,37 +183,12 @@ class devcmd(commands.Cog):
     @_devcmd.command(name="load", aliases=['reload', 'unload'])
     @is_owner()
     async def _dc_load(self, ctx, extension:str=None):
-        """Loads/reloads/unloads the specified extension, Use 'all' to apply to all cogs. (not load)"""
+        """Loads/reloads/unloads the specified extension"""
         await ctx.channel.typing()
         if ctx.invoked_with == "reload" and extension == None:
             extension = "devcmd"
         elif extension == None:
             raise BadArgument(f'"Extension" is a required argument')
-        if extension == "all":
-            if ctx.invoked_with == "unload":
-                for cog in list(self.bot.cogs.keys()):
-                    await self.bot.unload_extension(str(cog))
-                em = discord.Embed(title="", description=f"`✅ unloaded all cogs`", color=discord.Color.green())
-                return await ctx.send(embed=em)
-            elif ctx.invoked_with == "reload":
-                errors = []
-                for cog in list(self.bot.cogs.keys()):
-                    try:
-                        await self.bot.unload_extension(str(cog))
-                        await self.bot.load_extension(str(cog))
-                    except Exception:
-                        error = traceback.format_exc().replace(os.getenv("NAME"), "<my name>")
-                        errors.append(discord.Embed(title=f"Error while reloading {str(cog)}", color=discord.Color.red(), description=error))
-                if errors == []:
-                    em = discord.Embed(title="", description=f"`✅ reloaded all cogs`", color=discord.Color.green())
-                    return await ctx.send(embed=em)
-                else:
-                    errors = [errors[i:i+5] for i in range(0, len(errors), 10)]
-                    for err in errors:
-                        await ctx.send(embeds=err)
-                return
-            else:
-                raise BadArgument(f'You can only use "all" for "reload" and "unload", not "load"')
         if ctx.invoked_with == "unload":
             try:
                 await self.bot.unload_extension(extension)
@@ -279,20 +255,35 @@ class devcmd(commands.Cog):
                 if os.getenv("NAME") in msg.lower():
                     msg = msg.replace(os.getenv("NAME"), "<my name>")
                 errorEm = discord.Embed(title="Eval Error", description=msg, color=discord.Color.red())
-                await ctx.send(embed=errorEm)
+                try:
+                    await ctx.send(embed=errorEm)
+                except:
+                    paste = await mystbin_client.post(msg)
+                    errorEm = discord.Embed(title="Error", description=f"[Your error was too long, so I sent it here]({str(paste)})", color=discord.Color.red())
+                    await ctx.send(embed=errorEm)
                 return
             if res:
-                msg = f"```py\n{res}\n#output\n{otp}\n```"
+                msg = f"```py\n{res}\n{otp}\n```"
                 if os.getenv("NAME") in msg.lower():
                     msg = msg.replace(os.getenv("NAME"), "<my name>")
                 returnedEm = discord.Embed(title="Returned", description=msg, color=discord.Color.green())
-                await ctx.send(embed=returnedEm)
+                try:
+                    await ctx.send(embed=returnedEm)
+                except:
+                    paste = await mystbin_client.post(msg)
+                    returnedEm = discord.Embed(title="Returned", description=f"[Your output was too long, so I sent it here]({str(paste)})", color=discord.Color.green())
+                    await ctx.send(embed=returnedEm)
             else:
                 msg = f"```py\n{otp}\n```"
                 if os.getenv("NAME") in msg.lower():
                     msg = msg.replace(os.getenv("NAME"), "<my name>")
                 outputEm = discord.Embed(title="Output", description=msg, color=discord.Color.green())
-                await ctx.send(embed=outputEm)
+                try:
+                    await ctx.send(embed=outputEm)
+                except:
+                    paste = await mystbin_client.post(msg)
+                    outputEm = discord.Embed(title="Output", description=f"[Your output was too long, so I sent it here]({str(paste)})", color=discord.Color.green())
+                    await ctx.send(embed=outputEm)
 
     @_devcmd.command(name="sync", help="""
 Works like:
@@ -426,6 +417,14 @@ Works like:
         await ctx.send(file=discord.File(
             filename=name,
             fp=io.BytesIO(code.encode('utf-8'))))
+
+    @_devcmd.command(name="blocking", aliases=['blocking-code'])
+    async def _dc_blocking(self, ctx):
+        """Searches your code for blocking code"""
+        em = discord.Embed(description="Searching your code for blocking code... this might take a while")
+        await ctx.send(embed=em)
+        await ctx.channel.typing()
+        
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

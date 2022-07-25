@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.17"
+VERSION = "beta-1.0.0.18"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -429,7 +429,8 @@ Works like:
             cases = 0
             for root, dirs, files in os.walk(path):
                 for file in files:
-                    list_of_files.append(os.path.join(root,file))
+                    if file.endswith(".py"):
+                        list_of_files.append(os.path.join(root,file))
             for name in list_of_files:
                 xname = name.replace(os.getenv("NAME"), "<my name>")
                 await ctx.send(f"started checking {xname}")

@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.6"
+VERSION = "beta-1.0.0.7"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -182,16 +182,40 @@ class devcmd(commands.Cog):
     @_devcmd.command(name="load", aliases=['reload', 'unload'])
     @is_owner()
     async def _dc_load(self, ctx, extension:str=None):
-        """Loads/reloads/unloads the specified extension"""
+        """Loads/reloads/unloads the specified extension, Use 'all' to apply to all cogs. (not load)"""
         await ctx.channel.typing()
         if ctx.invoked_with == "reload" and extension == None:
             extension = "devcmd"
         elif extension == None:
             raise BadArgument(f'"Extension" is a required argument')
+        if extension == "all":
+            if ctx.invoked_with == "unload":
+                for cog in self.bot.cogs:
+                    await self.bot.unload_extension(str(cog))
+                em = discord.Embed(title="", description=f"`✅ unloaded all cogs`", color=discord.Color.green())
+                return await ctx.send(embed=em)
+            elif ctx.invoked_with == "reload":
+                errors = []
+                for cog in self.bot.cogs:
+                    try:
+                        await self.bot.unload_extension(str(cog))
+                        await self.bot.load_extension(str(cog))
+                    except Exception:
+                        errors.append(discord.Embed(title=f"Error while reloading {str(cog)}", color=discord.Color.red(), description=str(traceback.format_exc())))
+                if errors == []:
+                    em = discord.Embed(title="", description=f"`✅ reloaded all cogs`", color=discord.Color.green())
+                    return await ctx.send(embed=em)
+                else:
+                    errors = [errors[i:i+5] for i in range(0, len(errors), 10)]
+                    for err in errors:
+                        await ctx.send(embeds=err)
+            else:
+                raise BadArgument(f'You can only use "all" for "reload" and "unload", not "load"')
         if ctx.invoked_with == "unload":
             try:
                 await self.bot.unload_extension(extension)
-                return await ctx.send(f"`✅ unloaded {extension}`")
+                em = discord.Embed(title="", description=f"`✅ unloaded {extension}`", color=discord.Color.green())
+                return await ctx.send(embed=em)
             except Exception:
                 em = discord.Embed(title="Error", description=f"""```py\n{traceback.format_exc()}\n```""", color=discord.Color.red())
                 msg = await ctx.author.send(embed=em)
@@ -395,7 +419,7 @@ Works like:
         except FileNotFoundError:
             raise BadArgument(f'"{file}" is not a valid file')
         
-        name = file.split['/']
+        name = file.split('/')
         name = name[len(name) - 1]
         await ctx.send(file=discord.File(
             filename=name,

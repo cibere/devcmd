@@ -423,13 +423,10 @@ Works like:
         em = discord.Embed(description="Searching your code for blocking code... this might take a while")
         await ctx.send(embed=em)
         allowedLibs = ['discord', 'os', 'sys', 'traceback', 'textwrap', 'io', 'mystbin', 'typing', 'dotenv', 'aiohttp', 'difflib', 'gtts', 'datetime', 'colorama', 'numpy']
-        try:
-            with open('libs.devcmd.txt', 'r') as f:
-                x = str(f.read)
-            for y in x.splitlines():
-                allowedLibs.append(y)
-        except:
-            pass
+        with open('libs.devcmd.txt', 'r') as f:
+            x = str(f.read)
+        for y in x.splitlines():
+            allowedLibs.append(y)
         async with ctx.channel.typing():
             path =os.getcwd()
             list_of_files = []

@@ -431,20 +431,21 @@ Works like:
                 for file in files:
                     list_of_files.append(os.path.join(root,file))
             for name in list_of_files:
+                xname = name.replace(os.getenv("NAME"), "<my name>")
                 with open(name, 'r', encoding='utf-8') as f:
                     code = str(f.read())
                 lines = code.splitlines()
                 for line in lines:
                     if line.replace(" ", "").replace("  ", "").startswith("def"):
-                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{name}`", color=discord.Color.blue())
+                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{xname}`", color=discord.Color.blue())
                         await ctx.send(embed=em)
                         cases += 1
                     if "import requests" in line:
-                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{name}`", color=discord.Color.blue())
+                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{xname}`", color=discord.Color.blue())
                         await ctx.send(embed=em)
                         cases += 1
                     if "from requests" in line:
-                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{name}`", color=discord.Color.blue())
+                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{xname}`", color=discord.Color.blue())
                         await ctx.send(embed=em)
                         cases += 1
                 await ctx.send(f"finished checking {name}")

@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.20"
+VERSION = "beta-1.0.0.21"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -422,7 +422,14 @@ Works like:
         """Searches your code for blocking code"""
         em = discord.Embed(description="Searching your code for blocking code... this might take a while")
         await ctx.send(embed=em)
-        allowedLibs = ['discord', 'os', 'sys', 'traceback', 'textwrap', 'io', 'mystbin', 'typing', 'dotenv', 'aiohttp']
+        allowedLibs = ['discord', 'os', 'sys', 'traceback', 'textwrap', 'io', 'mystbin', 'typing', 'dotenv', 'aiohttp', 'difflib', 'gtts', 'datetime', 'colorama', 'numpy']
+        try:
+            with open('libs.devcmd.txt', 'r') as f:
+                x = str(f.read)
+            for y in x.splitlines():
+                allowedLibs.append(y)
+        except:
+            pass
         async with ctx.channel.typing():
             path =os.getcwd()
             list_of_files = []
@@ -444,7 +451,7 @@ Works like:
                                 await ctx.send(embed=em)
                                 cases += 1
                     if line.startswith("import") or line.startswith("from"):
-                        lib = line.split(" ")[1].split(".")[0]
+                        lib = line.split(" ")[1].split(".")[0].replace(",", "")
                         if lib not in allowedLibs:
                             em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)+1}`\nFile: `{xname}`\nReason: importing `{lib}`, which is not a whitelisted module", color=discord.Color.blue())
                             await ctx.send(embed=em)

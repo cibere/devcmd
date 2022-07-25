@@ -1,4 +1,3 @@
-from http.client import HTTPException
 from discord.ext import commands
 from discord.ext.commands import *
 import discord
@@ -15,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.19"
+VERSION = "beta-1.0.0.20"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -423,6 +422,7 @@ Works like:
         """Searches your code for blocking code"""
         em = discord.Embed(description="Searching your code for blocking code... this might take a while")
         await ctx.send(embed=em)
+        allowedLibs = ['discord', 'os', 'sys', 'traceback', 'textwrap', 'io', 'mystbin', 'typing', 'dotenv', 'aiohttp']
         async with ctx.channel.typing():
             path =os.getcwd()
             list_of_files = []
@@ -433,25 +433,23 @@ Works like:
                         list_of_files.append(os.path.join(root,file))
             for name in list_of_files:
                 xname = name.replace(os.getenv("NAME"), "<my name>")
-                await ctx.send(f"started checking {xname}")
                 with open(name, 'r', encoding='utf-8') as f:
                     code = str(f.read())
                 lines = code.splitlines()
                 for line in lines:
                     if line.replace(" ", "").replace("  ", "").startswith("def"):
                         if line.replace(" ", "").replace("  ", "").startswith("def__init__") == False:
-                            em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line) +1}`\nFile: `{xname}`\nReason: non async function found", color=discord.Color.blue())
+                            if line.startswith("def "):
+                                em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line) +1}`\nFile: `{xname}`\nReason: non async function found", color=discord.Color.blue())
+                                await ctx.send(embed=em)
+                                cases += 1
+                    if line.startswith("import") or line.startswith("from"):
+                        lib = line.split(" ")[1].split(".")[0]
+                        if lib not in allowedLibs:
+                            em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)+1}`\nFile: `{xname}`\nReason: importing `{lib}`, which is not a whitelisted module", color=discord.Color.blue())
                             await ctx.send(embed=em)
                             cases += 1
-                    if "import requests" in line:
-                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)+1}`\nFile: `{xname}`\nReason: importing `requests`, which is a blocking", color=discord.Color.blue())
-                        await ctx.send(embed=em)
-                        cases += 1
-                    if "from requests" in line:
-                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)+1}`\nFile: `{xname}`\nReason: importing `requests`, which is a blocking module", color=discord.Color.blue())
-                        await ctx.send(embed=em)
-                        cases += 1
-                await ctx.send(f"finished checking {xname}")
+
 
             em=discord.Embed(title="Scanning Complete", description=f"Completed with {cases} cases of possible blocking code found.", color=discord.Color.blue())
         await ctx.send(embed=em)

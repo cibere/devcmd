@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.7"
+VERSION = "beta-1.0.0.8"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -196,12 +196,14 @@ class devcmd(commands.Cog):
                 return await ctx.send(embed=em)
             elif ctx.invoked_with == "reload":
                 errors = []
-                for cog in self.bot.cogs:
+                cogs = self.bot.cogs
+                for cog in cogs:
                     try:
                         await self.bot.unload_extension(str(cog))
                         await self.bot.load_extension(str(cog))
                     except Exception:
-                        errors.append(discord.Embed(title=f"Error while reloading {str(cog)}", color=discord.Color.red(), description=str(traceback.format_exc())))
+                        error = traceback.format_exc().replace(os.getenv("NAME"), "<my name>")
+                        errors.append(discord.Embed(title=f"Error while reloading {str(cog)}", color=discord.Color.red(), description=error))
                 if errors == []:
                     em = discord.Embed(title="", description=f"`✅ reloaded all cogs`", color=discord.Color.green())
                     return await ctx.send(embed=em)
@@ -209,6 +211,7 @@ class devcmd(commands.Cog):
                     errors = [errors[i:i+5] for i in range(0, len(errors), 10)]
                     for err in errors:
                         await ctx.send(embeds=err)
+                return
             else:
                 raise BadArgument(f'You can only use "all" for "reload" and "unload", not "load"')
         if ctx.invoked_with == "unload":

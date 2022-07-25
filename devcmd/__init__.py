@@ -13,10 +13,10 @@ import subprocess
 from dotenv import load_dotenv
 load_dotenv()
 
-disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil"]
+disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.24"
+VERSION = "beta-1.0.0.25"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {

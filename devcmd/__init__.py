@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.15"
+VERSION = "beta-1.0.0.16"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -424,6 +424,7 @@ Works like:
         em = discord.Embed(description="Searching your code for blocking code... this might take a while")
         await ctx.send(embed=em)
         async with ctx.channel.typing():
+            await ctx.send(f"started checking {xname}")
             path =os.getcwd()
             list_of_files = []
             cases = 0
@@ -437,15 +438,15 @@ Works like:
                 lines = code.splitlines()
                 for line in lines:
                     if line.replace(" ", "").replace("  ", "").startswith("def"):
-                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{xname}`", color=discord.Color.blue())
+                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)}`\nFile: `{xname}`\nReason: non async function found", color=discord.Color.blue())
                         await ctx.send(embed=em)
                         cases += 1
                     if "import requests" in line:
-                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{xname}`", color=discord.Color.blue())
+                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)}`\nFile: `{xname}`\nReason: importing `requests`, which is a blocking", color=discord.Color.blue())
                         await ctx.send(embed=em)
                         cases += 1
                     if "from requests" in line:
-                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{xname}`", color=discord.Color.blue())
+                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)}`\nFile: `{xname}`\nReason: importing `requests`, which is a blocking module", color=discord.Color.blue())
                         await ctx.send(embed=em)
                         cases += 1
                 await ctx.send(f"finished checking {xname}")

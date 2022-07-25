@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.8"
+VERSION = "beta-1.0.0.9"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -190,14 +190,13 @@ class devcmd(commands.Cog):
             raise BadArgument(f'"Extension" is a required argument')
         if extension == "all":
             if ctx.invoked_with == "unload":
-                for cog in self.bot.cogs:
+                for cog in list(self.bot.cogs.keys()):
                     await self.bot.unload_extension(str(cog))
                 em = discord.Embed(title="", description=f"`✅ unloaded all cogs`", color=discord.Color.green())
                 return await ctx.send(embed=em)
             elif ctx.invoked_with == "reload":
                 errors = []
-                cogs = self.bot.cogs
-                for cog in cogs:
+                for cog in list(self.bot.cogs.keys()):
                     try:
                         await self.bot.unload_extension(str(cog))
                         await self.bot.load_extension(str(cog))

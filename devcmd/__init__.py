@@ -448,7 +448,7 @@ Works like:
                         em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{xname}`", color=discord.Color.blue())
                         await ctx.send(embed=em)
                         cases += 1
-                await ctx.send(f"finished checking {name}")
+                await ctx.send(f"finished checking {xname}")
 
             em=discord.Embed(title="Scanning Complete", description=f"Completed with {cases} cases of possible blocking code found.", color=discord.Color.blue())
         await ctx.send(embed=em)

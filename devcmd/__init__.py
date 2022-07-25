@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.11"
+VERSION = "beta-1.0.0.12"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -423,32 +423,33 @@ Works like:
         """Searches your code for blocking code"""
         em = discord.Embed(description="Searching your code for blocking code... this might take a while")
         await ctx.send(embed=em)
-        await ctx.channel.typing()
-        path =os.getcwd()
-        list_of_files = []
-        cases = 0
-        for root, dirs, files in os.walk(path):
-            for file in files:
-                list_of_files.append(os.path.join(root,file))
-        for name in list_of_files:
-            with open(name, 'r', encoding='utf-8') as f:
-                code = str(f.read())
-            lines = code.splitlines
-            for line in lines:
-                if line.replace(" ", "").replace("  ", "").startswith("def"):
-                    em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{name}`", color=discord.Color.blue())
-                    await ctx.send(embed=em)
-                    cases += 1
-                if "import requests" in line:
-                    em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{name}`", color=discord.Color.blue())
-                    await ctx.send(embed=em)
-                    cases += 1
-                if "from requests" in line:
-                    em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{name}`", color=discord.Color.blue())
-                    await ctx.send(embed=em)
-                    cases += 1
+        async with ctx.channel.typing():
+            path =os.getcwd()
+            list_of_files = []
+            cases = 0
+            for root, dirs, files in os.walk(path):
+                for file in files:
+                    list_of_files.append(os.path.join(root,file))
+            for name in list_of_files:
+                with open(name, 'r', encoding='utf-8') as f:
+                    code = str(f.read())
+                lines = code.splitlines
+                for line in lines:
+                    if line.replace(" ", "").replace("  ", "").startswith("def"):
+                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{name}`", color=discord.Color.blue())
+                        await ctx.send(embed=em)
+                        cases += 1
+                    if "import requests" in line:
+                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{name}`", color=discord.Color.blue())
+                        await ctx.send(embed=em)
+                        cases += 1
+                    if "from requests" in line:
+                        em=discord.Embed(title="Possible Blocking Code Found", description=f"Line `{lines.index(line)}` in `{name}`", color=discord.Color.blue())
+                        await ctx.send(embed=em)
+                        cases += 1
+                await ctx.send(f"finished checking {name}")
 
-        em=discord.Embed(title="Scanning Complete", description=f"Completed with {cases} cases of possible blocking code found.", color=discord.Color.blue())
+            em=discord.Embed(title="Scanning Complete", description=f"Completed with {cases} cases of possible blocking code found.", color=discord.Color.blue())
         await ctx.send(embed=em)
         
 

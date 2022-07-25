@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.22"
+VERSION = "beta-1.0.0.23"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -424,7 +424,7 @@ Works like:
         await ctx.send(embed=em)
         allowedLibs = ['discord', 'os', 'sys', 'traceback', 'textwrap', 'io', 'mystbin', 'typing', 'dotenv', 'aiohttp', 'difflib', 'gtts', 'datetime', 'colorama', 'numpy']
         with open('libs.devcmd.txt', 'r') as f:
-            x = str(f.read)
+            x = str(f.read())
         for y in x.splitlines():
             allowedLibs.append(y)
         async with ctx.channel.typing():

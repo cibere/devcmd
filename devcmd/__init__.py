@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.16"
+VERSION = "beta-1.0.0.17"
 url = "https://github.com/cibere/devcmd@beta"
 
 masterEmbeds = {
@@ -424,7 +424,6 @@ Works like:
         em = discord.Embed(description="Searching your code for blocking code... this might take a while")
         await ctx.send(embed=em)
         async with ctx.channel.typing():
-            await ctx.send(f"started checking {xname}")
             path =os.getcwd()
             list_of_files = []
             cases = 0
@@ -433,6 +432,7 @@ Works like:
                     list_of_files.append(os.path.join(root,file))
             for name in list_of_files:
                 xname = name.replace(os.getenv("NAME"), "<my name>")
+                await ctx.send(f"started checking {xname}")
                 with open(name, 'r', encoding='utf-8') as f:
                     code = str(f.read())
                 lines = code.splitlines()

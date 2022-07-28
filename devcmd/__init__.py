@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.26"
+VERSION = "beta-1.0.0.27"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -70,7 +70,7 @@ class infoCmd:
                 em = infoCmd.masterEmbeds['doc']
                 view=infoCmd.infoDropdownView(self.owner, docDef=True)
             elif val == "git":
-                em = infoCmd.asterEmbeds['git']
+                em = infoCmd.masterEmbeds['git']
                 view=infoCmd.infoDropdownView(self.owner, gitDef=True)
             elif val == "color":
                 em = infoCmd.masterEmbeds['color']

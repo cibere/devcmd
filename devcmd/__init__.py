@@ -94,13 +94,8 @@ class infoCmd:
 
 class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
-        lines=block.split("\n")
-        if "`" in lines[0]:
-            lines.pop(0)
-        if "`" in lines[len(lines)-1]:
-            li = lines[len(lines)-1].rsplit('```', 1)
-            lines[len(lines)-1] = ''.join(li)
-        return "\n".join(lines)
+        block = block.replace("```py", "").replace("```", "")
+        return block
 
 class RedirectedStdout:
     def __init__(self):

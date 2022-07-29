@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.12"
+VERSION = "beta-1.0.1.13"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:

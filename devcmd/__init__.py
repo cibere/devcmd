@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.1"
+VERSION = "beta-1.0.1.2"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -170,7 +170,7 @@ class devcmd(commands.Cog):
 
         rawcmds = []
         x = 2
-        for c in await devcmd.get_commands():
+        for c in await devcmd.get_commands(self):
             desc = c.description + "\n\n" + c.help
             em = discord.Embed(title=f"Help: {c.name}", color=discord.Color.blue(), description=desc)
             em.set_author(name=ctx.guild.name, icon_url=ctx.guildIconUrl)

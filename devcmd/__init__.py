@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.10"
+VERSION = "beta-1.0.1.11"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -118,7 +118,6 @@ class helpButtons(discord.ui.View):
         self.user = user
         self.pages = pages
         self.current_page = 0
-        self._dc_hb_num.label = f"1/{len(self.pages)}"
         super().__init__(timeout=None)
 
     @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.blurple, disabled=True)

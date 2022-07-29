@@ -172,7 +172,7 @@ class devcmd(commands.Cog):
             em = discord.Embed(title=f"Help: {c.name}", color=discord.Color.blue(), description=c.description)
             if c.help != None:
                 em.add_field(name="Help", value=c.help)
-            em.add_field(name="Usage", value=f"{c.signature}")
+            em.add_field(name="Usage", value=f"devcmd {c.qualified_name} {c.signature}")
             em.set_author(name=ctx.guild.name, icon_url=ctx.guildIconUrl)
             em.set_footer(text=f"{ctx.author} | {x}", icon_url=ctx.author.avatar.url)
             pages.append(em)

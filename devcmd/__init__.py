@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.4"
+VERSION = "beta-1.0.1.5"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -177,6 +177,9 @@ class devcmd(commands.Cog):
             em.set_footer(text=f"{ctx.author} | {x}", icon_url=ctx.author.avatar.url)
             pages.append(em)
             x += 1
+        print(len(pages))
+        for p in pages:
+            await ctx.send(embed=p)
         await ctx.send(view=helpButtons(user=ctx.author, pages=pages), embed=pages[0])
 
     @_devcmd.command(name="info", aliases=['about', 'github', 'docs'])

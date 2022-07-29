@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.0.28"
+VERSION = "beta-1.0.1.1"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -113,6 +113,39 @@ class RedirectedStdout:
     def __str__(self):
         return self._string_io.getvalue()
 
+class helpButtons(discord.ui.View):
+    def __init__(self, user, pages):
+        self.user = user
+        self.pages = pages
+        self.current_page = 0
+        super().__init__(timeout=None)
+
+    @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.blurple, disabled=True)
+    async def _dc_hb_left(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if self.user.id is not interaction.user.id:
+            return await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
+        if self.current_page - 1 == 0:
+            self.green.disabled = True
+        self.grey.disabled = False
+        self.current_page -= 1
+        self._dc_hb_num.label = f"{self.current_page}/{len(self.pages)}"
+        await interaction.response.edit_message(embed=self.pages[self.current_page - 1], view=self)
+
+    @discord.ui.button(label=f'1', style=discord.ButtonStyle.gray, disabled=True)
+    async def _dc_hb_num(self, interaction: discord.Interaction, button: discord.ui.Button):
+        pass
+
+    @discord.ui.button(emoji='➡️', style=discord.ButtonStyle.blurple)
+    async def _dc_hb_right(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if self.user.id is not interaction.user.id:
+            return await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
+        if self.current_page + 1 == len(self.pages) - 1:
+            self.grey.disabled = True
+        self.green.disabled = False
+        self.current_page += 1
+        self._dc_hb_num.label = f"{self.current_page}/{len(self.pages)}"
+        await interaction.response.edit_message(embed=self.pages[self.current_page + 1], view=self)
+
 class devcmd(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -125,6 +158,26 @@ class devcmd(commands.Cog):
             await ctx.send("Invalid Syntax")
         else:
             raise discord.ext.commands.CommandNotFound(f'Command "{ctx.invoked_with} {extra_args}" is not found')
+
+    @_devcmd.command(name="help")
+    async def _dc_help(self, ctx):
+        """Gives you help with devcmd"""
+        pages = []
+        em = discord.Embed(title="Devcmd Help", color=discord.Color.blue(), description="""```yaml\n<> - required arguement\n[] - optional argument```""")
+        em.set_author(name=ctx.guild.name, icon_url=ctx.guildIconUrl)
+        em.set_footer(text=f"{ctx.author} | 1", icon_url=ctx.author.avatar.url)
+        pages.append(em)
+
+        rawcmds = []
+        x = 2
+        for c in await devcmd.get_commands():
+            desc = c.description + "\n\n" + c.help
+            em = discord.Embed(title=f"Help: {c.name}", color=discord.Color.blue(), description=desc)
+            em.set_author(name=ctx.guild.name, icon_url=ctx.guildIconUrl)
+            em.set_footer(text=f"{ctx.author} | {x}", icon_url=ctx.author.avatar.url)
+            pages.append(em)
+            x += 1
+        await ctx.send(view=helpButtons(user=ctx.author, pages=pages), embed=pages[0])
 
     @_devcmd.command(name="info", aliases=['about', 'github', 'docs'])
     @is_owner()

@@ -170,7 +170,7 @@ class devcmd(commands.Cog):
 
         rawcmds = []
         x = 2
-        for c in devcmd.get_commands(self):
+        for c in devcmd._devcmd.commands:
             desc = c.description + "\n\n" + c.help
             em = discord.Embed(title=f"Help: {c.name}", color=discord.Color.blue(), description=desc)
             em.set_author(name=ctx.guild.name, icon_url=ctx.guildIconUrl)

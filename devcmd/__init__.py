@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.8"
+VERSION = "beta-1.0.1.9"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -118,6 +118,7 @@ class helpButtons(discord.ui.View):
         self.user = user
         self.pages = pages
         self.current_page = 0
+        self._dc_hb_num.label = f"1/{len(self.pages)}"
         super().__init__(timeout=None)
 
     @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.blurple, disabled=True)
@@ -128,7 +129,7 @@ class helpButtons(discord.ui.View):
             self._dc_hb_left.disabled = True
         self._dc_hb_right.disabled = False
         self.current_page -= 1
-        self._dc_hb_num.label = f"{self.current_page}/{len(self.pages)}"
+        self._dc_hb_num.label = f"{self.current_page + 1}/{len(self.pages)}"
         await interaction.response.edit_message(embed=self.pages[self.current_page], view=self)
 
     @discord.ui.button(label=f'1', style=discord.ButtonStyle.gray, disabled=True)
@@ -143,25 +144,23 @@ class helpButtons(discord.ui.View):
             self._dc_hb_right.disabled = True
         self._dc_hb_left.disabled = False
         self.current_page += 1
-        self._dc_hb_num.label = f"{self.current_page}/{len(self.pages)}"
+        self._dc_hb_num.label = f"{self.current_page + 1}/{len(self.pages)}"
         await interaction.response.edit_message(embed=self.pages[self.current_page], view=self)
 
 class devcmd(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group(hidden=True, invoke_without_command=True, name="devcmd", aliases=['dev', 'dc'])
+    @commands.group(hidden=True, invoke_without_command=True, name="devcmd", aliases=['dev', 'dc'], description="the devcmd base group")
     @is_owner()
     async def _devcmd(self, ctx, *, extra_args=None):
-        """the devcmd base group"""
         if extra_args == None:
             await ctx.send("Invalid Syntax")
         else:
             raise discord.ext.commands.CommandNotFound(f'Command "{ctx.invoked_with} {extra_args}" is not found')
 
-    @_devcmd.command(name="help")
+    @_devcmd.command(name="help", description="Gives you help with devcmd")
     async def _dc_help(self, ctx):
-        """Gives you help with devcmd"""
         pages = []
         em = discord.Embed(title="Devcmd Help", color=discord.Color.blue(), description="""```yaml\n<> - required arguement\n[] - optional argument```""")
         em.set_author(name=ctx.guild.name, icon_url=ctx.guildIconUrl)
@@ -173,23 +172,22 @@ class devcmd(commands.Cog):
         for c in devcmd._devcmd.commands:
             desc = c.description + "\n\n" + c.help
             em = discord.Embed(title=f"Help: {c.name}", color=discord.Color.blue(), description=desc)
+            em.add_field(name="Usage", value=f"{c.usage}")
             em.set_author(name=ctx.guild.name, icon_url=ctx.guildIconUrl)
             em.set_footer(text=f"{ctx.author} | {x}", icon_url=ctx.author.avatar.url)
             pages.append(em)
             x += 1
         await ctx.send(view=helpButtons(user=ctx.author, pages=pages), embed=pages[0])
 
-    @_devcmd.command(name="info", aliases=['about', 'github', 'docs'])
+    @_devcmd.command(name="info", aliases=['about', 'github', 'docs'], description="Gives you a view that gives you information about devcmd")
     @is_owner()
     async def _dc_info(self, ctx):
-        """Gives you a view that gives you information about devcmd"""
         em = discord.Embed(title="Please make a selection", color=discord.Color.blue())
         await ctx.send(embed=em, view=infoCmd.infoDropdownView(ctx.author))
 
-    @_devcmd.command(aliases=['logs'], name="audit")
+    @_devcmd.command(aliases=['logs'], name="audit", description="Shows the last amount of audit log entries")
     @is_owner()
     async def _cd_audit(self, ctx:commands.Context, num:int):
-        """Shows the last amount of audit log entries"""
         await ctx.channel.typing()
         audits = []
         async for entry in ctx.guild.audit_logs(limit=num):
@@ -203,37 +201,33 @@ class devcmd(commands.Cog):
                 f.write(embed.description)
             await ctx.send(file=discord.File(f"temp/{ctx.author.id}.txt"))
 
-    @_devcmd.command(aliases=['clean', 'clear'], name="purge")
+    @_devcmd.command(aliases=['clean', 'clear'], name="purge", description="Purges the specifies amount of messages")
     @is_owner()
     async def _dc_purge(self, ctx, num:int):
-        """Purges the specifies amount of messages"""
         num += 1
         deleted = await ctx.channel.purge(limit=num)
         embed=discord.Embed(color=discord.Color.green(), description=f"Deleted {len(deleted)} messages")
         await ctx.author.send(embed=embed)
 
-    @_devcmd.command(name="restart")
+    @_devcmd.command(name="restart", description="Restarts the bot")
     @is_owner()
     async def _dc_restart(self, ctx):
-        """Restarts the bot"""
         await ctx.channel.typing()
         embed=discord.Embed(color=discord.Color.green(), title="Restarting now...")
         await ctx.send(embed=embed)
         os.execv(sys.executable, ['python'] + sys.argv)
     
-    @_devcmd.command(name="shutdown", aliases=['logout'])
+    @_devcmd.command(name="shutdown", aliases=['logout'], description="Shutsdown/logs out the bot")
     @is_owner()
     async def _dc_shutdown(self, ctx):
-        """Shutsdown/logs out the bot"""
         await ctx.channel.typing()
         embed=discord.Embed(color=discord.Color.green(), title="Logging out...")
         await ctx.reply(embed=embed)
         await self.bot.close()
 
-    @_devcmd.command(name="load", aliases=['reload', 'unload'])
+    @_devcmd.command(name="load", aliases=['reload', 'unload'], description="Loads/reloads/unloads the specified extension")
     @is_owner()
     async def _dc_load(self, ctx, extension:str=None):
-        """Loads/reloads/unloads the specified extension"""
         await ctx.channel.typing()
         if ctx.invoked_with == "reload" and extension == None:
             extension = "devcmd"
@@ -275,10 +269,9 @@ class devcmd(commands.Cog):
                 em = discord.Embed(title="Error", description=f"(Error is too long to send here, so it was sent here)[{str(paste)}]", color=discord.Color.red())
                 await ctx.send(embed=em)    
 
-    @_devcmd.command(name="eval", aliases=['```py', '```', 'py', 'python', 'run', 'exec', 'execute'])
+    @_devcmd.command(name="eval", aliases=['```py', '```', 'py', 'python', 'run', 'exec', 'execute'], description="Evaluates the given code")
     @is_owner()
     async def _dc_eval(self, ctx, *,code:CodeBlock):
-        """Evaluates the given code"""
         await ctx.channel.typing()
         env={
             "ctx":ctx,
@@ -341,11 +334,10 @@ Works like:
 `!sync ~` -> sync current guild
 `!sync *` -> copies all global app commands to current guild and syncs
 `!sync ^` -> clears all commands from the current guild target and syncs (removes guild commands)
-`!sync id_1 id_2` -> syncs guilds with id 1 and 2""")
+`!sync id_1 id_2` -> syncs guilds with id 1 and 2""", description="Syncs app_commands to the given thing")
     @is_owner()
     @commands.guild_only()
     async def _dc_sync(self, ctx, guilds: Greedy[discord.Object], spec: Optional[Literal["~", "*", "^"]] = None):
-        """Syncs app_commands to the given thing"""
         if not guilds:
             if spec == "~":
                 synced = await ctx.bot.tree.sync(guild=ctx.guild)
@@ -375,10 +367,9 @@ Works like:
         em = discord.Embed(description=f"Synced the tree to {ret}/{len(guilds)}", color=discord.Color.green())
         await ctx.send(embed=em)
     
-    @_devcmd.command(name="disable")
+    @_devcmd.command(name="disable", description="Disables a command")
     @is_owner()
     async def _dc_disable(self, ctx, raw: str):
-        """Disables a command"""
         em=discord.Embed()
         command = self.bot.get_command(raw)
         if command == None:
@@ -392,10 +383,9 @@ Works like:
         em.color = discord.Color.green()
         await ctx.send(embed=em)
 
-    @_devcmd.command(name="enable")
+    @_devcmd.command(name="enable", description="Enables a command")
     @is_owner()
     async def _dc_enable(self, ctx, raw: str):
-        """Enables a command"""
         command = self.bot.get_command(raw)
         if command == None:
             raise BadArgument(f'Command "{raw}" not found')
@@ -405,10 +395,9 @@ Works like:
         em.color = discord.Color.green()
         await ctx.send(embed=em)
 
-    @_devcmd.command(name="update", aliases=['update-msg'])
+    @_devcmd.command(name="update", description="Lets you update your devcmd", aliases=['update-msg'])
     @is_owner()
     async def _dc_update(self, ctx):
-        """Lets you update your devcmd"""
         if ctx.invoked_with == "update-msg":
             em=discord.Embed(title="Updating devcmd")
             em.description = f"Successfully updated devcmd to version {VERSION}"
@@ -424,17 +413,15 @@ Works like:
         await self.bot.process_commands(msg) 
         
 
-    @_devcmd.command(name="version")
+    @_devcmd.command(name="version", description="Sends the current version of devcmd you are running")
     @is_owner()
     async def _dc_version(self, ctx):
-        """Sends the current version of devcmd you are running"""
         em = discord.Embed(description=f"Running Devcmd Version {VERSION}", color=discord.Color.blue())
         await ctx.send(embed=em)
 
-    @_devcmd.command(name="source", aliases=['src'])
+    @_devcmd.command(name="source", aliases=['src'], description="Gives the source code for the specified command")
     @is_owner()
     async def _dc_source(self, ctx, *, command_name: str):
-        """Gives the source code for the specified command"""
         await ctx.channel.typing()
         command = self.bot.get_command(command_name)
         if not command:
@@ -450,10 +437,9 @@ Works like:
             filename="source.py",
             fp=io.BytesIO(source_text.encode('utf-8'))))
 
-    @_devcmd.command(name="file")
+    @_devcmd.command(name="file", description="Sends the code for the specified file")
     @is_owner()
     async def _dc_file(self, ctx, file:str):
-        """Sends the code for the specified file"""
         if "env" in file:
             raise BadArgument(f'"{file}" is not a safe file')
         try:
@@ -468,9 +454,8 @@ Works like:
             filename=name,
             fp=io.BytesIO(code.encode('utf-8'))))
 
-    @_devcmd.command(name="blocking", aliases=['blocking-code'])
+    @_devcmd.command(name="blocking",description="Searches your code for blocking code",  aliases=['blocking-code'])
     async def _dc_blocking(self, ctx):
-        """Searches your code for blocking code"""
         em = discord.Embed(description="Searching your code for blocking code... this might take a while")
         await ctx.send(embed=em)
         async with ctx.channel.typing():

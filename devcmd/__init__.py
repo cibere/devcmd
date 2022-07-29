@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.5"
+VERSION = "beta-1.0.1.6"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -129,7 +129,7 @@ class helpButtons(discord.ui.View):
         self._dc_hb_left.disabled = False
         self.current_page -= 1
         self._dc_hb_num.label = f"{self.current_page}/{len(self.pages)}"
-        await interaction.response.edit_message(embed=self.pages[self.current_page - 1], view=self)
+        await interaction.response.edit_message(embed=self.pages[self.current_page], view=self)
 
     @discord.ui.button(label=f'1', style=discord.ButtonStyle.gray, disabled=True)
     async def _dc_hb_num(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -144,7 +144,7 @@ class helpButtons(discord.ui.View):
         self._dc_hb_right.disabled = False
         self.current_page += 1
         self._dc_hb_num.label = f"{self.current_page}/{len(self.pages)}"
-        await interaction.response.edit_message(embed=self.pages[self.current_page + 1], view=self)
+        await interaction.response.edit_message(embed=self.pages[self.current_page], view=self)
 
 class devcmd(commands.Cog):
     def __init__(self, bot):
@@ -177,9 +177,6 @@ class devcmd(commands.Cog):
             em.set_footer(text=f"{ctx.author} | {x}", icon_url=ctx.author.avatar.url)
             pages.append(em)
             x += 1
-        print(len(pages))
-        for p in pages:
-            await ctx.send(embed=p)
         await ctx.send(view=helpButtons(user=ctx.author, pages=pages), embed=pages[0])
 
     @_devcmd.command(name="info", aliases=['about', 'github', 'docs'])

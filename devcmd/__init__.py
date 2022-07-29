@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.3"
+VERSION = "beta-1.0.1.4"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -125,8 +125,8 @@ class helpButtons(discord.ui.View):
         if self.user.id is not interaction.user.id:
             return await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
         if self.current_page - 1 == 0:
-            self.green.disabled = True
-        self.grey.disabled = False
+            self._dc_hb_right.disabled = True
+        self._dc_hb_left.disabled = False
         self.current_page -= 1
         self._dc_hb_num.label = f"{self.current_page}/{len(self.pages)}"
         await interaction.response.edit_message(embed=self.pages[self.current_page - 1], view=self)
@@ -140,8 +140,8 @@ class helpButtons(discord.ui.View):
         if self.user.id is not interaction.user.id:
             return await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
         if self.current_page + 1 == len(self.pages) - 1:
-            self.grey.disabled = True
-        self.green.disabled = False
+            self._dc_hb_left.disabled = True
+        self._dc_hb_right.disabled = False
         self.current_page += 1
         self._dc_hb_num.label = f"{self.current_page}/{len(self.pages)}"
         await interaction.response.edit_message(embed=self.pages[self.current_page + 1], view=self)

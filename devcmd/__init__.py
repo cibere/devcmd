@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.13"
+VERSION = "beta-1.0.1.14"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -241,7 +241,7 @@ class devcmd(commands.Cog):
             except Exception:
                 em = discord.Embed(title="Error", description=f"""```py\n{traceback.format_exc()}\n```""", color=discord.Color.red())
                 msg = await ctx.author.send(embed=em)
-                em2 = discord.Embed(title="", description=f"(Error has been sent to your dms)[{msg.jump_url}]", color=discord.Color.green())
+                em2 = discord.Embed(title="", description=f"[Error has been sent to your dms]({msg.jump_url})", color=discord.Color.green())
                 return await ctx.send(embed=em2)
         try:
             await self.bot.unload_extension(extension)
@@ -258,7 +258,7 @@ class devcmd(commands.Cog):
             try:
                 em = discord.Embed(title="Error", description=f"```py\n{error}\n```", color=discord.Color.red())
                 msg = await ctx.author.send(embed=em)
-                em2 = discord.Embed(title="", description=f"(Error has been sent to your dms)[{msg.jump_url}]", color=discord.Color.orange())
+                em2 = discord.Embed(title="", description=f"[Error has been sent to your dms]({msg.jump_url})", color=discord.Color.orange())
                 await ctx.send(embed=em2)
             except discord.errors.Forbidden:
                 em = discord.Embed(title="Error", description=f"```py\n{error}\n```", color=discord.Color.red())

@@ -17,7 +17,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.15"
+VERSION = "beta-1.0.1.16"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -330,15 +330,10 @@ class devcmd(commands.Cog):
 
     @_dc_eval.command(name="link", description="evaluates code from a link Ex: pastebin")
     @is_owner()
-    async def _dc_eval_link(self, ctx, link:str):
-        try:
-            async with aiohttp.ClientSession() as cs:
-                async with cs.get(link) as r:
-                    code = await r.read()
-        except:
-            errorEm = discord.Embed(title="Invalid Link", description=f'', color=discord.Color.red())
-            return await ctx.send(embed=errorEm)
-        
+    async def _dc_eval_link(self, ctx, link):
+        async with aiohttp.ClientSession() as cs:
+            async with cs.get(link) as r:
+                code = await r.read()
         await ctx.channel.typing()
         env={
             "ctx":ctx,

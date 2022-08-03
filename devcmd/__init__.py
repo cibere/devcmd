@@ -17,7 +17,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.18"
+VERSION = "beta-1.0.1.19"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -269,7 +269,7 @@ class devcmd(commands.Cog):
                 em = discord.Embed(title="Error", description=f"(Error is too long to send here, so it was sent here)[{str(paste)}]", color=discord.Color.red())
                 await ctx.send(embed=em)    
 
-    @_devcmd.group(name="eval", aliases=['```py', '```', 'py', 'python', 'run', 'exec', 'execute'], description="Evaluates the given code")
+    @_devcmd.group(invoke_without_command=True, name="eval", aliases=['```py', '```', 'py', 'python', 'run', 'exec', 'execute'], description="Evaluates the given code")
     @is_owner()
     async def _dc_eval(self, ctx, *,code:CodeBlock):
         await ctx.channel.typing()

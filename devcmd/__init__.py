@@ -515,9 +515,6 @@ Works like:
             filename=name,
             fp=io.BytesIO(code.encode('utf-8'))))
 
-    @_devcmd.command(name="invite", description="gives you a link to invite the bot with", aliases=['join', 'add'])
-    @is_owner()
-
     @_devcmd.command(name="blocking",description="Searches your code for blocking code",  aliases=['blocking-code'])
     @is_owner()
     async def _dc_blocking(self, ctx):

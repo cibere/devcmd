@@ -1,3 +1,4 @@
+import aiohttp
 from discord.ext import commands
 from discord.ext.commands import *
 import discord
@@ -16,7 +17,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.14"
+VERSION = "beta-1.0.1.15"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -268,9 +269,76 @@ class devcmd(commands.Cog):
                 em = discord.Embed(title="Error", description=f"(Error is too long to send here, so it was sent here)[{str(paste)}]", color=discord.Color.red())
                 await ctx.send(embed=em)    
 
-    @_devcmd.command(name="eval", aliases=['```py', '```', 'py', 'python', 'run', 'exec', 'execute'], description="Evaluates the given code")
+    @_devcmd.group(name="eval", aliases=['```py', '```', 'py', 'python', 'run', 'exec', 'execute'], description="Evaluates the given code")
     @is_owner()
     async def _dc_eval(self, ctx, *,code:CodeBlock):
+        await ctx.channel.typing()
+        env={
+            "ctx":ctx,
+            "bot":self.bot,
+            "message":ctx.message,
+            "author":ctx.author,
+            "guild":ctx.guild,
+            "channel":ctx.channel,
+            "discord":discord,
+            "commands":commands,
+            "os":os,
+            "io":io,
+            "sys":sys
+        }
+
+        function="async def func():\n"+indent(code,"    ")
+        with RedirectedStdout() as otp:
+            try:
+                exec(function,env)
+                func=env["func"]
+                res= await func()
+            except Exception as e:
+                msg = f"```py\n{otp}\n{e}{geterr()}\n```"
+                if os.getenv("NAME") in msg.lower():
+                    msg = msg.replace(os.getenv("NAME"), "<my name>")
+                errorEm = discord.Embed(title="Eval Error", description=msg, color=discord.Color.red())
+                try:
+                    await ctx.send(embed=errorEm)
+                except:
+                    paste = await mystbin_client.post(msg)
+                    errorEm = discord.Embed(title="Error", description=f"[Your error was too long, so I sent it here]({str(paste)})", color=discord.Color.red())
+                    await ctx.send(embed=errorEm)
+                return
+            if res:
+                msg = f"```py\n{res}\n{otp}\n```"
+                if os.getenv("NAME") in msg.lower():
+                    msg = msg.replace(os.getenv("NAME"), "<my name>")
+                returnedEm = discord.Embed(title="Returned", description=msg, color=discord.Color.green())
+                try:
+                    await ctx.send(embed=returnedEm)
+                except:
+                    paste = await mystbin_client.post(msg)
+                    returnedEm = discord.Embed(title="Returned", description=f"[Your output was too long, so I sent it here]({str(paste)})", color=discord.Color.green())
+                    await ctx.send(embed=returnedEm)
+            else:
+                msg = f"```py\n{otp}\n```"
+                if os.getenv("NAME") in msg.lower():
+                    msg = msg.replace(os.getenv("NAME"), "<my name>")
+                outputEm = discord.Embed(title="Output", description=msg, color=discord.Color.green())
+                try:
+                    await ctx.send(embed=outputEm)
+                except:
+                    paste = await mystbin_client.post(msg)
+                    outputEm = discord.Embed(title="Output", description=f"[Your output was too long, so I sent it here]({str(paste)})", color=discord.Color.green())
+                    await ctx.send(embed=outputEm)
+
+    @_dc_eval.command(name="link", description="evaluates code from a link Ex: pastebin")
+    @is_owner()
+    async def _dc_eval_link(self, ctx, link:str):
+        try:
+            async with aiohttp.ClientSession() as cs:
+                async with cs.get(link) as r:
+                    code = await r.read()
+        except:
+            errorEm = discord.Embed(title="Invalid Link", description=f'', color=discord.Color.red())
+            return await ctx.send(embed=errorEm)
+        
         await ctx.channel.typing()
         env={
             "ctx":ctx,

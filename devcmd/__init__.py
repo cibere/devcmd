@@ -96,7 +96,6 @@ class CodeBlock(commands.Converter):
     async def convert(self,ctx, block:str):
         block = block.replace("```py", "").replace("```", "")
         return block
-
 class RedirectedStdout:
     def __init__(self):
         self._stdout = None
@@ -454,7 +453,11 @@ Works like:
             filename=name,
             fp=io.BytesIO(code.encode('utf-8'))))
 
+    @_devcmd.command(name="invite", description="gives you a link to invite the bot with", aliases=['join', 'add'])
+    @is_owner()
+
     @_devcmd.command(name="blocking",description="Searches your code for blocking code",  aliases=['blocking-code'])
+    @is_owner()
     async def _dc_blocking(self, ctx):
         em = discord.Embed(description="Searching your code for blocking code... this might take a while")
         await ctx.send(embed=em)

@@ -17,7 +17,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.17"
+VERSION = "beta-1.0.1.18"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -329,7 +329,6 @@ class devcmd(commands.Cog):
                     await ctx.send(embed=outputEm)
 
     @_dc_eval.command(name="link", description="evaluates code from a link Ex: pastebin")
-    @is_owner()
     async def _dc_eval_link(self, ctx, link):
         async with aiohttp.ClientSession() as cs:
             async with cs.get(link) as r:

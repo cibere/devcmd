@@ -17,7 +17,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.19"
+VERSION = "beta-1.0.1.20"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -162,8 +162,6 @@ class devcmd(commands.Cog):
     async def _dc_help(self, ctx):
         pages = []
         em = discord.Embed(title="Devcmd Help", color=discord.Color.blue(), description="""```yaml\n<> - required arguement\n[] - optional argument```""")
-        em.set_author(name=ctx.guild.name, icon_url=ctx.guildIconUrl)
-        em.set_footer(text=f"{ctx.author} | 1", icon_url=ctx.author.avatar.url)
         pages.append(em)
 
         rawcmds = []
@@ -173,8 +171,6 @@ class devcmd(commands.Cog):
             if c.help != None:
                 em.add_field(name="Help", value=c.help)
             em.add_field(name="Usage", value=f"devcmd {c.qualified_name} {c.signature}")
-            em.set_author(name=ctx.guild.name, icon_url=ctx.guildIconUrl)
-            em.set_footer(text=f"{ctx.author} | {x}", icon_url=ctx.author.avatar.url)
             pages.append(em)
             x += 1
         await ctx.send(view=helpButtons(user=ctx.author, pages=pages), embed=pages[0])

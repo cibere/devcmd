@@ -192,9 +192,9 @@ class devcmd(commands.Cog):
         try:
             await ctx.reply(embed=embed)
         except:
-            with open(f"temp/{ctx.author.id}.txt", "w") as f:
-                f.write(embed.description)
-            await ctx.send(file=discord.File(f"temp/{ctx.author.id}.txt"))
+            await ctx.send(file=discord.File(
+            filename="Audit Logs",
+            fp=io.BytesIO(embed.description.encode('utf-8'))))
 
     @_devcmd.command(aliases=['clean', 'clear'], name="purge", description="Purges the specifies amount of messages")
     @is_owner()

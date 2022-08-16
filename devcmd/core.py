@@ -364,11 +364,11 @@ Works like:
     
     @_devcmd.command(name="disable", description="Disables a command")
     @is_owner()
-    async def _dc_disable(self, ctx, raw: str):
+    async def _dc_disable(self, ctx, command_name: str):
         em=discord.Embed()
-        command = self.bot.get_command(raw)
+        command = self.bot.get_command(command_name)
         if command == None:
-            raise BadArgument(f'Command "{raw}" not found')
+            raise BadArgument(f'Command "{command_name}" not found')
         if not command.enabled:
             em.color = discord.Color.red()
             em.description = f"{command.name} is already disabled"
@@ -380,10 +380,10 @@ Works like:
 
     @_devcmd.command(name="enable", description="Enables a command")
     @is_owner()
-    async def _dc_enable(self, ctx, raw: str):
-        command = self.bot.get_command(raw)
+    async def _dc_enable(self, ctx, command_name: str):
+        command = self.bot.get_command(command_name)
         if command == None:
-            raise BadArgument(f'Command "{raw}" not found')
+            raise BadArgument(f'Command "{command_name}" not found')
         em = discord.Embed()
         command.update(enabled=True)
         em.description = f"Enabled {command.name}"

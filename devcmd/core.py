@@ -16,8 +16,8 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "2.1.1"
-url = "https://github.com/cibere/devcmd"
+VERSION = "3.0.0"
+url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
     masterEmbeds = {

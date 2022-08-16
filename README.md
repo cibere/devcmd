@@ -51,4 +51,4 @@ Devcmd Docs
 
 > cibere#6647 - everything else
 > 
-> AmongBrown#5609 - help with the eval command
+> AmongBrown#5609 - helped with the eval command

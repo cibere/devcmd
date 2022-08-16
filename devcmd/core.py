@@ -500,5 +500,14 @@ Works like:
             embed=discord.Embed(title="Invite Url", description=f"`{perms}` are not valid permissions. Here is a blank invite url:\n{url}", color=discord.Color.blue())
         await ctx.send(embed=embed)
 
+    @_devcmd.command(name="remove", description="removes a cog")
+    @is_owner()
+    async def _dc_remove(self, ctx, cog_name:str):
+        cogs = [str(cog) for cog in self.bot.cogs]
+        if (cog_name not in cogs):
+            return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"`{cog_name}` is not a cog that is currently loaded"))
+        await self.bot.remove_cog()
+        await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Successfully removed `{cog_name}`"))
+
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

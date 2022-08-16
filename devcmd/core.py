@@ -490,6 +490,7 @@ Works like:
         await ctx.send(embed=em)
 
     @_devcmd.command(name="invite", description="gives you a url to invite your bot")
+    @is_owner()
     async def _dc_invite(self, ctx, perms=0):
         try:
             url = discord.utils.oauth_url(self.bot.user.id, permissions=discord.Permissions(permissions=perms))

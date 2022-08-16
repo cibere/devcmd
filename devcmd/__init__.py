@@ -1,1 +1,1 @@
-from core import VERSION, devcmd, setup
+from .core import VERSION, devcmd, setup

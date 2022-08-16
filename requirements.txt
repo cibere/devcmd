@@ -1,2 +1,2 @@
-mystbin.py
 git+https://github.com/Rapptz/discord.py
+mystbin.py

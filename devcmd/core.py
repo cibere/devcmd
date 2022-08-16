@@ -324,67 +324,6 @@ class devcmd(commands.Cog):
                     outputEm = discord.Embed(title="Output", description=f"[Your output was too long, so I sent it here]({str(paste)})", color=discord.Color.green())
                     await ctx.send(embed=outputEm)
 
-    @_dc_eval.command(name="link", description="evaluates code from a link Ex: pastebin")
-    async def _dc_eval_link(self, ctx, link):
-        async with aiohttp.ClientSession() as cs:
-            async with cs.get(link) as r:
-                code = str(await r.read())
-        await ctx.channel.typing()
-        env={
-            "ctx":ctx,
-            "bot":self.bot,
-            "message":ctx.message,
-            "author":ctx.author,
-            "guild":ctx.guild,
-            "channel":ctx.channel,
-            "discord":discord,
-            "commands":commands,
-            "os":os,
-            "io":io,
-            "sys":sys
-        }
-
-        function="async def func():\n"+indent(code,"    ")
-        with RedirectedStdout() as otp:
-            try:
-                exec(function,env)
-                func=env["func"]
-                res= await func()
-            except Exception as e:
-                msg = f"```py\n{otp}\n{e}{geterr()}\n```"
-                if os.getenv("NAME") in msg.lower():
-                    msg = msg.replace(os.getenv("NAME"), "<my name>")
-                errorEm = discord.Embed(title="Eval Error", description=msg, color=discord.Color.red())
-                try:
-                    await ctx.send(embed=errorEm)
-                except:
-                    paste = await mystbin_client.post(msg)
-                    errorEm = discord.Embed(title="Error", description=f"[Your error was too long, so I sent it here]({str(paste)})", color=discord.Color.red())
-                    await ctx.send(embed=errorEm)
-                return
-            if res:
-                msg = f"```py\n{res}\n{otp}\n```"
-                if os.getenv("NAME") in msg.lower():
-                    msg = msg.replace(os.getenv("NAME"), "<my name>")
-                returnedEm = discord.Embed(title="Returned", description=msg, color=discord.Color.green())
-                try:
-                    await ctx.send(embed=returnedEm)
-                except:
-                    paste = await mystbin_client.post(msg)
-                    returnedEm = discord.Embed(title="Returned", description=f"[Your output was too long, so I sent it here]({str(paste)})", color=discord.Color.green())
-                    await ctx.send(embed=returnedEm)
-            else:
-                msg = f"```py\n{otp}\n```"
-                if os.getenv("NAME") in msg.lower():
-                    msg = msg.replace(os.getenv("NAME"), "<my name>")
-                outputEm = discord.Embed(title="Output", description=msg, color=discord.Color.green())
-                try:
-                    await ctx.send(embed=outputEm)
-                except:
-                    paste = await mystbin_client.post(msg)
-                    outputEm = discord.Embed(title="Output", description=f"[Your output was too long, so I sent it here]({str(paste)})", color=discord.Color.green())
-                    await ctx.send(embed=outputEm)
-
     @_devcmd.command(name="sync", help="""
 Works like:
 `!sync` -> global sync

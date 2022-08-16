@@ -17,7 +17,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.26"
+VERSION = "beta-1.0.1.27"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -506,7 +506,7 @@ Works like:
         cogs = [str(cog) for cog in self.bot.cogs]
         if (cog_name not in cogs):
             return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"`{cog_name}` is not a cog that is currently loaded"))
-        await self.bot.remove_cog()
+        await self.bot.remove_cog(cog_name)
         await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Successfully removed `{cog_name}`"))
 
 async def setup(bot):

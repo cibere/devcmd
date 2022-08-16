@@ -17,7 +17,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.22"
+VERSION = "beta-1.0.1.23"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -200,9 +200,9 @@ class devcmd(commands.Cog):
     @_devcmd.command(aliases=['clean', 'clear'], name="purge", description="Purges the specifies amount of messages")
     @is_owner()
     async def _dc_purge(self, ctx, num:int):
-        num += 1
+        await ctx.message.delete()
         deleted = await ctx.channel.purge(limit=num)
-        embed=discord.Embed(color=discord.Color.green(), description=f"Deleted {len(deleted)} messages")
+        embed=discord.Embed(color=discord.Color.green(), description=f"Deleted {len(deleted)} messages in {ctx.channel.mention}")
         await ctx.author.send(embed=embed)
 
     @_devcmd.command(name="restart", description="Restarts the bot")
@@ -488,7 +488,16 @@ Works like:
 
             em=discord.Embed(title="Scanning Complete", description=f"Completed with {cases} cases of possible blocking code found.", color=discord.Color.blue())
         await ctx.send(embed=em)
-        
+
+    @_devcmd.command(name="invite", description="gives you a url to invite your bot")
+    async def _dc_invite(self, ctx, perms):
+        try:
+            url = discord.utils.oauth_url(self.bot.user.id, permissions=perms)
+            embed=discord.Embed(title="Invite Url", description=url, color=discord.Color.blue())
+        except:
+            url = discord.utils.oauth_url(self.bot.user.id)
+            embed=discord.Embed(title="Invite Url", description=f"{perms} are not valid permissions. Here is a blank invite url:\n{url}", color=discord.Color.blue())
+        await ctx.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

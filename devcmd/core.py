@@ -511,7 +511,7 @@ Works like:
     
     @_devcmd.command(name="cogs", description="lists all loaded cogs")
     @is_owner()
-    async def _dc_cogs(self, ctx, cog_name:str):
+    async def _dc_cogs(self, ctx):
         cogs = [f"`{str(cog)}`" for cog in self.bot.cogs]
         em = discord.Embed(title="Loaded Cogs", color=discord.Color.blue(), description=', '.join(cogs))
         await ctx.send(embed=em)

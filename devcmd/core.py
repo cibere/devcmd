@@ -451,45 +451,6 @@ Works like:
             filename=name,
             fp=io.BytesIO(code.encode('utf-8'))))
 
-    @_devcmd.command(name="blocking",description="Searches your code for blocking code",  aliases=['blocking-code'])
-    @is_owner()
-    async def _dc_blocking(self, ctx):
-        em = discord.Embed(description="Searching your code for blocking code... this might take a while")
-        await ctx.send(embed=em)
-        async with ctx.channel.typing():
-            path =os.getcwd()
-            list_of_files = []
-            fileNames = []
-            cases = 0
-            for root, dirs, files in os.walk(path):
-                for file in files:
-                    if file.endswith(".py"):
-                        list_of_files.append(os.path.join(root,file))
-                        fileNames.append(file.split(".")[0])
-            for name in list_of_files:
-                xname = name.replace(os.getenv("NAME"), "<my name>")
-                with open(name, 'r', encoding='utf-8') as f:
-                    code = str(f.read())
-                lines = code.splitlines()
-                for line in lines:
-                    if line.replace(" ", "").replace("  ", "").startswith("def"):
-                        if line.replace(" ", "").replace("  ", "").startswith("def__init__") == False:
-                            if line.startswith("def "):
-                                em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line) +1}`\nFile: `{xname}`\nReason: non async function found", color=discord.Color.blue())
-                                await ctx.send(embed=em)
-                                cases += 1
-                    if line.startswith("import") or line.startswith("from"):
-                        lib = line.split(" ")[1].split(".")[0].replace(",", "")
-                        if lib not in fileNames:
-                            if lib in disallowedLibs:
-                                em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)+1}`\nFile: `{xname}`\nReason: importing `{lib}`, which is not a whitelisted module", color=discord.Color.blue())
-                                await ctx.send(embed=em)
-                                cases += 1
-
-
-            em=discord.Embed(title="Scanning Complete", description=f"Completed with {cases} cases of possible blocking code found.", color=discord.Color.blue())
-        await ctx.send(embed=em)
-
     @_devcmd.command(name="invite", description="gives you a url to invite your bot")
     @is_owner()
     async def _dc_invite(self, ctx, perms=0):

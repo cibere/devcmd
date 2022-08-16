@@ -9,6 +9,11 @@ Devcmd Docs
 </sup>
 </p>
 
+## Warning!
+```diff
+- THIS IS ONLY BEING MAINTANED ON THE LATEST VERSION OF PYTHON AND DPY
+```
+
 ## Index
 > <a href="https://github.com/cibere/devcmd#features">Features</a>
 > 

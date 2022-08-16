@@ -329,7 +329,7 @@ Works like:
 `!sync ~` -> sync current guild
 `!sync *` -> copies all global app commands to current guild and syncs
 `!sync ^` -> clears all commands from the current guild target and syncs (removes guild commands)
-`!sync id_1 id_2` -> syncs guilds with id 1 and 2""", description="Syncs app_commands to the given thing")
+`!sync id_1 id_2` -> syncs guilds with id 1 and 2""", description="Syncs app_commands according to the given arg")
     @is_owner()
     @commands.guild_only()
     async def _dc_sync(self, ctx, guilds: Greedy[discord.Object], spec: Optional[Literal["~", "*", "^"]] = None):

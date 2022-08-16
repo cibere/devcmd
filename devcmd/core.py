@@ -490,13 +490,13 @@ Works like:
         await ctx.send(embed=em)
 
     @_devcmd.command(name="invite", description="gives you a url to invite your bot")
-    async def _dc_invite(self, ctx, perms):
+    async def _dc_invite(self, ctx, perms=0):
         try:
             url = discord.utils.oauth_url(self.bot.user.id, permissions=perms)
             embed=discord.Embed(title="Invite Url", description=url, color=discord.Color.blue())
         except:
             url = discord.utils.oauth_url(self.bot.user.id)
-            embed=discord.Embed(title="Invite Url", description=f"{perms} are not valid permissions. Here is a blank invite url:\n{url}", color=discord.Color.blue())
+            embed=discord.Embed(title="Invite Url", description=f"`{perms}` are not valid permissions. Here is a blank invite url:\n{url}", color=discord.Color.blue())
         await ctx.send(embed=embed)
 
 async def setup(bot):

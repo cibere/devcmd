@@ -17,7 +17,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "beta-1.0.1.27"
+VERSION = "beta-1.0.1.28"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -508,6 +508,13 @@ Works like:
             return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"`{cog_name}` is not a cog that is currently loaded"))
         await self.bot.remove_cog(cog_name)
         await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Successfully removed `{cog_name}`"))
+    
+    @_devcmd.command(name="cogs", description="lists all loaded cogs")
+    @is_owner()
+    async def _dc_cogs(self, ctx, cog_name:str):
+        cogs = [f"`{str(cog)}`" for cog in self.bot.cogs]
+        em = discord.Embed(title="Loaded Cogs", color=discord.Color.blue(), description=', '.join(cogs))
+        await ctx.send(embed=em)
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

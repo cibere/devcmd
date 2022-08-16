@@ -170,7 +170,7 @@ class devcmd(commands.Cog):
             em = discord.Embed(title=f"Help: {c.name}", color=discord.Color.blue(), description=c.description)
             if c.help != None:
                 em.add_field(name="Help", value=c.help)
-            em.add_field(name="Usage", value=f"{self.bot.command_prefix}devcmd {c.qualified_name} {c.signature}")
+            em.add_field(name="Usage", value=f"devcmd {c.qualified_name} {c.signature}")
             pages.append(em)
             x += 1
         await ctx.send(view=helpButtons(user=ctx.author, pages=pages), embed=pages[0])

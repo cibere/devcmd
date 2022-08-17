@@ -117,6 +117,7 @@ class helpButtons(discord.ui.View):
         self.user = user
         self.pages = pages
         self.current_page = 0
+        self._dc_hb_num.label = f"{self.current_page + 1}/{len(self.pages)}"
         super().__init__(timeout=None)
 
     @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.blurple, disabled=True)

@@ -117,8 +117,8 @@ class helpButtons(discord.ui.View):
         self.user = user
         self.pages = pages
         self.current_page = 0
-        self._dc_hb_num.label = f"{self.current_page + 1}/{len(self.pages)}"
         super().__init__(timeout=None)
+        self._dc_hb_num.label = f"{self.current_page + 1}/{len(self.pages)}"
 
     @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.blurple, disabled=True)
     async def _dc_hb_left(self, interaction: discord.Interaction, button: discord.ui.Button):

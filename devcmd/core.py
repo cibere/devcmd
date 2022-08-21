@@ -526,7 +526,7 @@ Works like:
         except:
             pass
         txt = text.replace(os.getenv("NAME"), "<my name>")
-        await ctx.send(embed=discord.Embed(description=discord.utils.remove_markdown(txt), color=discord.Color.blue(), title=f"Your cleaned text"))
+        await ctx.send(embed=discord.Embed(description=f"```{txt}```", color=discord.Color.blue(), title=f"Your cleaned text"))
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

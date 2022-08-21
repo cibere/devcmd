@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.0.9"
+VERSION = "BETA-3.0.10"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -263,7 +263,7 @@ class devcmd(commands.Cog):
                 em2 = discord.Embed(title="", description=f"I am unable to send you a dm, so error will be sent here.", color=discord.Color.red())
                 await ctx.send(embeds=[em, em2])
             except:
-                paste = await mystbin_client.post(error, syntax="python")
+                paste = await mystbin_client.create_paste(filename="error.py", content=error, syntax="python")
                 em = discord.Embed(title="Error", description=f"(Error is too long to send here, so it was sent here)[{str(paste)}]", color=discord.Color.red())
                 await ctx.send(embed=em)    
 

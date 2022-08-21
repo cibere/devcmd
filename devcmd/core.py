@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.0.4"
+VERSION = "BETA-3.0.5"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -520,7 +520,7 @@ Works like:
 
     @_devcmd.command(name="clean", description="cleans the given text of your name")
     @is_owner()
-    async def _dc_clean(self, ctx, text):
+    async def _dc_clean(self, ctx, *, text):
         try:
             await ctx.message.delete()
         except:

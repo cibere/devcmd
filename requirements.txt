@@ -1,1 +1,1 @@
-mystbin.py
+-e git+https://github.com/PythonistaGuild/mystbin-py.git 

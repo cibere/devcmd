@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.0.6"
+VERSION = "BETA-3.0.7"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -529,6 +529,7 @@ Works like:
         await ctx.reply(embed=discord.Embed(description=f"```{txt}```", color=discord.Color.blue(), title=f"Your cleaned text"), mention_author=False)
 
     @_dc_clean.command(name="raw", description="clean command, but for mobile!")
+    @is_owner()
     async def _dc_clean_raw(self, ctx, *, text):
         try:
             await ctx.message.delete()

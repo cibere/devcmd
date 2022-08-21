@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.0.8"
+VERSION = "BETA-3.0.9"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -518,7 +518,7 @@ Works like:
         em = discord.Embed(title="Loaded Cogs", color=discord.Color.blue(), description=', '.join(cogs))
         await ctx.send(embed=em)
 
-    @_devcmd.group(name="clean", description="cleans the given text of your name")
+    @_devcmd.group(name="clean", description="cleans the given text of your name", invoke_without_command=True)
     @is_owner()
     async def _dc_clean(self, ctx, *, text):
         txt = text.replace(os.getenv("NAME"), "<my name>")

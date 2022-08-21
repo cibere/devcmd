@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.0.5"
+VERSION = "BETA-3.0.6"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -525,7 +525,7 @@ Works like:
             await ctx.message.delete()
         except:
             pass
-        txt = text.replace(os.getenv("NAME", "<my name>"))
+        txt = text.replace(os.getenv("NAME"), "<my name>")
         await ctx.send(embed=discord.Embed(description=txt, color=discord.Color.blue(), title=f"Your cleaned text"))
 
 async def setup(bot):

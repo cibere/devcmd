@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.0.3.3"
+VERSION = "BETA-3.0.4"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -199,7 +199,7 @@ class devcmd(commands.Cog):
             filename="Audit Logs",
             fp=io.BytesIO(embed.description.encode('utf-8'))))
 
-    @_devcmd.command(aliases=['clean', 'clear'], name="purge", description="Purges the specifies amount of messages")
+    @_devcmd.command(aliases=['clear'], name="purge", description="Purges the specifies amount of messages")
     @is_owner()
     async def _dc_purge(self, ctx, num:int):
         await ctx.message.delete()
@@ -517,6 +517,16 @@ Works like:
         cogs = [f"`{str(cog)}`" for cog in self.bot.cogs]
         em = discord.Embed(title="Loaded Cogs", color=discord.Color.blue(), description=', '.join(cogs))
         await ctx.send(embed=em)
+
+    @_devcmd.command(name="clean", description="cleans the given text of your name")
+    @is_owner()
+    async def _dc_clean(self, ctx, text):
+        try:
+            await ctx.message.delete()
+        except:
+            pass
+        txt = text.replace(os.getenv("NAME", "<my name>"))
+        await ctx.send(embed=discord.Embed(description=txt, color=discord.Color.blue(), title=f"Your cleaned text"))
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

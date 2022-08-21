@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.1.0"
+VERSION = "BETA-3.1.1"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -325,8 +325,8 @@ class devcmd(commands.Cog):
                     file = mystbin.File(filename="error.py", content=msg, syntax="py")
 
                     paste = await mystbin_client.create_multifile_paste(files=[file])
-                    outputEm = discord.Embed(title="Output", description=f"[Your output was too long, so I sent it here]({str(paste.files[0].content)})", color=discord.Color.green())
-                    await ctx.send(embed=outputEm)
+                    outputEm2 = discord.Embed(title="Output", description=f"[Your output was too long, so I sent it here]({str(paste.files[0].content)})", color=discord.Color.green())
+                    await ctx.send(embed=outputEm2)
 
     @_devcmd.command(name="sync", help="""
 Works like:

@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.1.3"
+VERSION = "BETA-3.1.4"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -236,8 +236,8 @@ class devcmd(commands.Cog):
                 await self.bot.unload_extension(extension)
                 em = discord.Embed(title="", description=f"`✅ unloaded {extension}`", color=discord.Color.green())
                 return await ctx.send(embed=em)
-            except commands.ExtensionNotFound:
-                em = discord.Embed(title="Error", description=f"""Extension `{extension}` not found""", color=discord.Color.red())
+            except commands.ExtensionNotLoaded:
+                em = discord.Embed(title="Error", description=f"""Extension `{extension}` was not previously loaded""", color=discord.Color.red())
                 return await ctx.send(embed=em)
             except Exception:
                 em = discord.Embed(title="Error", description=f"""```py\n{traceback.format_exc()}\n```""", color=discord.Color.red())
@@ -247,9 +247,6 @@ class devcmd(commands.Cog):
         try:
             await self.bot.unload_extension(extension)
             text = "reloaded"
-        except commands.ExtensionNotFound:
-            em = discord.Embed(title="Error", description=f"""Extension `{extension}` not found""", color=discord.Color.red())
-            return await ctx.send(embed=em)
         except Exception:
             text = "loaded"
         try:

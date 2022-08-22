@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.1.2"
+VERSION = "BETA-3.1.3"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -238,7 +238,7 @@ class devcmd(commands.Cog):
                 return await ctx.send(embed=em)
             except commands.ExtensionNotFound:
                 em = discord.Embed(title="Error", description=f"""Extension `{extension}` not found""", color=discord.Color.red())
-                return await ctx.send(em)
+                return await ctx.send(embed=em)
             except Exception:
                 em = discord.Embed(title="Error", description=f"""```py\n{traceback.format_exc()}\n```""", color=discord.Color.red())
                 msg = await ctx.author.send(embed=em)
@@ -249,7 +249,7 @@ class devcmd(commands.Cog):
             text = "reloaded"
         except commands.ExtensionNotFound:
             em = discord.Embed(title="Error", description=f"""Extension `{extension}` not found""", color=discord.Color.red())
-            return await ctx.send(em)
+            return await ctx.send(embed=em)
         except Exception:
             text = "loaded"
         try:
@@ -258,7 +258,7 @@ class devcmd(commands.Cog):
             await ctx.send(embed=em)
         except commands.ExtensionNotFound:
             em = discord.Embed(title="Error", description=f"""Extension `{extension}` not found""", color=discord.Color.red())
-            return await ctx.send(em)
+            return await ctx.send(embed=em)
         except Exception:
             error = traceback.format_exc()
             error = error.replace(os.getenv("NAME"), "<my name>")

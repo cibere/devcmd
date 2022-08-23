@@ -19,7 +19,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.2"
+VERSION = "BETA-3.2.3"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -561,7 +561,8 @@ Works like:
     async def cleanCallback(self, ctx, text, method:Literal['pc', 'mobile']):
         txt = text.replace(os.getenv("NAME"), "[NAME HERE]")
         tokens = [token for token in TOKEN_REGEX.findall(text) if self.validate_token(token)]
-        self.loggers.main.info(f"Tokens: {str(tokens)}")
+        import logging
+        logging.info(f"Tokens: {str(tokens)}")
         for tok in tokens:
             txt.replace(tok, "[TOKEN HERE]")
         if method == "pc":

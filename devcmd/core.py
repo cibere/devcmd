@@ -9,6 +9,7 @@ from io import StringIO
 from traceback import format_exc as geterr
 from textwrap import indent
 import sys, traceback
+import base64, binascii
 import subprocess
 from dotenv import load_dotenv
 load_dotenv()
@@ -18,7 +19,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.1"
+VERSION = "BETA-3.2.2"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -546,31 +547,42 @@ Works like:
         em = discord.Embed(title="Loaded Cogs", color=discord.Color.blue(), description=', '.join(cogs))
         await ctx.send(embed=em)
 
-    @_devcmd.group(name="clean", description="cleans the given text of your name", invoke_without_command=True)
-    @is_owner()
-    async def _dc_clean(self, ctx, *, text):
+
+    def validate_token(self, token: str) -> bool:
+        try:
+            # Just check if the first part validates as a user ID
+            (user_id, _, _) = token.split('.')
+            user_id = int(base64.b64decode(user_id + '==', validate=True))
+        except (ValueError, binascii.Error):
+            return False
+        else:
+            return True
+
+    async def cleanCallback(self, ctx, text, method:Literal['pc', 'mobile']):
         txt = text.replace(os.getenv("NAME"), "[NAME HERE]")
-        tokens = [token for token in TOKEN_REGEX.findall(text)]
+        tokens = [token for token in TOKEN_REGEX.findall(text) if self.validate_token(token)]
+        self.loggers.main.info(f"Tokens: {str(tokens)}")
         for tok in tokens:
             txt.replace(tok, "[TOKEN HERE]")
-        await ctx.reply(embed=discord.Embed(description=f"```{txt}```", color=discord.Color.blue(), title=f"Your cleaned text"), mention_author=False)
+        if method == "pc":
+            await ctx.reply(embed=discord.Embed(description=f"```{txt}```", color=discord.Color.blue(), title=f"Your cleaned text"), mention_author=False)
+        elif method == 'mobile':
+            await ctx.reply(txt, mention_author=False)
         try:
             await ctx.message.delete()
         except:
             pass
 
+    @_devcmd.group(name="clean", description="cleans the given text of your name", invoke_without_command=True)
+    @is_owner()
+    async def _dc_clean(self, ctx, *, text):
+        await self.cleanCallback(ctx, text, 'pc')
+        
+
     @_dc_clean.command(name="raw", description="clean command, but for mobile!")
     @is_owner()
     async def _dc_clean_raw(self, ctx, *, text):
-        txt = text.replace(os.getenv("NAME"), "[NAME HERE]")
-        tokens = [token for token in TOKEN_REGEX.findall(text)]
-        for tok in tokens:
-            txt.replace(tok, "[TOKEN HERE]")
-        await ctx.reply(txt, mention_author=False)
-        try:
-            await ctx.message.delete()
-        except:
-            pass
+        await self.cleanCallback(ctx, text, 'mobile')
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.1.6"
+VERSION = "BETA-3.1.7"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -227,7 +227,7 @@ class devcmd(commands.Cog):
     @is_owner()
     async def _dc_load(self, ctx, extension:str=None):
         await ctx.channel.typing()
-        if extension == "all":
+        if extension == "all" and ctx.invoked_with == "reload":
             cogs = []
             for cog in self.bot.cogs:
                 await self.bot.remove_cog(cog)
@@ -235,7 +235,7 @@ class devcmd(commands.Cog):
                     await self.bot.add_cog(cog)
                     cogs.append(f"✅ Reloaded `{cog.name}`")
                 except:
-                    cogs.append(f"❌ Unable to load `{cog.name}`")
+                    cogs.append(f"❌ Unable to load `{cog}`")
             em = discord.Embed(title="", description='\n'.join(cogs), color=discord.Color.blue())
             return await ctx.send(embed=em)
         elif ctx.invoked_with == "reload" and extension == None:

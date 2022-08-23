@@ -19,7 +19,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.3"
+VERSION = "BETA-3.2.4"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -548,23 +548,11 @@ Works like:
         await ctx.send(embed=em)
 
 
-    def validate_token(self, token: str) -> bool:
-        try:
-            # Just check if the first part validates as a user ID
-            (user_id, _, _) = token.split('.')
-            user_id = int(base64.b64decode(user_id + '==', validate=True))
-        except (ValueError, binascii.Error):
-            return False
-        else:
-            return True
-
     async def cleanCallback(self, ctx, text, method:Literal['pc', 'mobile']):
         txt = text.replace(os.getenv("NAME"), "[NAME HERE]")
-        tokens = [token for token in TOKEN_REGEX.findall(text) if self.validate_token(token)]
-        import logging
-        logging.info(f"Tokens: {str(tokens)}")
+        tokens = [token for token in TOKEN_REGEX.findall(txt)]
         for tok in tokens:
-            txt.replace(tok, "[TOKEN HERE]")
+            txt = txt.replace(tok, "[TOKEN HERE]")
         if method == "pc":
             await ctx.reply(embed=discord.Embed(description=f"```{txt}```", color=discord.Color.blue(), title=f"Your cleaned text"), mention_author=False)
         elif method == 'mobile':

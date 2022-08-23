@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.1.11"
+VERSION = "BETA-3.1.12"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -548,7 +548,7 @@ Works like:
     @is_owner()
     async def _dc_clean(self, ctx, *, text):
         txt = text.replace(os.getenv("NAME"), "<my name>")
-        x = re.search("[\w]{24}\.[\w]{6}\.[\w-_]{27}", txt)
+        x = re.search("/[\w]{24}\.[\w]{6}\.[\w-_]{27}/", txt)
         if x != None:
             txt.replace(x, "<Token Here>")
         await ctx.reply(embed=discord.Embed(description=f"```{txt}```", color=discord.Color.blue(), title=f"Your cleaned text"), mention_author=False)
@@ -561,7 +561,7 @@ Works like:
     @is_owner()
     async def _dc_clean_raw(self, ctx, *, text):
         txt = text.replace(os.getenv("NAME"), "<my name>")
-        x = re.search("[\w]{24}\.[\w]{6}\.[\w-_]{27}", txt)
+        x = re.search("/[\w]{24}\.[\w]{6}\.[\w-_]{27}/", txt)
         if x != None:
             txt.replace(x, "<Token Here>")
         await ctx.reply(txt, mention_author=False)

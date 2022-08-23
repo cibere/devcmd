@@ -278,7 +278,7 @@ class devcmd(commands.Cog):
             return await ctx.send(embed=em)
         except Exception:
             error = traceback.format_exc()
-            error = error.replace(os.getenv("NAME"), "<my name>")
+            error = error.replace(os.getenv("NAME"), "[NAME HERE]")
             try:
                 em = discord.Embed(title="Error", description=f"```py\n{error}\n```", color=discord.Color.red())
                 msg = await ctx.author.send(embed=em)
@@ -320,7 +320,7 @@ class devcmd(commands.Cog):
             except Exception as e:
                 msg = f"```py\n{otp}\n{e}{geterr()}\n```"
                 if os.getenv("NAME") in msg.lower():
-                    msg = msg.replace(os.getenv("NAME"), "<my name>")
+                    msg = msg.replace(os.getenv("NAME"), "[NAME HERE]")
                 errorEm = discord.Embed(title="Eval Error", description=msg, color=discord.Color.red())
                 try:
                     await ctx.send(embed=errorEm)
@@ -332,7 +332,7 @@ class devcmd(commands.Cog):
             if res:
                 msg = f"```py\n{res}\n{otp}\n```"
                 if os.getenv("NAME") in msg.lower():
-                    msg = msg.replace(os.getenv("NAME"), "<my name>")
+                    msg = msg.replace(os.getenv("NAME"), "[NAME HERE]")
                 returnedEm = discord.Embed(title="Returned", description=msg, color=discord.Color.green())
                 try:
                     await ctx.send(embed=returnedEm)
@@ -343,7 +343,7 @@ class devcmd(commands.Cog):
             else:
                 msg = f"```py\n{otp}\n```"
                 if os.getenv("NAME") in msg.lower():
-                    msg = msg.replace(os.getenv("NAME"), "<my name>")
+                    msg = msg.replace(os.getenv("NAME"), "[NAME HERE]")
                 outputEm = discord.Embed(title="Output", description=msg, color=discord.Color.green())
                 try:
                     await ctx.send(embed=outputEm)
@@ -496,7 +496,7 @@ Works like:
                         list_of_files.append(os.path.join(root,file))
                         fileNames.append(file.split(".")[0])
             for name in list_of_files:
-                xname = name.replace(os.getenv("NAME"), "<my name>")
+                xname = name.replace(os.getenv("NAME"), "[NAME HERE]")
                 with open(name, 'r', encoding='utf-8') as f:
                     code = str(f.read())
                 lines = code.splitlines()
@@ -549,10 +549,10 @@ Works like:
     @_devcmd.group(name="clean", description="cleans the given text of your name", invoke_without_command=True)
     @is_owner()
     async def _dc_clean(self, ctx, *, text):
-        txt = text.replace(os.getenv("NAME"), "<my name>")
-        x = re.search(TOKEN_REGEX, txt)
-        if x != None:
-            txt.replace(x, "<Token Here>")
+        txt = text.replace(os.getenv("NAME"), "[NAME HERE]")
+        tokens = [token for token in TOKEN_REGEX.findall(text)]
+        for tok in tokens:
+            txt.replace(tok, "[TOKEN HERE]")
         await ctx.reply(embed=discord.Embed(description=f"```{txt}```", color=discord.Color.blue(), title=f"Your cleaned text"), mention_author=False)
         try:
             await ctx.message.delete()
@@ -562,10 +562,10 @@ Works like:
     @_dc_clean.command(name="raw", description="clean command, but for mobile!")
     @is_owner()
     async def _dc_clean_raw(self, ctx, *, text):
-        txt = text.replace(os.getenv("NAME"), "<my name>")
-        x = re.search(TOKEN_REGEX, txt)
-        if x != None:
-            txt.replace(x, "<Token Here>")
+        txt = text.replace(os.getenv("NAME"), "[NAME HERE]")
+        tokens = [token for token in TOKEN_REGEX.findall(text)]
+        for tok in tokens:
+            txt.replace(tok, "[TOKEN HERE]")
         await ctx.reply(txt, mention_author=False)
         try:
             await ctx.message.delete()

@@ -13,10 +13,12 @@ import subprocess
 from dotenv import load_dotenv
 load_dotenv()
 
+
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.1.13"
+TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
+VERSION = "BETA-3.1.14"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -548,7 +550,7 @@ Works like:
     @is_owner()
     async def _dc_clean(self, ctx, *, text):
         txt = text.replace(os.getenv("NAME"), "<my name>")
-        x = re.search("([a-zA-Z0-9]{24}\.[a-zA-Z0-9]{6}\.[a-zA-Z0-9_\-]{27}|mfa\.[a-zA-Z0-9_\-]{84})", txt)
+        x = re.search(TOKEN_REGEX, txt)
         if x != None:
             txt.replace(x, "<Token Here>")
         await ctx.reply(embed=discord.Embed(description=f"```{txt}```", color=discord.Color.blue(), title=f"Your cleaned text"), mention_author=False)
@@ -561,7 +563,7 @@ Works like:
     @is_owner()
     async def _dc_clean_raw(self, ctx, *, text):
         txt = text.replace(os.getenv("NAME"), "<my name>")
-        x = re.search("([a-zA-Z0-9]{24}\.[a-zA-Z0-9]{6}\.[a-zA-Z0-9_\-]{27}|mfa\.[a-zA-Z0-9_\-]{84})", txt)
+        x = re.search(TOKEN_REGEX, txt)
         if x != None:
             txt.replace(x, "<Token Here>")
         await ctx.reply(txt, mention_author=False)

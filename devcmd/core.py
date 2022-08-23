@@ -4,7 +4,7 @@ import discord
 import io, os
 from typing import Literal, Optional
 import inspect
-import mystbin
+import mystbin, re
 from io import StringIO
 from traceback import format_exc as geterr
 from textwrap import indent
@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.1.10"
+VERSION = "BETA-3.1.11"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -548,6 +548,9 @@ Works like:
     @is_owner()
     async def _dc_clean(self, ctx, *, text):
         txt = text.replace(os.getenv("NAME"), "<my name>")
+        x = re.search("[\w]{24}\.[\w]{6}\.[\w-_]{27}", txt)
+        if x != None:
+            txt.replace(x, "<Token Here>")
         await ctx.reply(embed=discord.Embed(description=f"```{txt}```", color=discord.Color.blue(), title=f"Your cleaned text"), mention_author=False)
         try:
             await ctx.message.delete()
@@ -558,6 +561,9 @@ Works like:
     @is_owner()
     async def _dc_clean_raw(self, ctx, *, text):
         txt = text.replace(os.getenv("NAME"), "<my name>")
+        x = re.search("[\w]{24}\.[\w]{6}\.[\w-_]{27}", txt)
+        if x != None:
+            txt.replace(x, "<Token Here>")
         await ctx.reply(txt, mention_author=False)
         try:
             await ctx.message.delete()

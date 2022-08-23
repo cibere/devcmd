@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.1.8"
+VERSION = "BETA-3.1.9"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -154,7 +154,13 @@ class devcmd(commands.Cog):
     @is_owner()
     async def _devcmd(self, ctx, *, extra_args=None):
         if extra_args == None:
-            await ctx.send("Invalid Syntax")
+            nl = '\n'
+            em = discord.Embed(
+                title=f"Invalid Syntax",
+                color=discord.Color.red(),
+                description=f"Please choose from one of my many subcommands:\n{nl.join([cmd.name for cmd in ctx.command.commands])}"
+            )
+            await ctx.send(embed=em)
         else:
             raise discord.ext.commands.CommandNotFound(f'Command "{ctx.invoked_with} {extra_args}" is not found')
 

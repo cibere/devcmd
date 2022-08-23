@@ -16,7 +16,7 @@ load_dotenv()
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
-VERSION = "BETA-3.1.5"
+VERSION = "BETA-3.1.6"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -227,7 +227,7 @@ class devcmd(commands.Cog):
     @is_owner()
     async def _dc_load(self, ctx, extension:str=None):
         await ctx.channel.typing()
-        if ctx.invoked_with == "all":
+        if extension == "all":
             cogs = []
             for cog in self.bot.cogs:
                 await self.bot.remove_cog(cog)

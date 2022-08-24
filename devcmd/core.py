@@ -19,7 +19,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.6"
+VERSION = "BETA-3.2.7"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -129,6 +129,7 @@ class synced_start_pagination(discord.ui.View):
         for c in self.synced:
             em = discord.Embed(title=f"Command: {c.name}", color=discord.Color.blue(), description=c.description)
             em.add_field(name="ID", value=f"{c.id}")
+            em.add_field(name="Usage", value=f"{c.mention}")
             pages.append(em)
         await interaction.response.edit_message(embed=pages[0], view=Paginator(interaction.user, pages))
 

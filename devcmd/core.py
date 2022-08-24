@@ -18,7 +18,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.9"
+VERSION = "BETA-3.2.10"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -130,7 +130,7 @@ class synced_start_pagination(discord.ui.View):
             em.add_field(name="ID", value=f"{c.id}")
             em.add_field(name="Usage", value=f"{c.mention}")
             pages.append(em)
-        await interaction.response.edit_message(embed=pages[0], view=ButtonPaginator(interaction.user, pages))
+        await interaction.response.edit_message(embed=pages[0], view=Paginator(interaction.user, pages))
 
 class devcmd(commands.Cog):
     def __init__(self, bot):
@@ -167,7 +167,7 @@ class devcmd(commands.Cog):
             em.add_field(name="Usage", value=f"devcmd {c.qualified_name} {c.signature}")
             pages.append(em)
             x += 1
-        await ctx.send(view=ButtonPaginator(user=ctx.author, pages=pages), embed=pages[0])
+        await ctx.send(view=Paginator(user=ctx.author, pages=pages), embed=pages[0])
 
     @_devcmd.command(name="info", aliases=['about', 'github', 'docs'], description="Gives you a view that gives you information about devcmd")
     @is_owner()

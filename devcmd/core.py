@@ -9,17 +9,16 @@ from io import StringIO
 from traceback import format_exc as geterr
 from textwrap import indent
 import sys, traceback
-import base64, binascii
 import subprocess
 from dotenv import load_dotenv
 load_dotenv()
-
+from .utils import Paginator
 
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.8"
+VERSION = "BETA-3.2.9"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -132,42 +131,6 @@ class synced_start_pagination(discord.ui.View):
             em.add_field(name="Usage", value=f"{c.mention}")
             pages.append(em)
         await interaction.response.edit_message(embed=pages[0], view=ButtonPaginator(interaction.user, pages))
-
-class ButtonPaginator(discord.ui.View):
-    def __init__(self, user, pages):
-        self.user = user
-        self.pages = pages
-        self.current_page = 0
-        super().__init__(timeout=None)
-        self._dc_hb_num.label = f"{self.current_page + 1}/{len(self.pages)}"
-        if len(self.pages) == 1:
-            self._dc_hb_right.disabled=True
-
-    @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.blurple, disabled=True)
-    async def _dc_hb_left(self, interaction: discord.Interaction, button: discord.ui.Button):
-        if self.user.id != interaction.user.id:
-            return await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
-        if self.current_page - 1 == 0:
-            self._dc_hb_left.disabled = True
-        self._dc_hb_right.disabled = False
-        self.current_page -= 1
-        self._dc_hb_num.label = f"{self.current_page + 1}/{len(self.pages)}"
-        await interaction.response.edit_message(embed=self.pages[self.current_page], view=self)
-
-    @discord.ui.button(label=f'1', style=discord.ButtonStyle.gray, disabled=True)
-    async def _dc_hb_num(self, interaction: discord.Interaction, button: discord.ui.Button):
-        pass
-
-    @discord.ui.button(emoji='➡️', style=discord.ButtonStyle.blurple)
-    async def _dc_hb_right(self, interaction: discord.Interaction, button: discord.ui.Button):
-        if self.user.id != interaction.user.id:
-            return await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
-        if self.current_page + 1 == len(self.pages) - 1:
-            self._dc_hb_right.disabled = True
-        self._dc_hb_left.disabled = False
-        self.current_page += 1
-        self._dc_hb_num.label = f"{self.current_page + 1}/{len(self.pages)}"
-        await interaction.response.edit_message(embed=self.pages[self.current_page], view=self)
 
 class devcmd(commands.Cog):
     def __init__(self, bot):

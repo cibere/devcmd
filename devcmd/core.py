@@ -19,7 +19,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.7"
+VERSION = "BETA-3.2.8"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -131,15 +131,17 @@ class synced_start_pagination(discord.ui.View):
             em.add_field(name="ID", value=f"{c.id}")
             em.add_field(name="Usage", value=f"{c.mention}")
             pages.append(em)
-        await interaction.response.edit_message(embed=pages[0], view=Paginator(interaction.user, pages))
+        await interaction.response.edit_message(embed=pages[0], view=ButtonPaginator(interaction.user, pages))
 
-class Paginator(discord.ui.View):
+class ButtonPaginator(discord.ui.View):
     def __init__(self, user, pages):
         self.user = user
         self.pages = pages
         self.current_page = 0
         super().__init__(timeout=None)
         self._dc_hb_num.label = f"{self.current_page + 1}/{len(self.pages)}"
+        if len(self.pages) == 1:
+            self._dc_hb_right.disabled=True
 
     @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.blurple, disabled=True)
     async def _dc_hb_left(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -202,7 +204,7 @@ class devcmd(commands.Cog):
             em.add_field(name="Usage", value=f"devcmd {c.qualified_name} {c.signature}")
             pages.append(em)
             x += 1
-        await ctx.send(view=Paginator(user=ctx.author, pages=pages), embed=pages[0])
+        await ctx.send(view=ButtonPaginator(user=ctx.author, pages=pages), embed=pages[0])
 
     @_devcmd.command(name="info", aliases=['about', 'github', 'docs'], description="Gives you a view that gives you information about devcmd")
     @is_owner()

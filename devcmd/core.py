@@ -19,7 +19,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.5"
+VERSION = "BETA-3.2.6"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -123,7 +123,7 @@ class synced_start_pagination(discord.ui.View):
 
     @discord.ui.button(label='Show All Commands', style=discord.ButtonStyle.blurple)
     async def _start_pagination(self, interaction: discord.Interaction, button: discord.ui.Button):
-        if self.user.id is not interaction.user.id:
+        if self.user.id != interaction.user.id:
             return await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
         pages = []
         for c in self.synced:
@@ -142,7 +142,7 @@ class Paginator(discord.ui.View):
 
     @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.blurple, disabled=True)
     async def _dc_hb_left(self, interaction: discord.Interaction, button: discord.ui.Button):
-        if self.user.id is not interaction.user.id:
+        if self.user.id != interaction.user.id:
             return await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
         if self.current_page - 1 == 0:
             self._dc_hb_left.disabled = True
@@ -157,7 +157,7 @@ class Paginator(discord.ui.View):
 
     @discord.ui.button(emoji='➡️', style=discord.ButtonStyle.blurple)
     async def _dc_hb_right(self, interaction: discord.Interaction, button: discord.ui.Button):
-        if self.user.id is not interaction.user.id:
+        if self.user.id != interaction.user.id:
             return await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
         if self.current_page + 1 == len(self.pages) - 1:
             self._dc_hb_right.disabled = True
@@ -182,7 +182,7 @@ class devcmd(commands.Cog):
             )
             await ctx.send(embed=em)
         else:
-            raise discord.ext.commands.CommandNotFound(f'Command "{ctx.invoked_with} {extra_args}" is not found')
+            raise discord.ext.commands.CommandNotFound(f'Command "{ctx.invoked_with} {extra_args}" != found')
 
     @_devcmd.command(name="help", description="Gives you help with devcmd")
     async def _dc_help(self, ctx):
@@ -394,11 +394,9 @@ Works like:
                 synced = []
             else:
                 synced = await ctx.bot.tree.sync()
-            await ctx.send(
-                f"Synced {len(synced)} commands {'globally' if spec is None else 'to the current guild.'}",
-                view=synced_start_pagination(ctx.author, synced)
-            )
-            return
+            return await ctx.send(
+                f"Synced {len(synced)} commands {'globally' if spec is None else 'to the current guild.'}", view=synced_start_pagination(ctx.author, synced))
+            
 
         ret = 0
         for guild in guilds:
@@ -485,12 +483,12 @@ Works like:
     @is_owner()
     async def _dc_file(self, ctx, file:str):
         if "env" in file:
-            raise BadArgument(f'"{file}" is not a safe file')
+            raise BadArgument(f'"{file}" != a safe file')
         try:
             with open(file, 'r', encoding="utf-8") as f:
                 code = str(f.read())
         except FileNotFoundError:
-            raise BadArgument(f'"{file}" is not a valid file')
+            raise BadArgument(f'"{file}" != a valid file')
         
         name = file.split('/')
         name = name[len(name) - 1]
@@ -529,7 +527,7 @@ Works like:
                         lib = line.split(" ")[1].split(".")[0].replace(",", "")
                         if lib not in fileNames:
                             if lib in disallowedLibs:
-                                em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)+1}`\nFile: `{xname}`\nReason: importing `{lib}`, which is not a whitelisted module", color=discord.Color.blue())
+                                em=discord.Embed(title="Possible Blocking Code Found", description=f"Line: `{lines.index(line)+1}`\nFile: `{xname}`\nReason: importing `{lib}`, which != a whitelisted module", color=discord.Color.blue())
                                 await ctx.send(embed=em)
                                 cases += 1
 
@@ -553,7 +551,7 @@ Works like:
     async def _dc_remove(self, ctx, cog_name:str):
         cogs = [str(cog) for cog in self.bot.cogs]
         if (cog_name not in cogs):
-            return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"`{cog_name}` is not a cog that is currently loaded"))
+            return await ctx.send(embed=discord.Embed(color=discord.Color.red(), description=f"`{cog_name}` != a cog that is currently loaded"))
         await self.bot.remove_cog(cog_name)
         await ctx.send(embed=discord.Embed(color=discord.Color.green(), description=f"Successfully removed `{cog_name}`"))
     

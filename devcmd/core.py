@@ -19,7 +19,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.4"
+VERSION = "BETA-3.2.5"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -115,7 +115,24 @@ class RedirectedStdout:
     def __str__(self):
         return self._string_io.getvalue()
 
-class helpButtons(discord.ui.View):
+class synced_start_pagination(discord.ui.View):
+    def __init__(self, user, synced):
+        self.user = user
+        self.synced = synced
+        super().__init__(timeout=None)
+
+    @discord.ui.button(label='Show All Commands', style=discord.ButtonStyle.blurple)
+    async def _start_pagination(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if self.user.id is not interaction.user.id:
+            return await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
+        pages = []
+        for c in self.synced:
+            em = discord.Embed(title=f"Command: {c.name}", color=discord.Color.blue(), description=c.description)
+            em.add_field(name="ID", value=f"{c.id}")
+            pages.append(em)
+        await interaction.response.edit_message(embed=pages[0], view=Paginator(interaction.user, pages))
+
+class Paginator(discord.ui.View):
     def __init__(self, user, pages):
         self.user = user
         self.pages = pages
@@ -184,7 +201,7 @@ class devcmd(commands.Cog):
             em.add_field(name="Usage", value=f"devcmd {c.qualified_name} {c.signature}")
             pages.append(em)
             x += 1
-        await ctx.send(view=helpButtons(user=ctx.author, pages=pages), embed=pages[0])
+        await ctx.send(view=Paginator(user=ctx.author, pages=pages), embed=pages[0])
 
     @_devcmd.command(name="info", aliases=['about', 'github', 'docs'], description="Gives you a view that gives you information about devcmd")
     @is_owner()
@@ -377,9 +394,9 @@ Works like:
                 synced = []
             else:
                 synced = await ctx.bot.tree.sync()
-
             await ctx.send(
-                f"Synced {len(synced)} commands {'globally' if spec is None else 'to the current guild.'}"
+                f"Synced {len(synced)} commands {'globally' if spec is None else 'to the current guild.'}",
+                view=synced_start_pagination(ctx.author, synced)
             )
             return
 

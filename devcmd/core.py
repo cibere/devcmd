@@ -20,7 +20,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.17"
+VERSION = "BETA-3.2.18"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -594,7 +594,6 @@ Works like:
         em.set_footer(text=f"Currently on round 1/{amount}")
         oringMsg = await ctx.send(embed=em)
         em = oringMsg.embeds[0]
-        em.description = ""
         
         pings = []
         for x in range(amount - 1):          
@@ -606,7 +605,10 @@ Works like:
             em = msg.embeds[0]
             if not x + 3 > amount - 1:
                 em.set_footer(text=f"Currently on round {x + 2}/{amount}")
-            em.description += f"\nRound {x + 1}: {msgP}ms"
+            try:
+                em.description += f"\nRound {x + 1}: {msgP}ms"
+            except:
+                em.description = f"\nRound {x + 1}: {msgP}ms"
         
         em.set_footer(text=f"Finished")
         em.set_field_at(0, value=f"```{round(statistics.mean(pings), 2)}ms```", name='Average', inline=False)

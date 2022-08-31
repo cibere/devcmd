@@ -20,7 +20,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.15"
+VERSION = "BETA-3.2.16"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -572,6 +572,7 @@ Works like:
         em.add_field(name="Average", value=f"```N/A```", inline=False)
         em.set_footer(text=f"Currently on round 1/{amount}")
         oringMsg = await ctx.send(embed=em)
+        em = oringMsg.embeds[0]
         
         pings = []
         for x in range(amount):
@@ -579,7 +580,7 @@ Works like:
             pings.append(ping)
             em = oringMsg.embeds[0]
             em.set_footer(text=f"Currently on round {x + 2}/{amount}")
-            em.description += f"Round {x + 2}: {ping}ms"
+            em.description += f"\nRound {x + 2}: {ping}ms"
             await oringMsg.edit(embed=em)
         
         em.set_field_at(0, value=f"```{round(statistics.mean(pings), 2)}ms```", name='Average', inline=False)
@@ -590,12 +591,8 @@ Works like:
         em = discord.Embed(title="Message Latency", description="", color=discord.Color.blue())
         em.add_field(name="Average", value=f"```N/A```", inline=False)
         em.set_footer(text=f"Currently on round 1/{amount}")
-        ping = time.monotonic()
         oringMsg = await ctx.send(embed=em)
-        ping = time.monotonic() - ping
         em = oringMsg.embeds[0]
-        em.set_footer(text=f"Currently on round 2/{amount}")
-        em.description = f"Round 1: {round(ping)}ms\n"
         
         pings = []
         for x in range(amount - 1):          
@@ -605,12 +602,11 @@ Works like:
             msgP = round(ping * 1000, 2)
             pings.append(msgP)
             em = msg.embeds[0]
-            if x + 3 > amount - 1:
-                em.set_footer(text=f"Finished")
-            else:
-                em.set_footer(text=f"Currently on round {x + 3}/{amount}")
-            em.description += f"\nRound {x + 2}: {msgP}ms"
+            if not x + 3 > amount - 1:
+                em.set_footer(text=f"Currently on round {x + 2}/{amount}")
+            em.description += f"\nRound {x + 1}: {msgP}ms"
         
+        em.set_footer(text=f"Finished")
         em.set_field_at(0, value=f"```{round(statistics.mean(pings), 2)}ms```", name='Average', inline=False)
         await oringMsg.edit(embed=em, content="")
         

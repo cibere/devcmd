@@ -20,7 +20,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.18"
+VERSION = "BETA-3.3.0"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -567,25 +567,9 @@ Works like:
         await ctx.send(embed=em)
     
     @_dc_ping.command(name="websocket", description="determines the bots websocket latency", aliases=['web', 'w', 'socket'])
-    async def _dc_ping_websocket(self, ctx, amount=3):
-        em = discord.Embed(title="Websock Latency", description="", color=discord.Color.blue())
-        em.add_field(name="Average", value=f"```N/A```", inline=False)
-        em.set_footer(text=f"Currently on round 1/{amount}")
-        oringMsg = await ctx.send(embed=em)
-        em = oringMsg.embeds[0]
-        em.description = ""
-        
-        pings = []
-        for x in range(amount):
-            ping = self.bot.latency * 1000
-            pings.append(ping)
-            em = oringMsg.embeds[0]
-            em.set_footer(text=f"Currently on round {x + 2}/{amount}")
-            em.description += f"\nRound {x + 2}: {ping}ms"
-            await oringMsg.edit(embed=em)
-        
-        em.set_field_at(0, value=f"```{round(statistics.mean(pings), 2)}ms```", name='Average', inline=False)
-        await oringMsg.edit(embed=em, content="")
+    async def _dc_ping_websocket(self, ctx):
+        em = discord.Embed(title="Websock Latency", description=f"{round(self.bot.latency * 1000, 2)}ms", color=discord.Color.blue())
+        await ctx.send(embed=em)
     
     @_dc_ping.command(name="message", description="determines the bots message latency", aliases=['msg', 'm'])
     async def _dc_ping_message(self, ctx, amount=3):
@@ -596,7 +580,7 @@ Works like:
         em = oringMsg.embeds[0]
         
         pings = []
-        for x in range(amount - 1):          
+        for x in range(amount):          
             ping = time.monotonic()
             msg = await oringMsg.edit(embed=em)
             ping = time.monotonic() - ping

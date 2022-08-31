@@ -20,7 +20,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.11"
+VERSION = "BETA-3.2.12"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -595,7 +595,7 @@ Works like:
         ping = time.monotonic() - ping
         em = oringMsg.embeds[0]
         em.set_footer(text=f"Currently on round 2/{amount}")
-        em.description += f"Round 1: {ping}ms\n"
+        em.description = f"Round 1: {ping}ms\n"
         
         pings = []
         for x in amount - 1:          

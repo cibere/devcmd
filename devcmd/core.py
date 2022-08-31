@@ -20,7 +20,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.12"
+VERSION = "BETA-3.2.13"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -574,7 +574,7 @@ Works like:
         oringMsg = await ctx.send(embed=em)
         
         pings = []
-        for x in amount:
+        for x in range(amount):
             ping = self.bot.latency * 1000
             pings.append(ping)
             em = oringMsg.embeds[0]
@@ -598,7 +598,7 @@ Works like:
         em.description = f"Round 1: {ping}ms\n"
         
         pings = []
-        for x in amount - 1:          
+        for x in range(amount - 1):          
             ping = time.monotonic()
             msg = await oringMsg.edit(embed=em)
             ping = time.monotonic() - ping

@@ -13,12 +13,14 @@ import subprocess
 from dotenv import load_dotenv
 load_dotenv()
 from .utils import Paginator
+import time
 
+import statistics
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.2.10"
+VERSION = "BETA-3.2.11"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -553,6 +555,63 @@ Works like:
     @is_owner()
     async def _dc_clean_raw(self, ctx, *, text):
         await self.cleanCallback(ctx, text, 'mobile')
+
+    @_devcmd.group(name="ping", description="ping subgroup", invoke_without_command=True)
+    async def _dc_ping(self, ctx):
+        nl = '\n'
+        em = discord.Embed(
+                title=f"Invalid Syntax",
+                color=discord.Color.red(),
+                description=f"Please choose from one of my many subcommands:\n>>> {nl.join([cmd.name for cmd in ctx.command.commands])}"
+        )
+        await ctx.send(embed=em)
+    
+    @_dc_ping.command(name="websocket", description="determines the bots websocket latency", aliases=['web', 'w', 'socket'])
+    async def _dc_ping_websocket(self, ctx, amount=3):
+        em = discord.Embed(title="Websock Latency", description="", color=discord.Color.blue())
+        em.add_field(name="Average", value=f"```N/A```", inline=False)
+        em.set_footer(text=f"Currently on round 1/{amount}")
+        oringMsg = await ctx.send(embed=em)
+        
+        pings = []
+        for x in amount:
+            ping = self.bot.latency * 1000
+            pings.append(ping)
+            em = oringMsg.embeds[0]
+            em.set_footer(text=f"Currently on round {x + 2}/{amount}")
+            em.description += f"Round {x + 2}: {ping}ms\n"
+            await oringMsg.edit(embed=em)
+        
+        em.set_field_at(0, value=f"```{round(statistics.mean(pings), 2)}ms```", name='Average', inline=False)
+        await oringMsg.edit(embed=em, content="")
+    
+    @_dc_ping.command(name="message", description="determines the bots message latency", aliases=['msg', 'm'])
+    async def _dc_ping_message(self, ctx, amount=3):
+        em = discord.Embed(title="Message Latency", description="", color=discord.Color.blue())
+        em.add_field(name="Average", value=f"```N/A```", inline=False)
+        em.set_footer(text=f"Currently on round 1/{amount}")
+        ping = time.monotonic()
+        oringMsg = await ctx.send(embed=em)
+        ping = time.monotonic() - ping
+        em = oringMsg.embeds[0]
+        em.set_footer(text=f"Currently on round 2/{amount}")
+        em.description += f"Round 1: {ping}ms\n"
+        
+        pings = []
+        for x in amount - 1:          
+            ping = time.monotonic()
+            msg = await oringMsg.edit(embed=em)
+            ping = time.monotonic() - ping
+            msgP = round(ping * 1000, 2)
+            pings.append(msgP)
+            em = msg.embeds[0]
+            em.set_footer(text=f"Currently on round {x + 3}/{amount}")
+            em.description += f"Round {x + 2}: {ping}ms\n"
+        
+        em.set_field_at(0, value=f"```{round(statistics.mean(pings), 2)}ms```", name='Average', inline=False)
+        await oringMsg.edit(embed=em, content="")
+        
+        
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

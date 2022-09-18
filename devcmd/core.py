@@ -305,6 +305,7 @@ class devcmd(commands.Cog):
                 res= await func()
             except Exception as e:
                 msg = f"```py\n{otp}\n{e}{geterr()}\n```"
+                msg = f"```py\n{e}```py\n{geterr()}\n```"
                 if os.getenv("NAME") in msg.lower():
                     msg = msg.replace(os.getenv("NAME"), "[NAME HERE]")
                 errorEm = discord.Embed(title="Eval Error", description=msg, color=discord.Color.red())

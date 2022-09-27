@@ -21,7 +21,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.3.7"
+VERSION = "BETA-3.3.8"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -620,7 +620,7 @@ Works like:
             except ImportError:
                 self.JSK_INSTALLED = False
             return self.bot.process_commands(ctx.message)
-        if 'jishaku' in self.bot.cogs:
+        if 'Jishaku' in self.bot.cogs:
             await self.bot.unload_extension('jishaku')
             em = discord.Embed(title="", description="`✅ unloaded jishaku`", color=discord.Color.green())
             await ctx.send(embed=em)

@@ -21,7 +21,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.3.6"
+VERSION = "BETA-3.3.7"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -138,13 +138,13 @@ class synced_start_pagination(discord.ui.View):
 class devcmd(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        global JSK_INSTALLED
-        JSK_INSTALLED = None
+        self.JSK_INSTALLED = None
         try:
             import jishaku
-            JSK_INSTALLED = True
+            del jishaku
+            self.JSK_INSTALLED = True
         except ImportError:
-            JSK_INSTALLED = False
+            self.JSK_INSTALLED = False
 
     @commands.group(hidden=True, invoke_without_command=True, name="devcmd", aliases=['dev', 'dc'], description="the devcmd base group")
     @is_owner()
@@ -610,15 +610,15 @@ Works like:
     @_devcmd.command(name="jishaku", description = "toggles jishaku", aliases=['jsk'])
     @is_owner()
     async def _dc_jsk(self, ctx):
-        if JSK_INSTALLED == False:
+        if self.JSK_INSTALLED == False:
             return await ctx.reply("You do not have jsk installed. Install it via ```pip install -U jishaku```")
-        if JSK_INSTALLED == None:
-            global JSK_INSTALLED
+        if self.JSK_INSTALLED == None:
             try:
                 import jishaku
-                JSK_INSTALLED = True
+                del jishaku
+                self.JSK_INSTALLED = True
             except ImportError:
-                JSK_INSTALLED = False
+                self.JSK_INSTALLED = False
             return self.bot.process_commands(ctx.message)
         if 'jishaku' in self.bot.cogs:
             await self.bot.unload_extension('jishaku')

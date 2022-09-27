@@ -14,6 +14,13 @@ from dotenv import load_dotenv
 load_dotenv()
 from .utils import Paginator
 import time
+JSK_INSTALLED = None
+try:
+    import jishaku
+    JSK_INSTALLED = True
+except ImportError:
+    JSK_INSTALLED = False
+
 
 import statistics
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
@@ -598,3 +605,24 @@ Works like:
         em.set_footer(text=f"Finished")
         em.set_field_at(0, value=f"```{round(statistics.mean(pings), 2)}ms```", name='Average', inline=False)
         await oringMsg.edit(embed=em, content="")
+        
+    @_devcmd.command(name="jishaku", description = "toggles jishaku", aliases=['jsk'])
+    @is_owner()
+    async def _dc_jsk(self, ctx):
+        if JSK_INSTALLED == False:
+            return await ctx.reply("You do not have jsk installed. Install it via ```pip install -U jishaku```")
+        if JSK_INSTALLED == None:
+            try:
+                import jishaku
+                JSK_INSTALLED = True
+            except ImportError:
+                JSK_INSTALLED = False
+            return self.bot.process_commands(ctx.message)
+        if 'jishaku' in self.bot.cogs:
+            await self.bot.unload_extension('jishaku')
+            em = discord.Embed(title="", description="`✅ unloaded jishaku`", color=discord.Color.green())
+            await ctx.send(embed=em)
+        else:
+            await self.bot.load_extension('jishaku')
+            em = discord.Embed(title="", description="`✅ loaded jishaku`", color=discord.Color.green())
+            await ctx.send(embed=em)

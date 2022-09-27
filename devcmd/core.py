@@ -14,12 +14,6 @@ from dotenv import load_dotenv
 load_dotenv()
 from .utils import Paginator
 import time
-JSK_INSTALLED = None
-try:
-    import jishaku
-    JSK_INSTALLED = True
-except ImportError:
-    JSK_INSTALLED = False
 
 
 import statistics
@@ -27,7 +21,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.3.5"
+VERSION = "BETA-3.3.6"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -144,6 +138,13 @@ class synced_start_pagination(discord.ui.View):
 class devcmd(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        global JSK_INSTALLED
+        JSK_INSTALLED = None
+        try:
+            import jishaku
+            JSK_INSTALLED = True
+        except ImportError:
+            JSK_INSTALLED = False
 
     @commands.group(hidden=True, invoke_without_command=True, name="devcmd", aliases=['dev', 'dc'], description="the devcmd base group")
     @is_owner()
@@ -612,6 +613,7 @@ Works like:
         if JSK_INSTALLED == False:
             return await ctx.reply("You do not have jsk installed. Install it via ```pip install -U jishaku```")
         if JSK_INSTALLED == None:
+            global JSK_INSTALLED
             try:
                 import jishaku
                 JSK_INSTALLED = True

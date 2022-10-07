@@ -314,7 +314,7 @@ class devcmd(commands.Cog):
         }
 
         function="async def func():\n"+indent(code,"    ")
-        function.splitlines()
+        function = function.splitlines()
         function[-1].removeprefix("    ")
         if not function[-1].startswith("print") and not function[-1].startswith("return"):
             function.pop(function[-1])

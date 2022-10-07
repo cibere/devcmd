@@ -22,7 +22,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.3.9"
+VERSION = "BETA-3.3.10"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -425,7 +425,7 @@ Works like:
             return await ctx.send(embed=em)
         
         await ctx.channel.typing()
-        subprocess.run(f"pip install git+{url}", shell=True)
+        subprocess.run(f"py -m pip install git+{url}", shell=True)
         await self.bot.unload_extension('devcmd')
         await self.bot.load_extension('devcmd')
         msg = ctx.message

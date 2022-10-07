@@ -22,7 +22,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.3.12"
+VERSION = "BETA-3.3.13"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -317,7 +317,8 @@ class devcmd(commands.Cog):
         function.splitlines()
         function[-1].removeprefix("    ")
         if not function[-1].startswith("print") and not function[-1].startswith("return"):
-            function[-1] = f"return {function[-1]}"
+            function.pop(function[-1])
+            function.append(f"return {function[-1]}")
         function = '\n'.join(function)
         with RedirectedStdout() as otp:
             try:

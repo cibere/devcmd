@@ -21,7 +21,7 @@ import statistics
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.3.24"
+VERSION = "BETA-3.3.25"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -122,7 +122,7 @@ async def create_paste(text: str):
         'text' : text.replace("\n", "\\n")
     }
     async with aiohttp.ClientSession() as cs:
-        async with cs.post("https://paste.cibere.dev", headers=data, verify_ssl=False) as r:
+        async with cs.post("https://paste.cibere.dev/upload", headers=data, verify_ssl=False) as r:
             res = await r.json()
     if res['status_code'] == 200:
         return f"https://paste.cibere.dev/{res['file_id']}"

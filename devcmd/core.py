@@ -22,7 +22,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.3.20"
+VERSION = "BETA-3.3.21"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -316,7 +316,6 @@ class devcmd(commands.Cog):
         function="async def func():\n"+indent(code,"    ")
         function = function.splitlines()
         x = function[-1].removeprefix("    ")
-        print(f"X: {x}")
         if not x.startswith("print") and not x.startswith("return") and not x.startswith(" "):
             function.pop(function.index(function[-1]))
             function.append(f"    return {x}")
@@ -340,7 +339,7 @@ class devcmd(commands.Cog):
                     await ctx.send(embed=errorEm)
                 return
             ping = time.monotonic() - ping
-            ping = round(ping * 1000, 2)
+            ping = ping * 1000
             if res:
                 msg = f"```py\n{res}\n{otp}\n```"
                 msg = filter_name(msg)

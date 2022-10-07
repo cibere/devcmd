@@ -21,7 +21,7 @@ import statistics
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.3.21"
+VERSION = "BETA-3.3.22"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:

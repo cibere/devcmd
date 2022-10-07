@@ -22,7 +22,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.3.19"
+VERSION = "BETA-3.3.20"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -317,7 +317,7 @@ class devcmd(commands.Cog):
         function = function.splitlines()
         x = function[-1].removeprefix("    ")
         print(f"X: {x}")
-        if not x.startswith("print") and not x.startswith("return") and not x.startswith("    "):
+        if not x.startswith("print") and not x.startswith("return") and not x.startswith(" "):
             function.pop(function.index(function[-1]))
             function.append(f"    return {x}")
         function = '\n'.join(function)

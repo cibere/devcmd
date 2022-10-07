@@ -22,7 +22,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.3.16"
+VERSION = "BETA-3.3.17"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -324,6 +324,7 @@ class devcmd(commands.Cog):
             try:
                 import_expression.exec(function,env)
                 func=env["func"]
+                ping = time.monotonic()
                 res= await func()
             except Exception as e:
                 msg = f"```py\n{otp}\n{e}{geterr()}\n```"
@@ -337,20 +338,25 @@ class devcmd(commands.Cog):
                     errorEm = discord.Embed(title="Error", description=f"[Your error was too long, so I sent it here]({str(paste)})", color=discord.Color.red())
                     await ctx.send(embed=errorEm)
                 return
+            ping = time.monotonic() - ping
+            ping = round(ping * 1000, 2)
             if res:
                 msg = f"```py\n{res}\n{otp}\n```"
                 msg = filter_name(msg)
                 returnedEm = discord.Embed(title="Returned", description=msg, color=discord.Color.green())
+                returnedEm.set_footer(text=f"Finished in {ping}ms")
                 try:
                     await ctx.send(embed=returnedEm)
                 except:
                     paste = await mystbin_client.post(msg)
                     returnedEm = discord.Embed(title="Returned", description=f"[Your output was too long, so I sent it here]({str(paste)})", color=discord.Color.green())
+                    returnedEm.set_footer(text=f"Finished in {ping}ms")
                     await ctx.send(embed=returnedEm)
             else:
                 msg = f"```py\n{otp}\n```"
                 msg = filter_name(msg)
                 outputEm = discord.Embed(title="Output", description=msg, color=discord.Color.green())
+                outputEm.set_footer(text=f"Finished in {ping}ms")
                 try:
                     await ctx.send(embed=outputEm)
                 except:
@@ -358,6 +364,7 @@ class devcmd(commands.Cog):
 
                     paste = await mystbin_client.create_multifile_paste(files=[file])
                     outputEm2 = discord.Embed(title="Output", description=f"[Your output was too long, so I sent it here]({str(paste.files[0].content)})", color=discord.Color.green())
+                    outputEm.set_footer(text=f"Finished in {ping}ms")
                     await ctx.send(embed=outputEm2)
 
     @_devcmd.command(name="sync", help="""

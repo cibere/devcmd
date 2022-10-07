@@ -122,7 +122,7 @@ async def create_paste(text: str):
         'text' : text
     }
     async with aiohttp.ClientSession() as cs:
-        async with cs.post("https://paste.cibere.dev", headers=data) as r:
+        async with cs.post("https://paste.cibere.dev", headers=data, verify_ssl=False) as r:
             res = await r.json()
     if res['status_code'] == 200:
         return f"https://paste.cibere.dev/{res['file_id']}"

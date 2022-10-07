@@ -8,6 +8,7 @@ import mystbin, re
 from io import StringIO
 from traceback import format_exc as geterr
 from textwrap import indent
+import import_expression
 import sys, traceback
 import subprocess
 from dotenv import load_dotenv
@@ -21,7 +22,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.3.8"
+VERSION = "BETA-3.3.9"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -308,7 +309,7 @@ class devcmd(commands.Cog):
         function="async def func():\n"+indent(code,"    ")
         with RedirectedStdout() as otp:
             try:
-                exec(function,env)
+                import_expression.exec(function,env)
                 func=env["func"]
                 res= await func()
             except Exception as e:

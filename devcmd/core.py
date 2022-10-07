@@ -22,7 +22,7 @@ disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3',
 
 mystbin_client = mystbin.Client()
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
-VERSION = "BETA-3.3.10"
+VERSION = "BETA-3.3.11"
 url = "https://github.com/cibere/devcmd@beta"
 
 class infoCmd:
@@ -117,6 +117,13 @@ class RedirectedStdout:
 
     def __str__(self):
         return self._string_io.getvalue()
+
+def filter_name(text: str):
+    name = os.getenv("NAME")
+    if name:
+        return text.replace(name, "[NAME HERE]")
+    else:
+        return text
 
 class synced_start_pagination(discord.ui.View):
     def __init__(self, user, synced):
@@ -273,7 +280,7 @@ class devcmd(commands.Cog):
             return await ctx.send(embed=em)
         except Exception:
             error = traceback.format_exc()
-            error = error.replace(os.getenv("NAME"), "[NAME HERE]")
+            error = filter_name(error)
             try:
                 em = discord.Embed(title="Error", description=f"```py\n{error}\n```", color=discord.Color.red())
                 msg = await ctx.author.send(embed=em)
@@ -315,8 +322,7 @@ class devcmd(commands.Cog):
             except Exception as e:
                 msg = f"```py\n{otp}\n{e}{geterr()}\n```"
                 msg = f"```py\n{e}```\n```py\n{geterr()}\n```"
-                if os.getenv("NAME") in msg.lower():
-                    msg = msg.replace(os.getenv("NAME"), "[NAME HERE]")
+                msg = filter_name(msg)
                 errorEm = discord.Embed(title="Eval Error", description=msg, color=discord.Color.red())
                 try:
                     await ctx.send(embed=errorEm)
@@ -327,8 +333,7 @@ class devcmd(commands.Cog):
                 return
             if res:
                 msg = f"```py\n{res}\n{otp}\n```"
-                if os.getenv("NAME") in msg.lower():
-                    msg = msg.replace(os.getenv("NAME"), "[NAME HERE]")
+                msg = filter_name(msg)
                 returnedEm = discord.Embed(title="Returned", description=msg, color=discord.Color.green())
                 try:
                     await ctx.send(embed=returnedEm)
@@ -338,8 +343,7 @@ class devcmd(commands.Cog):
                     await ctx.send(embed=returnedEm)
             else:
                 msg = f"```py\n{otp}\n```"
-                if os.getenv("NAME") in msg.lower():
-                    msg = msg.replace(os.getenv("NAME"), "[NAME HERE]")
+                msg = filter_name(msg)
                 outputEm = discord.Embed(title="Output", description=msg, color=discord.Color.green())
                 try:
                     await ctx.send(embed=outputEm)
@@ -490,7 +494,7 @@ Works like:
                         list_of_files.append(os.path.join(root,file))
                         fileNames.append(file.split(".")[0])
             for name in list_of_files:
-                xname = name.replace(os.getenv("NAME"), "[NAME HERE]")
+                xname = filter_name(name)
                 with open(name, 'r', encoding='utf-8') as f:
                     code = str(f.read())
                 lines = code.splitlines()
@@ -542,7 +546,7 @@ Works like:
 
 
     async def cleanCallback(self, ctx, text, method:Literal['pc', 'mobile']):
-        txt = text.replace(os.getenv("NAME"), "[NAME HERE]")
+        txt = filter_name(text)
         tokens = [token for token in TOKEN_REGEX.findall(txt)]
         for tok in tokens:
             txt = txt.replace(tok, "[TOKEN HERE]")

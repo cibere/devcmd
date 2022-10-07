@@ -119,7 +119,7 @@ class RedirectedStdout:
 
 async def create_paste(text: str):
     data = {
-        'text' : text
+        'text' : text.replace("\n", "\\n")
     }
     async with aiohttp.ClientSession() as cs:
         async with cs.post("https://paste.cibere.dev", headers=data, verify_ssl=False) as r:

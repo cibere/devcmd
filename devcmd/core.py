@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from .utils import Paginator
 import time
+from urllib import parse
 
 
 import statistics
@@ -121,8 +122,10 @@ async def create_paste(text: str):
     data = {
         'text' : text.replace("\n", "\\n")
     }
+    data = parse.urlencode(data)
+
     async with aiohttp.ClientSession() as cs:
-        async with cs.post("https://paste.cibere.dev/upload", data=data, verify_ssl=False) as r:
+        async with cs.post(f"https://paste.cibere.dev/upload?{data}", verify_ssl=False) as r:
             res = await r.json()
     if res['status_code'] == 200:
         return f"https://paste.cibere.dev/{res['file_id']}"
@@ -319,7 +322,8 @@ class devcmd(commands.Cog):
             "commands":commands,
             "os":os,
             "io":io,
-            "sys":sys
+            "sys":sys,
+            "aiohttp":aiohttp
         }
 
         function="async def func():\n"+indent(code,"    ")

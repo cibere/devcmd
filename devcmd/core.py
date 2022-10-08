@@ -118,18 +118,6 @@ class RedirectedStdout:
     def __str__(self):
         return self._string_io.getvalue()
 
-async def create_paste(text: str):
-    data = {
-        'text' : text.replace("\n", "\\n")
-    }
-    data = parse.urlencode(data)
-
-    async with aiohttp.ClientSession() as cs:
-        async with cs.post(f"https://paste.cibere.dev/upload?{data}", verify_ssl=False) as r:
-            res = await r.json()
-    if res['status_code'] == 200:
-        return f"https://paste.cibere.dev/{res['file_id']}"
-
 def filter_name(text: str):
     name = os.getenv("NAME")
     if name:
@@ -302,10 +290,6 @@ class devcmd(commands.Cog):
                 em = discord.Embed(title="Error", description=f"```py\n{error}\n```", color=discord.Color.red())
                 em2 = discord.Embed(title="", description=f"I am unable to send you a dm, so error will be sent here.", color=discord.Color.red())
                 await ctx.send(embeds=[em, em2])
-            except:
-                paste = await create_paste(error)
-                em = discord.Embed(title="Error", description=f"(Error is too long to send here, so it was sent here)[{str(paste)}]", color=discord.Color.red())
-                await ctx.send(embed=em)    
 
     @_devcmd.group(invoke_without_command=True, name="eval", aliases=['```py', '```', 'py', 'python', 'run', 'exec', 'execute'], description="Evaluates the given code")
     @is_owner()
@@ -344,12 +328,7 @@ class devcmd(commands.Cog):
                 msg = f"```py\n{e}```\n```py\n{geterr()}\n```"
                 msg = filter_name(msg)
                 errorEm = discord.Embed(title="Eval Error", description=msg, color=discord.Color.red())
-                try:
-                    await ctx.send(embed=errorEm)
-                except:
-                    paste = await create_paste(msg)
-                    errorEm = discord.Embed(title="Error", description=f"[Your error was too long, so I sent it here]({str(paste)})", color=discord.Color.red())
-                    await ctx.send(embed=errorEm)
+                await ctx.send(embed=errorEm)
                 return
             ping = time.monotonic() - ping
             ping = ping * 1000
@@ -358,25 +337,13 @@ class devcmd(commands.Cog):
                 msg = filter_name(msg)
                 returnedEm = discord.Embed(title="Returned", description=msg, color=discord.Color.green())
                 returnedEm.set_footer(text=f"Finished in {ping}ms")
-                try:
-                    await ctx.send(embed=returnedEm)
-                except:
-                    paste = await create_paste(msg)
-                    returnedEm = discord.Embed(title="Returned", description=f"[Your output was too long, so I sent it here]({str(paste)})", color=discord.Color.green())
-                    returnedEm.set_footer(text=f"Finished in {ping}ms")
-                    await ctx.send(embed=returnedEm)
+                await ctx.send(embed=returnedEm)
             else:
                 msg = f"```py\n{otp}\n```"
                 msg = filter_name(msg)
                 outputEm = discord.Embed(title="Output", description=msg, color=discord.Color.green())
                 outputEm.set_footer(text=f"Finished in {ping}ms")
-                try:
-                    await ctx.send(embed=outputEm)
-                except:
-                    paste = await create_paste(msg)
-                    outputEm2 = discord.Embed(title="Output", description=f"[Your output was too long, so I sent it here]({str(paste)})", color=discord.Color.green())
-                    outputEm.set_footer(text=f"Finished in {ping}ms")
-                    await ctx.send(embed=outputEm2)
+                await ctx.send(embed=outputEm)
 
     @_devcmd.command(name="sync", help="""
 Works like:

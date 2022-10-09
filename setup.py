@@ -1,5 +1,5 @@
 from setuptools import setup
-from devcmd.core import VERSION
+from devcmd import VERSION
 
 with open('README.md', 'r') as f:
     README = f.read()

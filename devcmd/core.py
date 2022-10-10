@@ -238,14 +238,13 @@ class devcmd(commands.Cog):
         await ctx.channel.typing()
         if extension == "all" and ctx.invoked_with == "reload":
             msg = []
-            cogs = list(self.bot.cogs.keys())
-            for cog in cogs:
-                await self.bot.remove_cog(cog)
+            exts = list(self.bot.extensions.keys())
+            for ext in exts:
                 try:
-                    await self.bot.add_cog(cog)
-                    msg.append(f"✅ Reloaded `{cog.name}`")
+                    await self.bot.reload_extension(ext)
+                    msg.append(f"✅ Reloaded `{ext.name}`")
                 except Exception as e:
-                    msg.append(f"❌ Unable to load `{cog}` due to `{e}`")
+                    msg.append(f"❌ Unable to load `{ext}` due to `{e}`")
             em = discord.Embed(title="", description='\n'.join(msg), color=discord.Color.blue())
             return await ctx.send(embed=em)
         elif ctx.invoked_with == "reload" and extension == None:

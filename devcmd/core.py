@@ -213,7 +213,6 @@ class devcmd(commands.Cog):
     @_devcmd.command(name="cleanup", description="cleans up the bots messages")
     @is_owner()
     async def _dc_purge(self, ctx: commands.Context, num:int):
-        await ctx.message.delete()
         def check(m):
             return m.author == ctx.me
         deleted = await ctx.channel.purge(limit=num, check=check)

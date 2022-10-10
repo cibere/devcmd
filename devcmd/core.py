@@ -208,11 +208,13 @@ class devcmd(commands.Cog):
             filename="Audit Logs",
             fp=io.BytesIO(embed.description.encode('utf-8'))))
 
-    @_devcmd.command(aliases=['clear'], name="purge", description="Purges the specifies amount of messages")
+    @_devcmd.command(name="cleanup", description="cleans up the bots messages")
     @is_owner()
-    async def _dc_purge(self, ctx, num:int):
+    async def _dc_purge(self, ctx: commands.Context, num:int):
         await ctx.message.delete()
-        deleted = await ctx.channel.purge(limit=num)
+        def check(m):
+            return m.author == ctx.me
+        deleted = await ctx.channel.purge(limit=num, check=check)
         embed=discord.Embed(color=discord.Color.green(), description=f"Deleted {len(deleted)} messages in {ctx.channel.mention}")
         await ctx.author.send(embed=embed)
 

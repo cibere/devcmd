@@ -117,12 +117,14 @@ class RedirectedStdout:
     def __str__(self):
         return self._string_io.getvalue()
 
-def filter_name(text: str):
+def filterTxt(text: str):
     name = os.getenv("NAME")
     if name:
-        return text.replace(name, "[NAME HERE]")
-    else:
-        return text
+        text = text.replace(name, "[NAME HERE]")
+    tokens = [token for token in TOKEN_REGEX.findall(text)]
+    for tok in tokens:
+        text = text.replace(tok, "[TOKEN HERE]")
+    return text
 
 class synced_start_pagination(discord.ui.View):
     def __init__(self, user, synced):
@@ -279,7 +281,7 @@ class devcmd(commands.Cog):
             return await ctx.send(embed=em)
         except Exception:
             error = traceback.format_exc()
-            error = filter_name(error)
+            error = filterTxt(error)
             try:
                 em = discord.Embed(title="Error", description=f"```py\n{error}\n```", color=discord.Color.red())
                 msg = await ctx.author.send(embed=em)
@@ -325,7 +327,7 @@ class devcmd(commands.Cog):
             except Exception as e:
                 msg = f"```py\n{otp}\n{e}{geterr()}\n```"
                 msg = f"```py\n{e}```\n```py\n{geterr()}\n```"
-                msg = filter_name(msg)
+                msg = filterTxt(msg)
                 errorEm = discord.Embed(title="Eval Error", description=msg, color=discord.Color.red())
                 await ctx.send(embed=errorEm)
                 return
@@ -333,13 +335,13 @@ class devcmd(commands.Cog):
             ping = ping * 1000
             if res:
                 msg = f"```py\n{res}\n{otp}\n```"
-                msg = filter_name(msg)
+                msg = filterTxt(msg)
                 returnedEm = discord.Embed(title="Returned", description=msg, color=discord.Color.green())
                 returnedEm.set_footer(text=f"Finished in {ping}ms")
                 await ctx.send(embed=returnedEm)
             else:
                 msg = f"```py\n{otp}\n```"
-                msg = filter_name(msg)
+                msg = filterTxt(msg)
                 outputEm = discord.Embed(title="Output", description=msg, color=discord.Color.green())
                 outputEm.set_footer(text=f"Finished in {ping}ms")
                 await ctx.send(embed=outputEm)
@@ -483,7 +485,7 @@ Works like:
                         list_of_files.append(os.path.join(root,file))
                         fileNames.append(file.split(".")[0])
             for name in list_of_files:
-                xname = filter_name(name)
+                xname = filterTxt(name)
                 with open(name, 'r', encoding='utf-8') as f:
                     code = str(f.read())
                 lines = code.splitlines()
@@ -535,10 +537,7 @@ Works like:
 
 
     async def cleanCallback(self, ctx, text, method:Literal['pc', 'mobile']):
-        txt = filter_name(text)
-        tokens = [token for token in TOKEN_REGEX.findall(txt)]
-        for tok in tokens:
-            txt = txt.replace(tok, "[TOKEN HERE]")
+        txt = filterTxt(text)
         if method == "pc":
             await ctx.reply(embed=discord.Embed(description=f"```{txt}```", color=discord.Color.blue(), title=f"Your cleaned text"), mention_author=False)
         elif method == 'mobile':

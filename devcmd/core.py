@@ -253,7 +253,7 @@ class devcmd(commands.Cog):
         if ctx.invoked_with == "unload":
             try:
                 await self.bot.unload_extension(extension)
-                em = discord.Embed(title="", description=f"`✅ unloaded {extension}`", color=discord.Color.green())
+                em = discord.Embed(title="", description=f"✅ unloaded `{extension}`", color=discord.Color.green())
                 return await ctx.send(embed=em)
             except commands.ExtensionNotLoaded:
                 em = discord.Embed(title="Error", description=f"""Extension `{extension}` was not previously loaded""", color=discord.Color.red())
@@ -270,7 +270,7 @@ class devcmd(commands.Cog):
             text = "loaded"
         try:
             await self.bot.load_extension(extension)
-            em = discord.Embed(title="", description=f"`✅ {text} {extension}`", color=discord.Color.green())
+            em = discord.Embed(title="", description=f"✅ {text} `{extension}`", color=discord.Color.green())
             await ctx.send(embed=em)
         except commands.ExtensionNotFound:
             em = discord.Embed(title="Error", description=f"""Extension `{extension}` not found""", color=discord.Color.red())

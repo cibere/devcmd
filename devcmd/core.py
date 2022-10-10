@@ -238,13 +238,12 @@ class devcmd(commands.Cog):
         await ctx.channel.typing()
         if extension == "all" and ctx.invoked_with == "reload":
             msg = []
-            exts = list(self.bot.extensions.keys())
-            for ext in exts:
+            for extension in list(self.bot.extensions.keys()):
                 try:
-                    await self.bot.reload_extension(ext)
-                    msg.append(f"✅ Reloaded `{ext.name}`")
+                    await self.bot.reload_extension(extension)
+                    msg.append(f"✅ Reloaded `{extension}`")
                 except Exception as e:
-                    msg.append(f"❌ Unable to load `{ext}` due to `{e}`")
+                    msg.append(f"❌ Unable to load `{extension}` due to `{e}`")
             em = discord.Embed(title="", description='\n'.join(msg), color=discord.Color.blue())
             return await ctx.send(embed=em)
         elif ctx.invoked_with == "reload" and extension == None:
@@ -382,7 +381,7 @@ Works like:
     
     @_devcmd.command(name="disable", description="Disables a command")
     @is_owner()
-    async def _dc_disable(self, ctx, command_name: str):
+    async def _dc_disable(self, ctx, *, command_name: str):
         em=discord.Embed()
         command = self.bot.get_command(command_name)
         if command == None:
@@ -398,7 +397,7 @@ Works like:
 
     @_devcmd.command(name="enable", description="Enables a command")
     @is_owner()
-    async def _dc_enable(self, ctx, command_name: str):
+    async def _dc_enable(self, ctx, *, command_name: str):
         command = self.bot.get_command(command_name)
         if command == None:
             raise BadArgument(f'Command "{command_name}" not found')

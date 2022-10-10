@@ -234,7 +234,7 @@ class devcmd(commands.Cog):
 
     @_devcmd.command(name="load", aliases=['reload', 'unload'], description="Loads/reloads/unloads the specified extension")
     @is_owner()
-    async def _dc_load(self, ctx, extension:str=None):
+    async def _dc_load(self, ctx, extension:str = None):
         await ctx.channel.typing()
         if extension == "all" and ctx.invoked_with == "reload":
             msg = []
@@ -244,8 +244,8 @@ class devcmd(commands.Cog):
                 try:
                     await self.bot.add_cog(cog)
                     msg.append(f"✅ Reloaded `{cog.name}`")
-                except:
-                    msg.append(f"❌ Unable to load `{cog}`")
+                except Exception as e:
+                    msg.append(f"❌ Unable to load `{cog}` due to `{e}`")
             em = discord.Embed(title="", description='\n'.join(msg), color=discord.Color.blue())
             return await ctx.send(embed=em)
         elif ctx.invoked_with == "reload" and extension == None:

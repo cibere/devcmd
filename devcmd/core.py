@@ -237,16 +237,16 @@ class devcmd(commands.Cog):
     async def _dc_load(self, ctx, extension:str=None):
         await ctx.channel.typing()
         if extension == "all" and ctx.invoked_with == "reload":
-            cogs = []
-            x = self.bot.cogs
-            for cog in x:
+            msg = []
+            cogs = list(self.bot.cogs.keys())
+            for cog in cogs:
                 await self.bot.remove_cog(cog)
                 try:
                     await self.bot.add_cog(cog)
-                    cogs.append(f"✅ Reloaded `{cog.name}`")
+                    msg.append(f"✅ Reloaded `{cog.name}`")
                 except:
-                    cogs.append(f"❌ Unable to load `{cog}`")
-            em = discord.Embed(title="", description='\n'.join(cogs), color=discord.Color.blue())
+                    msg.append(f"❌ Unable to load `{cog}`")
+            em = discord.Embed(title="", description='\n'.join(msg), color=discord.Color.blue())
             return await ctx.send(embed=em)
         elif ctx.invoked_with == "reload" and extension == None:
             extension = "devcmd"
@@ -420,8 +420,7 @@ Works like:
         
         await ctx.channel.typing()
         subprocess.run(f"py -m pip install git+{url}", shell=True)
-        await self.bot.unload_extension('devcmd')
-        await self.bot.load_extension('devcmd')
+        await self.bot.reload_extension('devcmd')
         msg = ctx.message
         msg.content += "-msg"
         await self.bot.process_commands(msg) 

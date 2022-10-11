@@ -300,11 +300,10 @@ class devcmd(commands.Cog):
                 if not as_generator:
                     res = await func()
                 else:
-                    res = []
                     async for x in func():
-                        res.append(x)
+                        print(x)
             except Exception as e:
-                if e == "object async_generator can't be used in 'await' expression":
+                if str(e) == "object async_generator can't be used in 'await' expression":
                     return await self._handle_eval(env, ctx, function, True)
                 msg = f"```py\n{otp}\n{e}{geterr()}\n```"
                 msg = f"```py\n{e}```\n```py\n{geterr()}\n```"

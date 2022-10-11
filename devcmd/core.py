@@ -291,6 +291,42 @@ class devcmd(commands.Cog):
                 em2 = discord.Embed(title="", description=f"I am unable to send you a dm, so error will be sent here.", color=discord.Color.red())
                 await ctx.send(embeds=[em, em2])
 
+    async def _handle_eval(self, env, ctx, as_generator = False):
+        with RedirectedStdout() as otp:
+            try:
+                import_expression.exec(function,env)
+                func = env["func"]
+                ping = time.monotonic()
+                if not as_generator:
+                    res = await func()
+                else:
+                    res = []
+                    async for x in func():
+                        res.append(x)
+            except Exception as e:
+                if e == "object async_generator can't be used in 'await' expression":
+                    return await self._handle_eval(env, ctx, True)
+                msg = f"```py\n{otp}\n{e}{geterr()}\n```"
+                msg = f"```py\n{e}```\n```py\n{geterr()}\n```"
+                msg = filterTxt(msg)
+                errorEm = discord.Embed(title="Eval Error", description=msg, color=discord.Color.red())
+                await ctx.send(embed=errorEm)
+                return
+            ping = time.monotonic() - ping
+            ping = ping * 1000
+            if res:
+                msg = f"```py\n{res}\n{otp}\n```"
+                msg = filterTxt(msg)
+                returnedEm = discord.Embed(title="Returned", description=msg, color=discord.Color.green())
+                returnedEm.set_footer(text=f"Finished in {ping}ms")
+                await ctx.send(embed=returnedEm)
+            else:
+                msg = f"```py\n{otp}\n```"
+                msg = filterTxt(msg)
+                outputEm = discord.Embed(title="Output", description=msg, color=discord.Color.green())
+                outputEm.set_footer(text=f"Finished in {ping}ms")
+                await ctx.send(embed=outputEm)
+
     @_devcmd.group(invoke_without_command=True, name="eval", aliases=['```py', '```', 'py', 'python', 'run', 'exec', 'execute'], description="Evaluates the given code")
     @is_owner()
     async def _dc_eval(self, ctx, *,code:CodeBlock):
@@ -317,33 +353,7 @@ class devcmd(commands.Cog):
             function.pop(function.index(function[-1]))
             function.append(f"    return {x}")
         function = '\n'.join(function)
-        with RedirectedStdout() as otp:
-            try:
-                import_expression.exec(function,env)
-                func=env["func"]
-                ping = time.monotonic()
-                res= await func()
-            except Exception as e:
-                msg = f"```py\n{otp}\n{e}{geterr()}\n```"
-                msg = f"```py\n{e}```\n```py\n{geterr()}\n```"
-                msg = filterTxt(msg)
-                errorEm = discord.Embed(title="Eval Error", description=msg, color=discord.Color.red())
-                await ctx.send(embed=errorEm)
-                return
-            ping = time.monotonic() - ping
-            ping = ping * 1000
-            if res:
-                msg = f"```py\n{res}\n{otp}\n```"
-                msg = filterTxt(msg)
-                returnedEm = discord.Embed(title="Returned", description=msg, color=discord.Color.green())
-                returnedEm.set_footer(text=f"Finished in {ping}ms")
-                await ctx.send(embed=returnedEm)
-            else:
-                msg = f"```py\n{otp}\n```"
-                msg = filterTxt(msg)
-                outputEm = discord.Embed(title="Output", description=msg, color=discord.Color.green())
-                outputEm.set_footer(text=f"Finished in {ping}ms")
-                await ctx.send(embed=outputEm)
+        
 
     @_devcmd.command(name="sync", help="""
 Works like:

@@ -300,6 +300,7 @@ class devcmd(commands.Cog):
                 if not as_generator:
                     res = await func()
                 else:
+                    res = None
                     async for x in func():
                         print(x)
             except Exception as e:

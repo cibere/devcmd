@@ -313,7 +313,7 @@ class devcmd(commands.Cog):
         function="async def func():\n"+indent(code,"    ")
         function = function.splitlines()
         x = function[-1].removeprefix("    ")
-        if not x.startswith("print") and not x.startswith("return") and not x.startswith(" "):
+        if not x.startswith("print") and not x.startswith("return") and not x.startswith(" ") and not x.startswith("yield"):
             function.pop(function.index(function[-1]))
             function.append(f"    return {x}")
         function = '\n'.join(function)

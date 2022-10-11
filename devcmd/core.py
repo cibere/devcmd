@@ -353,6 +353,7 @@ class devcmd(commands.Cog):
             function.pop(function.index(function[-1]))
             function.append(f"    return {x}")
         function = '\n'.join(function)
+        await self._handle_eval(env, ctx)
         
 
     @_devcmd.command(name="sync", help="""

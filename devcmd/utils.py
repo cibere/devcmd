@@ -2,13 +2,13 @@ import discord
 
 class Paginator(discord.ui.View):
     def __init__(self, user, pages):
+        super().__init__(timeout=None)
         self.user = user
         self.pages = pages
         self.current_page = 0
         self.indexButton.label = f"{self.current_page + 1}/{len(self.pages)}"
         if len(self.pages) == 1:
             self.rightButton.disabled=True
-        super().__init__(timeout=None)
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
         if self.user.id != interaction.user.id:

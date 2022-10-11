@@ -291,7 +291,7 @@ class devcmd(commands.Cog):
                 em2 = discord.Embed(title="", description=f"I am unable to send you a dm, so error will be sent here.", color=discord.Color.red())
                 await ctx.send(embeds=[em, em2])
 
-    async def _handle_eval(self, env, ctx, as_generator = False):
+    async def _handle_eval(self, env, ctx, function, as_generator = False):
         with RedirectedStdout() as otp:
             try:
                 import_expression.exec(function,env)
@@ -305,7 +305,7 @@ class devcmd(commands.Cog):
                         res.append(x)
             except Exception as e:
                 if e == "object async_generator can't be used in 'await' expression":
-                    return await self._handle_eval(env, ctx, True)
+                    return await self._handle_eval(env, ctx, function, True)
                 msg = f"```py\n{otp}\n{e}{geterr()}\n```"
                 msg = f"```py\n{e}```\n```py\n{geterr()}\n```"
                 msg = filterTxt(msg)
@@ -353,7 +353,7 @@ class devcmd(commands.Cog):
             function.pop(function.index(function[-1]))
             function.append(f"    return {x}")
         function = '\n'.join(function)
-        await self._handle_eval(env, ctx)
+        await self._handle_eval(env, ctx, function)
         
 
     @_devcmd.command(name="sync", help="""

@@ -219,14 +219,14 @@ class devcmd(commands.Cog):
                 if msg.author.id == ctx.guild.me.id:
                     await msg.delete()
                     deleted.append(msg)
-            embed=discord.Embed(color=discord.Color.green(), description=f"Deleted {len(deleted)} messages in {ctx.channel.mention}")
-            await ctx.author.send(embed=embed)
+            embed = discord.Embed(color=discord.Color.green(), description=f"Cleaned up {len(deleted)} messages")
+            await ctx.send(embed=embed)
 
     @_devcmd.command(name="restart", description="Restarts the bot")
     @is_owner()
     async def _dc_restart(self, ctx):
         await ctx.channel.typing()
-        embed=discord.Embed(color=discord.Color.green(), title="Restarting now...")
+        embed = discord.Embed(color=discord.Color.green(), title="Restarting now...")
         await ctx.send(embed=embed)
         os.execv(sys.executable, ['python'] + sys.argv)
     
@@ -234,7 +234,7 @@ class devcmd(commands.Cog):
     @is_owner()
     async def _dc_shutdown(self, ctx):
         await ctx.channel.typing()
-        embed=discord.Embed(color=discord.Color.green(), title="Logging out...")
+        embed = discord.Embed(color=discord.Color.green(), title="Logging out...")
         await ctx.reply(embed=embed)
         await self.bot.close()
 

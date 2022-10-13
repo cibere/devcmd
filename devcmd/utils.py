@@ -1,6 +1,6 @@
 import discord
 
-class Paginator(discord.ui.View):
+class EmbedPaginator(discord.ui.View):
     def __init__(self, user: discord.Member, pages: list[discord.Embed]) -> None:
         super().__init__(timeout=None)
         self.user = user

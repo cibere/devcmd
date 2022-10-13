@@ -1,5 +1,5 @@
 from .core import VERSION, devcmd
-from .utils import Paginator
+from .utils import *
 
 if VERSION.startswith('BETA'):
     # append version identifier based on commit count

@@ -13,7 +13,7 @@ import sys, traceback, aiohttp
 import subprocess
 from dotenv import load_dotenv
 load_dotenv()
-from .utils import Paginator
+from .utils import EmbedPaginator as Paginator
 import time
 
 

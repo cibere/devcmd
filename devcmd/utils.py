@@ -26,7 +26,7 @@ class EmbedPaginator(discord.ui.View):
         
         self.current_page = 0
         self.indexButton.label = f"{self.current_page + 1}/{len(self.pages)}"
-        await interaction.response.edit_message(content=self.pages[self.current_page], view=self)
+        await interaction.response.edit_message(embed=self.pages[self.current_page], view=self)
 
     @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.blurple, disabled=True, custom_id="devcmd_embed_paginator:left")
     async def leftButton(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
@@ -60,7 +60,7 @@ class EmbedPaginator(discord.ui.View):
         
         self.current_page = len(self.pages) - 1
         self.indexButton.label = f"{self.current_page + 1}/{len(self.pages)}"
-        await interaction.response.edit_message(content=self.pages[self.current_page], view=self)
+        await interaction.response.edit_message(embeed=self.pages[self.current_page], view=self)
 
 class TextPaginator(discord.ui.View):
     def __init__(self, user: discord.Member, pages: list[str]) -> None:

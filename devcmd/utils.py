@@ -1,7 +1,7 @@
 import discord
 
 class Paginator(discord.ui.View):
-    def __init__(self, user, pages):
+    def __init__(self, user: discord.Member, pages: list[discord.Embed]) -> None:
         super().__init__(timeout=None)
         self.user = user
         self.pages = pages
@@ -17,7 +17,7 @@ class Paginator(discord.ui.View):
         return True
 
     @discord.ui.button(emoji='⬅️', style=discord.ButtonStyle.blurple, disabled=True, custom_id="devcmd_paginator:left")
-    async def leftButton(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def leftButton(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
         if self.current_page - 1 == 0:
             self.leftButton.disabled = True
         self.rightButton.disabled = False
@@ -30,7 +30,7 @@ class Paginator(discord.ui.View):
         pass
 
     @discord.ui.button(emoji='➡️', style=discord.ButtonStyle.blurple, custom_id="devcmd_paginator:right")
-    async def rightButton(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def rightButton(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
         if self.current_page + 1 == len(self.pages) - 1:
             self.rightButton.disabled = True
         self.leftButton.disabled = False

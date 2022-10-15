@@ -18,6 +18,7 @@ def get_version():
                 VERSION += '+g' + out.decode('utf-8').strip()
         except Exception:
             pass
+    return VERSION
 
 async def setup(bot):
     await bot.add_cog(devcmd(bot))

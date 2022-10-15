@@ -1,5 +1,7 @@
 from .core import VERSION, devcmd
-from .utils import *
+from .converters import *
+from .paginators import *
+del discord, commands
 
 def get_version():
     from .core import VERSION

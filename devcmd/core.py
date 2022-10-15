@@ -13,8 +13,8 @@ import sys, traceback, aiohttp
 import subprocess
 from dotenv import load_dotenv
 load_dotenv()
-from .utils.paginators import EmbedPaginator
-from .utils.converters import CodeBlockConvertor
+from .paginators import EmbedPaginator
+from .converters import CodeBlockConvertor
 import time
 import statistics
 

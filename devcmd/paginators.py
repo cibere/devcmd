@@ -235,7 +235,7 @@ class ViewEmbedPaginator(discord.ui.View):
 
     async def generate(user: discord.Member, pages: list[list[discord.Embed, discord.ui.View]]):
         paginator = ViewEmbedPaginator(user=user, pages=pages)
-        await paginator.add_view(pages[0][0])
+        await paginator.add_view(pages[0][1])
         return paginator
 
     async def add_view(self, view: discord.ui.View) -> None:

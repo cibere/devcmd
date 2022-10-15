@@ -13,10 +13,11 @@ import sys, traceback, aiohttp
 import subprocess
 from dotenv import load_dotenv
 load_dotenv()
-from .paginators import EmbedPaginator
-from .converters import CodeBlockConvertor
 import time
 import statistics
+
+from .paginators import EmbedPaginator
+from .converters import CodeBlockConvertor
 
 disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')

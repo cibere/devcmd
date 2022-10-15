@@ -233,7 +233,7 @@ class ViewEmbedPaginator(discord.ui.View):
         if len(self.pages) == 1:
             self.rightButton.disabled=True
 
-    async def generate(user: discord.Member, pages: list[discord.ui.View]):
+    async def generate(user: discord.Member, pages: list[list[discord.Embed, discord.ui.View]]):
         paginator = ViewPaginator(user, pages)
         await paginator.add_view(pages[0])
         return paginator

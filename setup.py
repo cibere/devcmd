@@ -1,11 +1,13 @@
 from setuptools import setup
-from devcmd import VERSION
+from devcmd import VERSION, get_version
 
 with open('README.md', 'r') as f:
     README = f.read()
 
 with open('requirements.txt', 'r') as f:
     requirements = f.read()
+
+VERSION = get_version()
 
 setup(
     name='devcmd',

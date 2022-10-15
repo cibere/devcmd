@@ -224,7 +224,7 @@ class ViewPaginator(discord.ui.View):
 
 class ViewEmbedPaginator(discord.ui.View):
     def __init__(self, *, user: discord.Member = None, pages: list[list[discord.Embed, discord.ui.View]]) -> None:
-        """USE 'ViewPaginator.generate(...)' TO GENERATE THE VIEW FOR YOUR FIRST VIEW TO BE ON THE FIRST PAGE"""
+        """USE 'ViewEmbedPaginator.generate(...)' TO GENERATE THE VIEW FOR YOUR FIRST VIEW TO BE ON THE FIRST PAGE"""
         super().__init__(timeout=None)
         self.user = user
         self.pages = pages
@@ -234,7 +234,7 @@ class ViewEmbedPaginator(discord.ui.View):
             self.rightButton.disabled=True
 
     async def generate(user: discord.Member, pages: list[list[discord.Embed, discord.ui.View]]):
-        paginator = ViewPaginator(user, pages)
+        paginator = ViewEmbedPaginator(user, pages)
         await paginator.add_view(pages[0])
         return paginator
 

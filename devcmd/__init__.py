@@ -2,6 +2,7 @@ from .core import VERSION, devcmd
 from .utils import *
 
 def get_version():
+    from .core import VERSION
     if VERSION.startswith('BETA'):
         try:
             import subprocess

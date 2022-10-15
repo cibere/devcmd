@@ -13,13 +13,11 @@ import sys, traceback, aiohttp
 import subprocess
 from dotenv import load_dotenv
 load_dotenv()
-from .utils import EmbedPaginator as Paginator
+from .utils import EmbedPaginator, CodeBlockConvertor
 import time
-
-
 import statistics
-disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 
+disallowedLibs = ['requests', 'urllib', 'time', 'ImageMagick', 'PIL', 'sqlite3', 'postgres', "easy_pil", 'json']
 TOKEN_REGEX = re.compile(r'[a-zA-Z0-9_-]{23,28}\.[a-zA-Z0-9_-]{6,7}\.[a-zA-Z0-9_-]{27,}')
 VERSION = "BETA-3.3.3"
 url = "https://github.com/cibere/devcmd@beta"
@@ -97,10 +95,6 @@ class infoCmd:
             self._exit.disabled = True
             await interaction.response.edit_message(view=self)
 
-class CodeBlock(commands.Converter):
-    async def convert(self,ctx, block:str):
-        block = block.replace("```py", "").replace("```", "")
-        return block
 class RedirectedStdout:
     def __init__(self):
         self._stdout = None
@@ -142,7 +136,7 @@ class synced_start_pagination(discord.ui.View):
             em.add_field(name="ID", value=f"{c.id}")
             em.add_field(name="Usage", value=f"{c.mention}")
             pages.append(em)
-        await interaction.response.edit_message(embed=pages[0], view=Paginator(interaction.user, pages))
+        await interaction.response.edit_message(embed=pages[0], view=EmbedPaginator(interaction.user, pages))
 
 class devcmd(commands.Cog):
     def __init__(self, bot):
@@ -186,7 +180,7 @@ class devcmd(commands.Cog):
             em.add_field(name="Usage", value=f"{c.qualified_name} {c.signature}")
             pages.append(em)
             x += 1
-        await ctx.send(view=Paginator(user=ctx.author, pages=pages), embed=pages[0])
+        await ctx.send(view=EmbedPaginator(user=ctx.author, pages=pages), embed=pages[0])
 
     @_devcmd.command(name="info", aliases=['about', 'github', 'docs'], description="Gives you a view that gives you information about devcmd")
     @is_owner()
@@ -332,7 +326,7 @@ class devcmd(commands.Cog):
 
     @_devcmd.group(invoke_without_command=True, name="eval", aliases=['```py', '```', 'py', 'python', 'run', 'exec', 'execute'], description="Evaluates the given code")
     @is_owner()
-    async def _dc_eval(self, ctx, *,code:CodeBlock):
+    async def _dc_eval(self, ctx, *,code: CodeBlockConvertor):
         await ctx.channel.typing()
         env={
             "ctx":ctx,

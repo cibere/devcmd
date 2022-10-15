@@ -1,7 +1,7 @@
 import discord
 
 class EmbedPaginator(discord.ui.View):
-    def __init__(self, user: discord.Member, pages: list[discord.Embed]) -> None:
+    def __init__(self, *, user: discord.Member = None, pages: list[discord.Embed]) -> None:
         super().__init__(timeout=None)
         self.user = user
         self.pages = pages
@@ -11,10 +11,13 @@ class EmbedPaginator(discord.ui.View):
             self.rightButton.disabled=True
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        if self.user.id != interaction.user.id:
-            await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
-            return False
-        return True
+        if self.user:
+            if self.user.id != interaction.user.id:
+                await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
+                return False
+            return True
+        else:
+            return True
 
     @discord.ui.button(emoji='⏮️', style=discord.ButtonStyle.blurple, disabled=True, custom_id="devcmd_text_paginator:first")
     async def firstPageButton(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
@@ -63,7 +66,7 @@ class EmbedPaginator(discord.ui.View):
         await interaction.response.edit_message(embed=self.pages[self.current_page], view=self)
 
 class TextPaginator(discord.ui.View):
-    def __init__(self, user: discord.Member, pages: list[str]) -> None:
+    def __init__(self, *, user: discord.Member = None, pages: list[str]) -> None:
         super().__init__(timeout=None)
         self.user = user
         self.pages = pages
@@ -73,10 +76,13 @@ class TextPaginator(discord.ui.View):
             self.rightButton.disabled=True
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        if self.user.id != interaction.user.id:
-            await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
-            return False
-        return True
+        if self.user:
+            if self.user.id != interaction.user.id:
+                await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
+                return False
+            return True
+        else:
+            return True
 
     @discord.ui.button(emoji='⏮️', style=discord.ButtonStyle.blurple, disabled=True, custom_id="devcmd_text_paginator:first")
     async def firstPageButton(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
@@ -125,7 +131,7 @@ class TextPaginator(discord.ui.View):
         await interaction.response.edit_message(content=self.pages[self.current_page], view=self)
 
 class ViewPaginator(discord.ui.View):
-    def __init__(self, user: discord.Member, pages: list[discord.ui.View]) -> None:
+    def __init__(self, *, user: discord.Member = None, pages: list[discord.ui.View]) -> None:
         """USE 'ViewPaginator.generate(...)' TO GENERATE THE VIEW FOR YOUR FIRST VIEW TO BE ON THE FIRST PAGE"""
         super().__init__(timeout=None)
         self.user = user
@@ -150,10 +156,13 @@ class ViewPaginator(discord.ui.View):
                 self.remove_item(item)
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        if self.user.id != interaction.user.id:
-            await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
-            return False
-        return True
+        if self.user:
+            if self.user.id != interaction.user.id:
+                await interaction.response.send_message(f"Your not {self.user.mention}... are you?", ephemeral=True)
+                return False
+            return True
+        else:
+            return True
 
     @discord.ui.button(emoji='⏮️', style=discord.ButtonStyle.blurple, disabled=True, custom_id="devcmd_text_paginator:first")
     async def firstPageButton(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:

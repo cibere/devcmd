@@ -140,6 +140,7 @@ class ViewPaginator(discord.ui.View):
         self.indexButton.label = f"{self.current_page + 1}/{len(self.pages)}"
         if len(self.pages) == 1:
             self.rightButton.disabled=True
+            self.lastPageButton.disabled=True
 
     async def generate(user: discord.Member, pages: list[discord.ui.View]):
         paginator = ViewPaginator(user=user, pages=pages)
@@ -232,6 +233,7 @@ class ViewEmbedPaginator(discord.ui.View):
         self.indexButton.label = f"{self.current_page + 1}/{len(self.pages)}"
         if len(self.pages) == 1:
             self.rightButton.disabled=True
+            self.lastPageButton.disabled=True
 
     async def generate(user: discord.Member, pages: list[list[discord.Embed, discord.ui.View]]):
         paginator = ViewEmbedPaginator(user=user, pages=pages)

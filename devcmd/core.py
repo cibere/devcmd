@@ -305,8 +305,9 @@ class devcmd(commands.Cog):
             except Exception as e:
                 if str(e) == "object async_generator can't be used in 'await' expression":
                     return await self._handle_eval(env, ctx, function, True)
-                msg = f"```py\n{otp}\n{e}{geterr()}\n```"
-                msg = f"```py\n{e}```\n```py\n{geterr()}\n```"
+                err = geterr()
+                err = err.split("return compile(source, filename, mode, flags,")[1]
+                msg = f"```py\n{e}```\n```py\n{err}\n```"
                 msg = filterTxt(msg)
                 errorEm = discord.Embed(title="Eval Error", description=msg, color=discord.Color.red())
                 await ctx.send(embed=errorEm)
@@ -348,7 +349,7 @@ class devcmd(commands.Cog):
         function="async def func():\n"+indent(code,"    ")
         function = function.splitlines()
         x = function[-1].removeprefix("    ")
-        if not x.startswith("print") and not x.startswith("return") and not x.startswith(" ") and not x.startswith("yield"):
+        if not x.startswith("print") and not x.startswith("return") and not x.startswith(" ") and not x.startswith("yield") and not x.startswith("import"):
             function.pop(function.index(function[-1]))
             function.append(f"    return {x}")
         function = '\n'.join(function)

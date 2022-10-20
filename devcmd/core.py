@@ -313,7 +313,7 @@ class devcmd(commands.Cog):
                         err = err.split("res = await func()")[1]
                     except:
                         pass
-                msg = f"```py\n{otp}```\n```py\n{err}\n```" if otp is not "" else f"```py\n{err}\n```"
+                msg = f"n```py\n{err}\n```"
                 msg = filterTxt(msg)
                 errorEm = discord.Embed(title="Eval Error", description=msg, color=discord.Color.red())
                 await ctx.send(embed=errorEm)

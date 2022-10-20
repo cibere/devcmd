@@ -309,7 +309,10 @@ class devcmd(commands.Cog):
                 try:
                     err = err.split("return compile(source, filename, mode, flags,")[1]
                 except:
-                    pass
+                    try:
+                        err = err.split("res = await func()")[1]
+                    except:
+                        pass
                 msg = f"```py\n{e}```\n```py\n{err}\n```"
                 msg = filterTxt(msg)
                 errorEm = discord.Embed(title="Eval Error", description=msg, color=discord.Color.red())

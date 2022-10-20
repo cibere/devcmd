@@ -306,7 +306,10 @@ class devcmd(commands.Cog):
                 if str(e) == "object async_generator can't be used in 'await' expression":
                     return await self._handle_eval(env, ctx, function, True)
                 err = geterr()
-                err = err.split("return compile(source, filename, mode, flags,")[1]
+                try:
+                    err = err.split("return compile(source, filename, mode, flags,")[1]
+                except:
+                    pass
                 msg = f"```py\n{e}```\n```py\n{err}\n```"
                 msg = filterTxt(msg)
                 errorEm = discord.Embed(title="Eval Error", description=msg, color=discord.Color.red())

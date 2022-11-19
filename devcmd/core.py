@@ -8,7 +8,7 @@ except ImportError:
     pass
 import ciberedev
 
-from .sections import ALL_SECTIONS
+from devcmd.sections import ALL_SECTIONS
 
 
 class Devcmd(*ALL_SECTIONS):

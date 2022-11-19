@@ -20,7 +20,7 @@ setup(
         "Issue tracker": "https://github.com/cibere/devcmd/issues",
     },
     version=VERSION,
-    packages=["devcmd"],
+    packages=["devcmd", "devcmd.sections"],
     include_package_data=True,
     install_requires=requirements,
     python_requires=">=3.8.0",

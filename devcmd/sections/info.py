@@ -101,12 +101,12 @@ class infoDropdownView(discord.ui.View):
 
 class InfoSection(BaseSection):
     @command(name="info", description="gives you info about devcmd")
-    async def cmd_info(self, ctx: commands.Context):
+    async def cmd_info(self, ctx: commands.Context, _: str = ""):
         em = discord.Embed(title="Please make a selection", color=discord.Color.blue())
         await ctx.send(embed=em, view=infoDropdownView(ctx.author))
 
     @command(name="version", description="gives you the devcmd version your running")
-    async def cmd_version(self, ctx: commands.Context):
+    async def cmd_version(self, ctx: commands.Context, _: str = ""):
         import devcmd
 
         em = discord.Embed(

@@ -44,8 +44,16 @@ class Devcmd(*ALL_SECTIONS, BaseSection):
     async def cog_check(self, ctx: commands.Context) -> bool:
         if self.bot.owner_id:
             owners = [self.bot.owner_id]
-        else:
+        elif self.bot.owner_ids:
             owners = [self.bot.owner_ids]
+        else:
+            app = await self.bot.application_info()
+            if app.team:
+                self.bot.owner_ids = {m.id for m in app.team.members}
+                owners = [self.bot.owner_ids]
+            else:
+                self.bot.owner_id = app.owner.id
+                owners = [self.bot.owner_id]
 
         if ctx.author.id not in owners:
             raise NotAuthorized(str(ctx.author))

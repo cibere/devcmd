@@ -24,13 +24,6 @@ class Devcmd(*ALL_SECTIONS):
         self.bot = bot
         self.cdev = ciberedev.Client()
 
-    @commands.group(hidden=True, invoke_without_command=True, name="devcmd", description="the devcmd group", aliases=["dc", "dev"])  # type: ignore
-    async def the_group(self, ctx: commands.Context):
-        await ctx.send("Devcmd is loaded")
-
-    async def cog_load(self):
-        await self.cdev.start()
-
         def check(x):
             if inspect.isfunction(x):
                 print("Check: a func")
@@ -50,6 +43,13 @@ class Devcmd(*ALL_SECTIONS):
             )
             self.the_group.add_command(cmd)
             print(f"DEVCMD - Added command: {cmd_info['name']}")
+
+    @commands.group(hidden=True, invoke_without_command=True, name="devcmd", description="the devcmd group", aliases=["dc", "dev"])  # type: ignore
+    async def the_group(self, ctx: commands.Context):
+        await ctx.send("Devcmd is loaded")
+
+    async def cog_load(self):
+        await self.cdev.start()
 
     async def cog_unload(self):
         await self.cdev.close()

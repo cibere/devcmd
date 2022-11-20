@@ -6,13 +6,13 @@ import discord
 from discord.ext import commands
 
 from ..utils import filter_text
-from .base_section import BaseSection
+from .base_section import BaseSection, command
 
 
 class ExtensionsSection(BaseSection):
     cdev: ciberedev.Client
 
-    @commands.command(
+    @command(
         name="load",
         aliases=["reload", "unload"],
         description="loads/unloads/reloads an extension",
@@ -99,7 +99,7 @@ class ExtensionsSection(BaseSection):
                 )
                 await ctx.send(embed=em)
 
-    @commands.command(name="remove", description="removes a cog")
+    @command(name="remove", description="removes a cog")
     async def cmd_remove(self, ctx, cog_name: str):
         cogs = [str(cog) for cog in ctx.bot.cogs]
         if cog_name not in cogs:
@@ -117,7 +117,7 @@ class ExtensionsSection(BaseSection):
             )
         )
 
-    @commands.command(name="cogs", description="lists all loaded cogs")
+    @command(name="cogs", description="lists all loaded cogs")
     async def cmd_cogs(self, ctx):
         cogs = [f"`{str(cog)}`" for cog in ctx.bot.cogs]
         em = discord.Embed(

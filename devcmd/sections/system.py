@@ -4,18 +4,18 @@ import sys
 import discord
 from discord.ext import commands
 
-from .base_section import BaseSection
+from .base_section import BaseSection, command
 
 
 class SystemSection(BaseSection):
-    @commands.command(name="restart", description="Restarts the bot")
+    @command(name="restart", description="Restarts the bot")
     async def cmd_restart(self, ctx):
         await ctx.channel.typing()
         embed = discord.Embed(color=discord.Color.green(), title="Restarting now...")
         await ctx.send(embed=embed)
         os.execv(sys.executable, ["python"] + sys.argv)
 
-    @commands.command(
+    @command(
         name="shutdown",
         aliases=["logout"],
         description="Shutsdown/logs out the bot",

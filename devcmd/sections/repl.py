@@ -13,7 +13,7 @@ from discord.ext import commands
 
 from ..converters import CodeBlockConvertor
 from ..utils import filter_text
-from .base_section import BaseSection
+from .base_section import BaseSection, command
 
 
 class RedirectedStdout:
@@ -86,7 +86,7 @@ class ReplSection(BaseSection):
                 outputEm.set_footer(text=f"Finished in {ping}ms")
                 await ctx.send(embed=outputEm)
 
-    @commands.command(
+    @command(
         name="eval",
         aliases=["```py", "```", "py", "python", "run", "exec", "execute"],
         description="Evaluates the given code",

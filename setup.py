@@ -1,6 +1,6 @@
 from setuptools import setup
 
-from devcmd import VERSION
+from devcmd import STAGE, VERSION
 
 with open("README.md", "r") as f:
     README = f.read()
@@ -19,7 +19,7 @@ setup(
         "Code": "https://github.com/cibere/devcmd",
         "Issue tracker": "https://github.com/cibere/devcmd/issues",
     },
-    version=VERSION,
+    version=f"{STAGE}-{VERSION}",
     packages=["devcmd", "devcmd.sections"],
     include_package_data=True,
     install_requires=requirements,

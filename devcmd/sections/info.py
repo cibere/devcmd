@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-from .base_section import BaseSection
+from .base_section import BaseSection, command
 
 masterEmbeds = {
     "doc": discord.Embed(
@@ -100,14 +100,12 @@ class infoDropdownView(discord.ui.View):
 
 
 class InfoSection(BaseSection):
-    @commands.command(name="info", description="gives you info about devcmd")
+    @command(name="info", description="gives you info about devcmd")
     async def cmd_info(self, ctx: commands.Context):
         em = discord.Embed(title="Please make a selection", color=discord.Color.blue())
         await ctx.send(embed=em, view=infoDropdownView(ctx.author))
 
-    @commands.command(
-        name="version", description="gives you the devcmd version your running"
-    )
+    @command(name="version", description="gives you the devcmd version your running")
     async def cmd_version(self, ctx: commands.Context):
         import devcmd
 

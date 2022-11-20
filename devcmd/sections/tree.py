@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 from ..converters import SyncConvertor
-from .base_section import BaseSection
+from .base_section import BaseSection, command
 
 sync_description = """
 lets you sync your slash commands
@@ -19,7 +19,7 @@ guild/gu/server/s"""
 
 
 class TreeSection(BaseSection):
-    @commands.command(name="sync", description=sync_description)
+    @command(name="sync", description=sync_description)
     async def sync(self, ctx: commands.Context, scope: SyncConvertor):
         await ctx.typing()
 

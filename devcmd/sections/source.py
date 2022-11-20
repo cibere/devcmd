@@ -4,11 +4,11 @@ import io
 import discord
 from discord.ext import commands
 
-from .base_section import BaseSection
+from .base_section import BaseSection, command
 
 
 class SourceSection(BaseSection):
-    @commands.command(
+    @command(
         name="source",
         aliases=["src"],
         description="Gives the source code for the specified command",
@@ -30,7 +30,7 @@ class SourceSection(BaseSection):
             )
         )
 
-    @commands.command(
+    @command(
         name="file",
         description="Sends the code for the specified file",
     )

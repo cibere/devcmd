@@ -1,11 +1,11 @@
 import discord
 from discord.ext import commands
 
-from .base_section import BaseSection
+from .base_section import BaseSection, command
 
 
 class CommandsSection(BaseSection):
-    @commands.command(name="disable", description="Disables a command")
+    @command(name="disable", description="Disables a command")
     async def cmd_disable(self, ctx: commands.Context, command_name: str):
         em = discord.Embed()
         command = ctx.bot.get_command(command_name)
@@ -20,7 +20,7 @@ class CommandsSection(BaseSection):
         em.color = discord.Color.green()
         await ctx.send(embed=em)
 
-    @commands.command(name="enable", description="Enables a command")
+    @command(name="enable", description="Enables a command")
     async def cmd_enable(self, ctx: commands.Context, command_name: str):
         command = ctx.bot.get_command(command_name)
         if command == None:

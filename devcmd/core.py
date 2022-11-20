@@ -26,8 +26,10 @@ class Devcmd(*ALL_SECTIONS):
 
         def check(x):
             if inspect.isfunction(x):
+                print("Check: a func")
                 return hasattr(x, "cmd_info")
             else:
+                print("Check: not a func")
                 return False
 
         found = inspect.getmembers(self, predicate=check)

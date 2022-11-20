@@ -12,8 +12,12 @@ class SystemSection(BaseSection):
     async def cmd_restart(self, ctx: commands.Context, _: str = ""):
         await ctx.channel.typing()
 
+        if hasattr(ctx.bot, "shutdown_check"):
+            if not bool(ctx.bot.shutdown_check()):
+                return await self.send_error(ctx, "Restart Check Failed")
+
         await self.send_success(ctx, "Restarting now...")
-        os.execv(sys.executable, ["python"] + sys.argv)
+        os.execv(sys.executable, ["py"] + sys.argv)
 
     @command(
         name="shutdown",
@@ -22,6 +26,10 @@ class SystemSection(BaseSection):
     )
     async def cmd_shutdown(self, ctx: commands.Context, _: str = ""):
         await ctx.channel.typing()
+
+        if hasattr(ctx.bot, "shutdown_check"):
+            if not bool(ctx.bot.shutdown_check()):
+                return await self.send_error(ctx, "Shutdown Check Failed")
 
         await self.send_success(ctx, "Logging out...")
         await ctx.bot.close()

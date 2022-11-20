@@ -10,6 +10,7 @@ from ..utils import filter_text
 @commands.is_owner()
 class BaseSection(commands.Cog):
     cdev: ciberedev.Client
+    bot: commands.Bot
 
     async def send_error(self, messageable, message: str) -> discord.Message:
         em = discord.Embed(

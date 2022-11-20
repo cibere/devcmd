@@ -28,6 +28,7 @@ class Devcmd(*ALL_SECTIONS):
         for found_cmd in found:
             cmd_info = found_cmd.cmd_info
             cmd = commands.Command(
+                found_cmd,
                 name=cmd_info["name"],  # type: ignore
                 description=cmd_info["desc"],
                 aliases=cmd_info["aliases"],

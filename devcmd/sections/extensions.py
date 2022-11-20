@@ -118,7 +118,7 @@ class ExtensionsSection(BaseSection):
         )
 
     @command(name="cogs", description="lists all loaded cogs")
-    async def cmd_cogs(self, ctx: commands.Context, dummy_arg: str = ""):
+    async def cmd_cogs(self, ctx: commands.Context, _: str = ""):
         cogs = [f"`{str(cog)}`" for cog in ctx.bot.cogs]
         em = discord.Embed(
             title="Loaded Cogs", color=discord.Color.blue(), description=", ".join(cogs)

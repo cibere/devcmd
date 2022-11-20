@@ -32,7 +32,7 @@ class Devcmd(*ALL_SECTIONS):
                 print("Check: not a func")
                 return False
 
-        found = inspect.getmembers(self, predicate=check)
+        found = [getattr(self, x) for x in dir(self) if check(getattr(self, x))]
         print(f"DEVCMD - FOUND: {found}")
         for found_cmd in found:
             cmd_info = found_cmd[1].cmd_info

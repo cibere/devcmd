@@ -30,7 +30,7 @@ class Devcmd(*ALL_SECTIONS):
             cmd = commands.Command(
                 name=cmd_info["name"],  # type: ignore
                 description=cmd_info["desc"],
-                aliases=cmd_info["description"],
+                aliases=cmd_info["aliases"],
             )
             self.the_group.add_command(cmd)
 

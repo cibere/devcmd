@@ -1,9 +1,9 @@
 import os
 import sys
 
-import discord
 from discord.ext import commands
 
+from ..utils import RedirectedStdout
 from .base_section import BaseSection, command
 
 
@@ -28,4 +28,6 @@ class SystemSection(BaseSection):
 
     @command(name="os", description="lets you execute stuff in your console")
     async def cmd_os(self, ctx: commands.Context, query: str):
-        pass
+        async with RedirectedStdout() as opt:
+            os.system(query)
+            await self.send_info(ctx, "OS Output", str(opt))

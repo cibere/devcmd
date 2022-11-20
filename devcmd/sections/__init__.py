@@ -7,8 +7,9 @@ from .source import SourceSection
 from .system import SystemSection
 from .tree import TreeSection
 
-ALL_SECTIONS = [CommandsSection, ExtensionsSection]
-"""
+ALL_SECTIONS = [
+    CommandsSection,
+    ExtensionsSection,
     InfoSection,
     ModSection,
     ReplSection,
@@ -16,4 +17,3 @@ ALL_SECTIONS = [CommandsSection, ExtensionsSection]
     SystemSection,
     TreeSection,
 ]
-"""

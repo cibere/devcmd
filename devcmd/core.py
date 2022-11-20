@@ -24,15 +24,7 @@ class Devcmd(*ALL_SECTIONS):
         self.bot = bot
         self.cdev = ciberedev.Client()
 
-        def check(x):
-            if inspect.isfunction(x):
-                print("Check: a func")
-                return hasattr(x, "cmd_info")
-            else:
-                print("Check: not a func")
-                return False
-
-        found = [getattr(self, x) for x in dir(self) if check(getattr(self, x))]
+        found = [getattr(self, x) for x in dir(self) if x.startswith("cmd_")]
         print(f"DEVCMD - {dir(self)}")
         print(f"DEVCMD - FOUND: {found}")
         for found_cmd in found:

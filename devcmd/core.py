@@ -25,17 +25,14 @@ class Devcmd(*ALL_SECTIONS):
         self.cdev = ciberedev.Client()
 
         found = [getattr(self, x) for x in dir(self) if x.startswith("cmd_")]
-        print(f"DEVCMD - {dir(self)}")
-        print(f"DEVCMD - FOUND: {found}")
         for found_cmd in found:
-            cmd_info = found_cmd[1].cmd_info
+            cmd_info = found_cmd.cmd_info
             cmd = commands.Command(
                 name=cmd_info["name"],  # type: ignore
                 description=cmd_info["description"],
                 aliases=cmd_info["description"],
             )
             self.the_group.add_command(cmd)
-            print(f"DEVCMD - Added command: {cmd_info['name']}")
 
     @commands.group(hidden=True, invoke_without_command=True, name="devcmd", description="the devcmd group", aliases=["dc", "dev"])  # type: ignore
     async def the_group(self, ctx: commands.Context):

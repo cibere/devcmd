@@ -29,11 +29,12 @@ class Devcmd(*ALL_SECTIONS):
             cmd_info = found_cmd.cmd_info
             cmd = commands.Command(
                 found_cmd,
-                name=cmd_info["name"],  # type: ignore
+                name=cmd_info["name"],
                 description=cmd_info["desc"],
                 aliases=cmd_info["aliases"],
             )
             self.the_group.add_command(cmd)
+            print(f"DEVCMD - Loaded {cmd_info['name']}")
 
     @commands.group(hidden=True, invoke_without_command=True, name="devcmd", description="the devcmd group", aliases=["dc", "dev"])  # type: ignore
     async def the_group(self, ctx: commands.Context):

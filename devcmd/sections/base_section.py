@@ -2,7 +2,7 @@ from discord.ext import commands
 
 
 @commands.is_owner()
-class BaseSection(commands.Cog, group_name="devcmd"):
+class BaseSection(commands.Cog):
     pass
 
 

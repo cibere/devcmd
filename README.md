@@ -16,6 +16,8 @@ A discord.py extension for developers to help manage there bot
 >
 > <a href="https://github.com/cibere/devcmd#devcmd-versions">Devcmd Versions</a>
 >
+> <a href="https://github.com/cibere/devcmd#notes">Extra Notes</a>
+>
 > <a href="https://github.com/cibere/devcmd#credits">Credits</a>
 
 ## Features
@@ -52,6 +54,10 @@ A discord.py extension for developers to help manage there bot
 > ```
 > pip install git+https://github.com/cibere/devcmd@beta
 > ```
+
+## Notes:
+
+> The restart and shutdown commands will call `bot.shutdown_check` (if it exists) before restarting/shutting down. If the function returns false, it will abort the action. If it returns true, it will continue with the action.
 
 ## Credits:
 

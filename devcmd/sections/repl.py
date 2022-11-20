@@ -12,30 +12,13 @@ import import_expression
 from discord.ext import commands
 
 from ..converters import CodeBlockConvertor
-from ..utils import filter_text
+from ..utils import RedirectedStdout, filter_text
 from .base_section import BaseSection, command
-
-
-class RedirectedStdout:
-    def __init__(self):
-        self._stdout = None
-        self._string_io = None
-
-    def __enter__(self):
-        self._stdout = sys.stdout
-        sys.stdout = self._string_io = StringIO()
-        return self
-
-    def __exit__(self, type, value, traceback):
-        sys.stdout = self._stdout
-
-    def __str__(self):
-        return self._string_io.getvalue()  # type: ignore
 
 
 class ReplSection(BaseSection):
     async def _handle_eval(self, env, ctx, function, as_generator=False):
-        with RedirectedStdout() as otp:
+        async with RedirectedStdout() as otp:
             try:
                 import_expression.exec(function, env)
                 func = env["func"]

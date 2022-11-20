@@ -1,5 +1,3 @@
-import inspect
-
 from discord.ext import commands
 
 try:
@@ -13,9 +11,6 @@ import logging
 import ciberedev
 
 from devcmd.sections import ALL_SECTIONS
-
-logger = logging.getLogger("devcmd")
-logger.setLevel(logging.INFO)
 
 
 class Devcmd(*ALL_SECTIONS):
@@ -34,7 +29,6 @@ class Devcmd(*ALL_SECTIONS):
                 aliases=cmd_info["aliases"],
             )
             self.the_group.add_command(cmd)
-            print(f"DEVCMD - Loaded {cmd_info['name']}")
 
     @commands.group(hidden=True, invoke_without_command=True, name="devcmd", description="the devcmd group", aliases=["dc", "dev"])  # type: ignore
     async def the_group(self, ctx: commands.Context):

@@ -2,7 +2,6 @@ import inspect
 import io
 
 import discord
-from discord.ext import commands
 
 from .base_section import BaseSection, command
 

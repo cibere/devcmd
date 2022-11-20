@@ -7,7 +7,6 @@ from discord.ext import commands
 from ..utils import filter_text
 
 
-@commands.is_owner()
 class BaseSection(commands.Cog):
     cdev: ciberedev.Client
     bot: commands.Bot

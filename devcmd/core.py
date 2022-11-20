@@ -11,6 +11,8 @@ import ciberedev
 from devcmd.sections import ALL_SECTIONS
 from devcmd.sections.base_section import BaseSection
 
+from .errors import NotAuthorized
+
 
 class Devcmd(*ALL_SECTIONS, BaseSection):
     def __init__(self, bot: commands.Bot):
@@ -38,6 +40,17 @@ class Devcmd(*ALL_SECTIONS, BaseSection):
 
     async def cog_unload(self):
         await self.cdev.close()
+
+    async def cog_check(self, ctx: commands.Context) -> bool:
+        if self.bot.owner_id:
+            owners = [self.bot.owner_id]
+        else:
+            owners = [self.bot.owner_ids]
+
+        if ctx.author.id not in owners:
+            raise NotAuthorized(str(ctx.author))
+        else:
+            return True
 
 
 async def setup(bot: commands.Bot):

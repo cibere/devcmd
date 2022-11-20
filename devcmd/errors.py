@@ -4,3 +4,10 @@ class InvalidArgument(Exception):
         self.given = given
 
         super().__init__(f"Invalid argument given in command {where}: '{given}'")
+
+
+class NotAuthorized(Exception):
+    def __init__(self, user: str):
+        self.who = user
+
+        super().__init__(f"'{user}' is not authorized to use devcmd")

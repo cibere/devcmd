@@ -4,15 +4,16 @@ import io
 import discord
 from discord.ext import commands
 
+from .base_section import BaseSection
 
-class SourceSection(commands.Cog):
+
+class SourceSection(BaseSection):
     @commands.command(
         name="source",
         aliases=["src"],
         description="Gives the source code for the specified command",
-        parent="devcmd",
     )
-    async def _dc_source(self, ctx, *, command_name: str):
+    async def cmd_source(self, ctx, *, command_name: str):
         await ctx.channel.typing()
         command = ctx.bot.get_command(command_name)
         if not command:
@@ -32,9 +33,8 @@ class SourceSection(commands.Cog):
     @commands.command(
         name="file",
         description="Sends the code for the specified file",
-        parent="devcmd",
     )
-    async def file(self, ctx, file: str):
+    async def cmd_file(self, ctx, file: str):
         await ctx.channel.typing()
         try:
             with open(file, "r", encoding="utf-8") as f:

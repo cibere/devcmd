@@ -13,6 +13,7 @@ from devcmd.sections import ALL_SECTIONS
 
 class Devcmd(*ALL_SECTIONS):
     def __init__(self, bot: commands.Bot):
+        super().__init__()
         self.bot = bot
         self.cdev = ciberedev.Client()
 

@@ -13,6 +13,7 @@ from discord.ext import commands
 
 from ..converters import CodeBlockConvertor
 from ..utils import filter_text
+from .base_section import BaseSection
 
 
 class RedirectedStdout:
@@ -32,7 +33,7 @@ class RedirectedStdout:
         return self._string_io.getvalue()  # type: ignore
 
 
-class ReplSection(commands.Cog):
+class ReplSection(BaseSection):
     async def _handle_eval(self, env, ctx, function, as_generator=False):
         with RedirectedStdout() as otp:
             try:
@@ -89,9 +90,8 @@ class ReplSection(commands.Cog):
         name="eval",
         aliases=["```py", "```", "py", "python", "run", "exec", "execute"],
         description="Evaluates the given code",
-        parent="devcmd",
     )
-    async def _eval(self, ctx, *, code: CodeBlockConvertor):
+    async def cmd_eval(self, ctx, *, code: CodeBlockConvertor):
         await ctx.channel.typing()
         env = {
             "ctx": ctx,

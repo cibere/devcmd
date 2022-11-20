@@ -3,11 +3,13 @@ import io
 import discord
 from discord.ext import commands
 
+from .base_section import BaseSection
 
-class ModSection(commands.Cog):
-    @commands.command(parent="devcmd", name="audit", description="gives you audit logs")
+
+class ModSection(BaseSection):
+    @commands.command(name="audit", description="gives you audit logs")
     @commands.guild_only()
-    async def audit(self, ctx: commands.Context, num: int):
+    async def cmd_audit(self, ctx: commands.Context, num: int):
         await ctx.channel.typing()
         audits = []
         async for entry in ctx.guild.audit_logs(limit=num):  # type: ignore
@@ -28,10 +30,8 @@ class ModSection(commands.Cog):
                 )
             )
 
-    @commands.command(
-        parent="devcmd", name="cleanup", description="cleans up the bots messages"
-    )
-    async def cleanup(self, ctx: commands.Context, num: int):
+    @commands.command(name="cleanup", description="cleans up the bots messages")
+    async def cmd_cleanup(self, ctx: commands.Context, num: int):
         await ctx.channel.typing()
 
         count = 0

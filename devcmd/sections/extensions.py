@@ -6,18 +6,18 @@ import discord
 from discord.ext import commands
 
 from ..utils import filter_text
+from .base_section import BaseSection
 
 
-class ExtensionsSection(commands.Cog):
+class ExtensionsSection(BaseSection):
     cdev: ciberedev.Client
 
     @commands.command(
-        parent="devcmd",
         name="load",
         aliases=["reload", "unload"],
         description="loads/unloads/reloads an extension",
     )
-    async def load(self, ctx: commands.Context, extension: Optional[str] = None):
+    async def cmd_load(self, ctx: commands.Context, extension: Optional[str] = None):
         await ctx.channel.typing()
         if ctx.invoked_with == "reload" and extension == None:
             extension = "devcmd"
@@ -99,8 +99,8 @@ class ExtensionsSection(commands.Cog):
                 )
                 await ctx.send(embed=em)
 
-    @commands.command(name="remove", description="removes a cog", parent="devcmd")
-    async def remove_cog(self, ctx, cog_name: str):
+    @commands.command(name="remove", description="removes a cog")
+    async def cmd_remove(self, ctx, cog_name: str):
         cogs = [str(cog) for cog in ctx.bot.cogs]
         if cog_name not in cogs:
             return await ctx.send(
@@ -117,8 +117,8 @@ class ExtensionsSection(commands.Cog):
             )
         )
 
-    @commands.command(name="cogs", description="lists all loaded cogs", parent="devcmd")
-    async def cogs(self, ctx):
+    @commands.command(name="cogs", description="lists all loaded cogs")
+    async def cmd_cogs(self, ctx):
         cogs = [f"`{str(cog)}`" for cog in ctx.bot.cogs]
         em = discord.Embed(
             title="Loaded Cogs", color=discord.Color.blue(), description=", ".join(cogs)

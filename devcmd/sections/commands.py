@@ -1,10 +1,12 @@
 import discord
 from discord.ext import commands
 
+from .base_section import BaseSection
 
-class CommandsSection(commands.Cog):
-    @commands.command(name="disable", description="Disables a command", parent="devcmd")
-    async def _dc_disable(self, ctx: commands.Context, command_name: str):
+
+class CommandsSection(BaseSection):
+    @commands.command(name="disable", description="Disables a command")
+    async def cmd_disable(self, ctx: commands.Context, command_name: str):
         em = discord.Embed()
         command = ctx.bot.get_command(command_name)
         if command == None:
@@ -18,8 +20,8 @@ class CommandsSection(commands.Cog):
         em.color = discord.Color.green()
         await ctx.send(embed=em)
 
-    @commands.command(name="enable", description="Enables a command", parent="devcmd")
-    async def _dc_enable(self, ctx: commands.Context, command_name: str):
+    @commands.command(name="enable", description="Enables a command")
+    async def cmd_enable(self, ctx: commands.Context, command_name: str):
         command = ctx.bot.get_command(command_name)
         if command == None:
             return await ctx.send(f'Command "{command_name}" not found')

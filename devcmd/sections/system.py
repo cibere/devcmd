@@ -11,8 +11,8 @@ class SystemSection(BaseSection):
     @command(name="restart", description="Restarts the bot")
     async def cmd_restart(self, ctx: commands.Context, _: str = ""):
         await ctx.channel.typing()
-        embed = discord.Embed(color=discord.Color.green(), title="Restarting now...")
-        await ctx.send(embed=embed)
+
+        await self.send_success(ctx, "Restarting now...")
         os.execv(sys.executable, ["python"] + sys.argv)
 
     @command(
@@ -22,6 +22,6 @@ class SystemSection(BaseSection):
     )
     async def cmd_shutdown(self, ctx: commands.Context, _: str = ""):
         await ctx.channel.typing()
-        embed = discord.Embed(color=discord.Color.green(), title="Logging out...")
-        await ctx.reply(embed=embed)
+
+        await self.send_success(ctx, "Logging out...")
         await ctx.bot.close()

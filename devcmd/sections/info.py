@@ -109,9 +109,5 @@ class InfoSection(BaseSection):
     async def cmd_version(self, ctx: commands.Context, _: str = ""):
         import devcmd
 
-        em = discord.Embed(
-            description=f"Running Devcmd Version {devcmd.VERSION}",
-            color=discord.Color.blue(),
-        )
-        await ctx.send(embed=em)
+        await self.send_info(ctx, "", f"Running Devcmd Version {devcmd.VERSION}")
         del devcmd

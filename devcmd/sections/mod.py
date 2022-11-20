@@ -17,18 +17,7 @@ class ModSection(BaseSection):
                 f"{entry.user} did {entry.action} to {entry.target} with the reason of: {entry.reason}"
             )
         nl = "\n"
-        embed = discord.Embed(
-            color=discord.Color.blue(), title="Audit", description=nl.join(audits)
-        )
-        try:
-            await ctx.reply(embed=embed)
-        except:
-            await ctx.send(
-                file=discord.File(
-                    filename="Audit Logs",
-                    fp=io.BytesIO(str(embed.description).encode("utf-8")),
-                )
-            )
+        await self.send_info(ctx, "Audit Logs", nl.join(audits))
 
     @command(name="cleanup", description="cleans up the bots messages")
     async def cmd_cleanup(self, ctx: commands.Context, num: int):
@@ -40,8 +29,4 @@ class ModSection(BaseSection):
                 await msg.delete()
                 count += 1
 
-        embed = discord.Embed(
-            color=discord.Color.green(),
-            description=f"Cleaned up {count} messages",
-        )
-        await ctx.author.send(embed=embed)
+        await self.send_success(ctx, f"Cleaned up {count} messages")

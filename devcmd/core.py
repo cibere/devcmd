@@ -6,14 +6,13 @@ try:
     load_dotenv()
 except ImportError:
     pass
-import logging
-
 import ciberedev
 
 from devcmd.sections import ALL_SECTIONS
+from devcmd.sections.base_section import BaseSection
 
 
-class Devcmd(*ALL_SECTIONS):
+class Devcmd(*ALL_SECTIONS, BaseSection):
     def __init__(self, bot: commands.Bot):
         super().__init__()
         self.bot = bot
@@ -32,7 +31,7 @@ class Devcmd(*ALL_SECTIONS):
 
     @commands.group(hidden=True, invoke_without_command=True, name="devcmd", description="the devcmd group", aliases=["dc", "dev"])  # type: ignore
     async def the_group(self, ctx: commands.Context):
-        await ctx.send("Devcmd is loaded")
+        await self.send_info(ctx, "", "Devcmd is loaded")
 
     async def cog_load(self):
         await self.cdev.start()

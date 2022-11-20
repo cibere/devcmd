@@ -61,12 +61,7 @@ class ReplSection(BaseSection):
                     except:
                         pass
                 msg = f"n```py\n{err}\n```"
-                msg = filter_text(msg)
-                errorEm = discord.Embed(
-                    title="Eval Error", description=msg, color=discord.Color.red()
-                )
-                await ctx.send(embed=errorEm)
-                return
+                return await self.send_error(ctx, msg)
             ping = time.monotonic() - ping
             ping = ping * 1000
             if res:
@@ -76,7 +71,7 @@ class ReplSection(BaseSection):
                     title="Returned", description=msg, color=discord.Color.green()
                 )
                 returnedEm.set_footer(text=f"Finished in {ping}ms")
-                await ctx.send(embed=returnedEm)
+                await self.send_message(ctx, returnedEm)
             else:
                 msg = f"```py\n{otp}\n```"
                 msg = filter_text(msg)
@@ -84,7 +79,7 @@ class ReplSection(BaseSection):
                     title="Output", description=msg, color=discord.Color.green()
                 )
                 outputEm.set_footer(text=f"Finished in {ping}ms")
-                await ctx.send(embed=outputEm)
+                await self.send_message(ctx, outputEm)
 
     @command(
         name="eval",

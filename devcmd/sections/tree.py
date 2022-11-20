@@ -28,8 +28,7 @@ class TreeSection(BaseSection):
         else:
             cmds = await ctx.bot.tree.sync(guild=ctx.guild)
 
-        em = discord.Embed(
-            description=f'Synced {len(cmds)} {"globally" if scope == "global" else "to the current guild"}',
-            color=discord.Color.blue(),
+        await self.send_success(
+            ctx,
+            f'Synced {len(cmds)} {"globally" if scope == "global" else "to the current guild"}',
         )
-        await ctx.send(embed=em)

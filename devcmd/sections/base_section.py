@@ -1,40 +1,53 @@
 import datetime
 
+import ciberedev
 import discord
 from discord.ext import commands
 
 
 @commands.is_owner()
 class BaseSection(commands.Cog):
-    async def send_error(self, messageable, message: str) -> None:
+    cdev: ciberedev.Client
+
+    async def send_error(self, messageable, message: str) -> discord.Message:
         em = discord.Embed(
             title="Error",
             description=message,
             color=discord.Color.red(),
             timestamp=datetime.datetime.utcnow(),
         )
-        await self.send_message(messageable, em)
+        return await self.send_message(messageable, em)
 
-    async def send_success(self, messageable, message: str) -> None:
+    async def send_success(self, messageable, message: str) -> discord.Message:
         em = discord.Embed(
             title="Success",
             description=message,
             color=discord.Color.green(),
             timestamp=datetime.datetime.utcnow(),
         )
-        await self.send_message(messageable, em)
+        return await self.send_message(messageable, em)
 
-    async def send_info(self, messageable, title: str, message: str) -> None:
+    async def send_info(self, messageable, title: str, message: str) -> discord.Message:
         em = discord.Embed(
             title=title,
             description=message,
             color=discord.Color.blue(),
             timestamp=datetime.datetime.utcnow(),
         )
-        await self.send_message(messageable, em)
+        return await self.send_message(messageable, em)
 
-    async def send_message(self, messageable, embed: discord.Embed) -> None:
-        await messageable.send(embed=embed)
+    async def send_message(self, messageable, embed: discord.Embed) -> discord.Message:
+        try:
+            msg = await messageable.send(embed=embed)
+        except discord.HTTPException:
+            paste = await self.cdev.create_paste(str(embed.description))
+            em = embed
+            em.description = (
+                f"(Message was too long to send, so I sent it here)[{str(paste)}]"
+            )
+            msg = await messageable.send(embed=em)
+
+        return msg
 
 
 def command(*, name: str, description: str, aliases: list[str] = []):

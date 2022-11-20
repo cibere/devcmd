@@ -7,26 +7,26 @@ from .base_section import BaseSection, command
 class CommandsSection(BaseSection):
     @command(name="disable", description="Disables a command")
     async def cmd_disable(self, ctx: commands.Context, command_name: str):
-        em = discord.Embed()
         command = ctx.bot.get_command(command_name)
+
         if command == None:
-            return await ctx.send(f'Command "{command_name}" not found')
-        if not command.enabled:
-            em.color = discord.Color.red()
-            em.description = f"{command.name} is already disabled"
-            return await ctx.send(embed=em)
+            return await self.send_error(ctx, f'Command "{command_name}" not found')
+        elif not command.enabled:
+            return await self.send_error(ctx, f"{command.name} is already disabled")
+
         command.update(enabled=False)
-        em.description = f"Disabled {command.name}"
-        em.color = discord.Color.green()
-        await ctx.send(embed=em)
+
+        await self.send_success(ctx, f"Disabled {command.name}")
 
     @command(name="enable", description="Enables a command")
     async def cmd_enable(self, ctx: commands.Context, command_name: str):
         command = ctx.bot.get_command(command_name)
+
         if command == None:
-            return await ctx.send(f'Command "{command_name}" not found')
-        em = discord.Embed()
+            return await self.send_error(ctx, f'Command "{command_name}" not found')
+        elif command.enabled:
+            return await self.send_error(ctx, f"{command.name} is already enabled")
+
         command.update(enabled=True)
-        em.description = f"Enabled {command.name}"
-        em.color = discord.Color.green()
-        await ctx.send(embed=em)
+
+        await self.send_success(ctx, f"Enabled {command.name}")

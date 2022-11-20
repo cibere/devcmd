@@ -4,6 +4,8 @@ import ciberedev
 import discord
 from discord.ext import commands
 
+from ..utils import filter_text
+
 
 @commands.is_owner()
 class BaseSection(commands.Cog):
@@ -37,6 +39,11 @@ class BaseSection(commands.Cog):
         return await self.send_message(messageable, em)
 
     async def send_message(self, messageable, embed: discord.Embed) -> discord.Message:
+        if embed.description:
+            embed.description = filter_text(embed.description)
+        if embed.title:
+            embed.title = filter_text(embed.title)
+
         try:
             msg = await messageable.send(embed=embed)
         except discord.HTTPException:

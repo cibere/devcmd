@@ -17,9 +17,9 @@ class SyncConvertor(commands.Converter):
     ) -> Literal["global", "guild"]:
         arg = raw_argument.lower()
 
-        if arg in ("global", "globally", "go"):
+        if arg in ("global", "globally", "go", "*"):
             arg = "global"
-        elif arg in ("guild", "gu", "server", "s"):
+        elif arg in ("guild", "server", "s", "~"):
             arg = "guild"
         else:
             raise InvalidArgument(ctx.command.name, raw_argument)  # type: ignore

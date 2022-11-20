@@ -12,15 +12,15 @@ sync global -> syncs globally
 sync guild -> syncs to the current guild
 
 accepted versions of global:
-global, globally, go
+global/globally/go/*
 
 accepted versions of guild:
-guild/gu/server/s"""
+guild/server/s/~"""
 
 
 class TreeSection(BaseSection):
     @command(name="sync", description=sync_description)
-    async def sync(self, ctx: commands.Context, scope: SyncConvertor):
+    async def sync(self, ctx: commands.Context, scope: SyncConvertor = "global"):  # type: ignore
         await ctx.typing()
 
         if scope == "global":

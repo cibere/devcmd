@@ -8,9 +8,13 @@ try:
     load_dotenv()
 except ImportError:
     pass
+import logging
+
 import ciberedev
 
 from devcmd.sections import ALL_SECTIONS
+
+logger = logging.getLogger("devcmd")
 
 
 class Devcmd(*ALL_SECTIONS):
@@ -34,6 +38,7 @@ class Devcmd(*ALL_SECTIONS):
                 aliases=cmd_info["description"],
             )
             self.the_group.add_command(cmd)
+            logging.info(f"Added command: {cmd_info['name']}")
 
     @commands.group(hidden=True, invoke_without_command=True, name="devcmd", description="the devcmd group", aliases=["dc", "dev"])  # type: ignore
     async def the_group(self, ctx: commands.Context):

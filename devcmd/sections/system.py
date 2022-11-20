@@ -25,3 +25,7 @@ class SystemSection(BaseSection):
 
         await self.send_success(ctx, "Logging out...")
         await ctx.bot.close()
+
+    @command(name="os", description="lets you execute stuff in your console")
+    async def cmd_os(self, ctx: commands.Context, query: str):
+        pass

@@ -18,7 +18,7 @@ logger = logging.getLogger("devcmd")
 logger.setLevel(logging.INFO)
 
 
-class Devcmd(*ALL_SECTIONS):
+class Devcmd(**ALL_SECTIONS):
     def __init__(self, bot: commands.Bot):
         super().__init__()
         self.bot = bot

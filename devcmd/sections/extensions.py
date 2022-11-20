@@ -100,7 +100,7 @@ class ExtensionsSection(BaseSection):
                 await ctx.send(embed=em)
 
     @command(name="remove", description="removes a cog")
-    async def cmd_remove(self, ctx, cog_name: str):
+    async def cmd_remove(self, ctx: commands.Context, cog_name: str):
         cogs = [str(cog) for cog in ctx.bot.cogs]
         if cog_name not in cogs:
             return await ctx.send(
@@ -118,7 +118,7 @@ class ExtensionsSection(BaseSection):
         )
 
     @command(name="cogs", description="lists all loaded cogs")
-    async def cmd_cogs(self, ctx):
+    async def cmd_cogs(self, ctx: commands.Context):
         cogs = [f"`{str(cog)}`" for cog in ctx.bot.cogs]
         em = discord.Embed(
             title="Loaded Cogs", color=discord.Color.blue(), description=", ".join(cogs)

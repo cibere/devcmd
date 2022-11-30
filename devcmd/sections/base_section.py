@@ -1,6 +1,5 @@
 import datetime
 
-import ciberedev
 import discord
 from discord.ext import commands
 
@@ -8,7 +7,6 @@ from ..utils import filter_text
 
 
 class BaseSection(commands.Cog):
-    cdev: ciberedev.Client
     bot: commands.Bot
 
     async def send_error(self, messageable, message: str) -> discord.Message:
@@ -44,16 +42,7 @@ class BaseSection(commands.Cog):
         if embed.title:
             embed.title = filter_text(embed.title)
 
-        try:
-            msg = await messageable.send(embed=embed)
-        except discord.HTTPException:
-            paste = await self.cdev.create_paste(str(embed.description))
-            em = embed
-            em.description = (
-                f"(Message was too long to send, so I sent it here)[{str(paste)}]"
-            )
-            msg = await messageable.send(embed=em)
-
+        msg = await messageable.send(embed=embed)
         return msg
 
 

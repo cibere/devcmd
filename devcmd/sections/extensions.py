@@ -1,7 +1,6 @@
 import traceback
 from typing import Optional
 
-import ciberedev
 import discord
 from discord.ext import commands
 
@@ -10,7 +9,7 @@ from .base_section import BaseSection, command
 
 
 class ExtensionsSection(BaseSection):
-    cdev: ciberedev.Client
+    bot: commands.Bot
 
     @command(
         name="load",
